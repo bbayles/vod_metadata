@@ -6,6 +6,10 @@ specification
 When you run this tool from a directory containing video files it will generate
 an XML metadata file for each video file in the directory.
 
+This tool requires Python (tested with version 3.3.1) and MediaInfo. You need
+to download the MediaInfo CLI executable from (http://mediainfo.sourceforge.net)
+and edit template_values.ini to specify the path.
+
 As of 2013 the generated can files have all the "Required" attributes in the
 CableLabs specification, but the ones added in 2009 are not included by default.
 
