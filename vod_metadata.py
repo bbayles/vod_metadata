@@ -29,7 +29,11 @@ if __name__ == "__main__":
    ecn_2009) = parse_config(config_path)
   
   # The user determines whether the ECN 2009 parameters are included
-  param_ecn_2009 = {"%movie_resolution%", "%movie_frame_rate%", "%movie_codec%"}
+  param_skip = set()
+  if not ecn_2009:
+    param_skip.add("%movie_resolution%")
+    param_skip.add("%movie_frame_rate%")
+    param_skip.add("%movie_codec%")
   
   # The main loop - runs through movie file
   for file_path in os.listdir():
@@ -157,8 +161,7 @@ if __name__ == "__main__":
       for line in infile:
         if line.count("%") == 2:
           param = ''.join(("%", line.split("%")[1], "%"))
-          if ((param not in param_ecn_2009)
-              or (param in param_ecn_2009 and ecn_2009)):
+          if (param not in param_skip):
             print(line.replace(param, D[param]), end='', file=outfile)
         else:
           print(line, end='', file=outfile)
