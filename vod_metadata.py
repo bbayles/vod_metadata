@@ -47,7 +47,7 @@ if __name__ == "__main__":
     
     # Randomly-generated values
     suffix = format(random.randint(0, 9999), "04")
-    title_billing_id = suffix + "S"
+    title_billing_id = "{}B".format(suffix)
 
     # Video file-specific value
     try:
@@ -74,23 +74,23 @@ if __name__ == "__main__":
       continue
     
     # Package section
-    package_asset_name = file_name[:20] + " (package)"
-    package_description = file_name[:20] + " (package asset)"
-    package_asset_id = ''.join((prefix, "P", asset_id, suffix))
+    package_asset_name = "{} (package)".format(file_name[:20])
+    package_description = "{} (package asset)".format(file_name[:20])
+    package_asset_id = "{}P{}{}".format(prefix, asset_id, suffix)
     
     # Title section
-    title_asset_name = file_name[:20] + " (title)"
-    title_description = file_name[:20] + " (title asset)"
-    title_asset_id = ''.join((prefix, "T", asset_id, suffix))
-    title_title_brief = file_name[:15] + suffix
-    title_title = file_name[:124] + suffix
+    title_asset_name = "{} (title)".format(file_name[:20])
+    title_description = "{} (title asset)".format(file_name[:20])
+    title_asset_id = "{}T{}{}".format(prefix, asset_id, suffix)
+    title_title_brief = "{}{}".format(file_name[:15], suffix)
+    title_title = "{}{}".format(file_name[:124], suffix)
     run_time = "{}:{}:{}".format(duration_h, duration_m, duration_s)
     display_run_time = "{}:{}".format(duration_h, duration_m)
     
     # Movie section
-    movie_asset_name = file_name[:20] + " (title)"
-    movie_description = file_name[:20] + " (movie asset)"
-    movie_asset_id = ''.join((prefix, "M", asset_id, suffix))
+    movie_asset_name = "{} (movie)".format(file_name[:20])
+    movie_description = "{} (movie asset)".format(file_name[:20])
+    movie_asset_id = "{}M{}{}".format(prefix, asset_id, suffix)
     movie_audio_type = int(mpeg_info["Audio"].get("Channel(s)", 0))
     movie_audio_type = "Stereo" if  movie_audio_type > 1 else "Mono"
     movie_resolution_height = mpeg_info["Video"]["Height"]
