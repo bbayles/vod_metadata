@@ -5,6 +5,9 @@
 import collections
 import subprocess
 
+class MediaInfoError(Exception):
+  pass
+
 def media_info(file_name, MediaInfo_path):
   """Returns a dictionary of dictionaries with the output of
      MediaInfo -f file_name"""
@@ -39,6 +42,6 @@ def media_info(file_name, MediaInfo_path):
       or "Frame rate" not in D["Video"]
       or "Height" not in D["Video"]
       or "Scan type" not in D["Video"]):
-    raise ValueError("Could not determine all video paramters")
+    raise MediaInfoError("Could not determine all video paramters")
   
   return D

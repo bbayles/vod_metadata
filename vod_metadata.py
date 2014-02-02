@@ -4,7 +4,7 @@
 # Copyright 2013 Bo Bayles (bbayles@gmail.com)
 # See README for more information
 # See LICENSE for license
-from media_info import media_info
+from media_info import media_info, MediaInfoError
 from md5_checksum import md5_checksum
 from parse_config import parse_config
 import datetime
@@ -56,7 +56,7 @@ if __name__ == "__main__":
     # Video file-specific value
     try:
       mpeg_info = media_info(file_path, MediaInfo_path)
-    except ValueError:
+    except MediaInfoError:
       print("Could not analyze {}. Is it a video file?".format(file_path))
       continue
     duration_s = round(float(mpeg_info["General"]["Duration"]) / 1000)
