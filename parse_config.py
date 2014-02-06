@@ -4,6 +4,9 @@
 # See LICENSE for license
 import configparser
 
+class ConfigurationError(Exception):
+  pass
+
 def parse_config(config_path):
   config = configparser.ConfigParser()
   _ = config.read(config_path)
@@ -19,7 +22,8 @@ def parse_config(config_path):
   product = config["VOD"].get("product", "MOD").strip()
   if len(product) > 20:
     product = product[:20]
-    print("Configuration file error: product must be 20 characters or fewer")
+    raise ConfigurationError("""Configuration file error: product must be 20 \
+characters or fewer""")
   
   # Provider_ID must be a lower-case domain name up to 20 characters
   provider_id = config["VOD"].get("provider_id", "example.com").lower().strip()
@@ -29,29 +33,30 @@ def parse_config(config_path):
       or len(domain[0]) == 0
       or len(domain[1]) == 1):
     provider_id = "example.com"
-    print("""Configuration file error: provider_id must be must be a lower-case\
-domain name up to 20 characters""")
-  
+    raise ConfigurationError("""Configuration file error: provider_id must be \
+must be a lower-case domain name up to 20 characters""")
+
   # Prefix must be 3 alphabetic characters
   prefix = config["VOD"].get("prefix", "MSO").upper().strip()
   if not prefix.isalpha():
     prefix == "MSO"
-    print("""Configuration file error: prefix must be 3 alphabetic\
-characters""")
+    raise ConfigurationError("""Configuration file error: prefix must be 3 \
+alphabetic characters""")
   
   # Category must be a /-delimeted hierarchy of folder names, each folder name
   # 20 characters or fewer  
   title_category = config["VOD"].get("prefix", "MSO Lab").strip()
   if any((len(folder) > 20 for folder in title_category.split("/"))):
     title_category == "MSO Lab"
-    print("""Configuration file error: category must be a /-delimeted hierarchy\
-of folder names, each folder name 20 characters or fewer""")
+    raise ConfigurationError("""Configuration file error: category must be a \
+/-delimeted hierarchy of folder names, each folder name 20 characters or fewer""")
   
   # Provider can be up to 20 characters
   provider = config["VOD"].get("provider", "001").strip()
   if len(provider) > 20:
     provider = product[:20]
-    print("Configuration file error: provider must be 20 characters or fewer")
+    raise ConfigurationError("""Configuration file error: provider must be 20 \
+characters or fewer""")
   
   # The ecn_2009 flag can be either "True" or "False"
   ecn_2009 = config["VOD"].get("ecn_2009", "False")
