@@ -13,7 +13,7 @@ import random
 
 if __name__ == "__main__":
   # Determine the path to the metadata template and configuration file
-  script_path = os.path.abspath( __file__ )
+  script_path = os.path.abspath(__file__)
   script_path = os.path.split(script_path)[0]
   config_path = os.path.join(script_path, "template_values.ini")
   infile_path = os.path.join(script_path, "metadata_template.xml")
