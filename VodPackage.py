@@ -5,18 +5,22 @@
 # See LICENSE for license
 
 from lxml import etree
-from vod_metadata import md5_checksum
-from vod_metadata import media_info
+from vod_metadata import check_video, check_picture, md5_checksum, param_skip
 import os.path
 
 class MissingElement(Exception):
   pass
 
+class InvalidMpeg(Exception):
+  pass
+
 class VodPackage(object):
+  # Some metadata attributes can appear more than once in the App_Data sections
+  # TODO: Audio_Type is one of these, but this is not implemented yet
   _multiples = {"Provider_Content_Tier", "Subscriber_View_Limit", "Rating",
                 "MSORating", "Advisories", "Audience", "Actors", "Director",
                 "Producers", "Category", "Chapter", "Recording_Artist",
-                "Song_Title", "Audio_Type", "Languages", "Subtitle_Languages",
+                "Song_Title", "Languages", "Subtitle_Languages",
                 "Dubbed_Languages"}
   
   def __init__(self, xml_path):
@@ -53,6 +57,8 @@ class VodPackage(object):
       self.D_app[ae_type] = self._parse_App_Data(ae_Metadata)
       self.D_content[ae_type] = ae_Asset.find("Content").attrib["Value"]
     
+    if "movie" not in self.D_content:
+      raise MissingElement("Package does not specify a movie element")
     self.has_preview = "preview" in self.D_content
     self.has_poster = "poster" in self.D_content
     
@@ -79,7 +85,11 @@ class VodPackage(object):
     
     return D
   
-  def write_xml(self, check_files=False):
+  def write_xml(self, rewrite=False):
+    # Over-write the given XML values with the ones determined by scanning the
+    # video if needed
+    if rewrite:
+      self.check_files()
     # Package asset
     doctype = '<!DOCTYPE ADI SYSTEM "ADI.DTD">'
     ADI = etree.Element("ADI")
@@ -133,6 +143,9 @@ class VodPackage(object):
         ae_AMS.set(key, value)
       # App_Data section
       for key, value in self.D_app[ae_type].items():
+        # Configuration controls whether certain values get skipped
+        if key in param_skip:
+          continue
         # Some of the App_Data tags can be repeated
         if key in self._multiples:
           for v in value:
@@ -171,14 +184,68 @@ class VodPackage(object):
 
   def check_files(self):
     for ae_type, ae_name in self.D_content.items():
+      # Check to make sure the referenced files exist in the same directory as
+      # the XML file
       ae_dir = os.path.split(self.xml_path)[0]
       ae_path = os.path.join(ae_dir, ae_name)
       if not os.path.isfile(ae_path):
         raise MissingElement("Package's {} element is missing - {}".format(ae_type, ae_path))
-      D_app[ae_type]["Content_FileSize"] = os.path.getsize(ae_path)
-      D_app[ae_type]["Content_CheckSum"] = md5_checksum(ae_path)
-      # movie_info = media_info(self.D_content["movie"])
+      # Set the file size and checksum values
+      self.D_app[ae_type]["Content_FileSize"] = str(os.path.getsize(ae_path))
+      self.D_app[ae_type]["Content_CheckSum"] = md5_checksum(ae_path)
+    # For the movie element use MediaInfo to scan the video to determine
+    # its bitrate, geometry, etc.
+    self.scan_video("movie")
+    if self.has_preview:
+      self.scan_video("preview")
+    if self.has_poster:
+      self.scan_image()
+  
+  def scan_video(self, ae_type):
+    mpeg_info = check_video(self.D_content[ae_type])
+    
+    # Calculate the run time of the video
+    duration_s = round(float(mpeg_info["General"]["Duration"]) / 1000)
+    duration_h, duration_s = divmod(duration_s, 3600)
+    duration_m, duration_s = divmod(duration_s, 60)
+    duration_h = format(duration_h, "02")
+    duration_m = format(duration_m, "02")
+    duration_s = format(duration_s, "02")
+    self.D_app[ae_type]["Run_Time"] = "{}:{}:{}".format(duration_h, duration_m, duration_s)
+    self.D_app[ae_type]["Display_Run_Time"] = "{}:{}".format(duration_h, duration_m)
+    
+    # Determine the movie's codec
+    commercial_name = mpeg_info["Video"]["Commercial name"]
+    format_profile = mpeg_info["Video"]["Format profile"]
+    if commercial_name == "MPEG-2 Video":
+      self.D_app[ae_type]["Codec"] = "MPEG2"
+    elif commercial_name == "AVC":
+      avc_profile = format_profile[0]
+      avc_level = format_profile[format_profile.find("@"):].replace(".", "")
+      self.D_app[ae_type]["Codec"] = "AVC {}P{}".format(avc_profile, avc_level)
+    else:
+      raise InvalidMpeg("Could not determine codec for {}".format(self.D_content[ae_type]))
+    
+    # Determine the audio type
+    audio_type = int(mpeg_info["Audio"].get("Channel(s)", 0))
+    self.D_app[ae_type]["Audio_Type"] = "Stereo" if  audio_type > 1 else "Mono"
+    
+    # Determine the geometry
+    movie_resolution_height = mpeg_info["Video"]["Height"]
+    move_resolution_scan = mpeg_info["Video"]["Scan type"][0].lower()
+    self.D_app[ae_type]["Resolution"] = "{}{}".format(movie_resolution_height, move_resolution_scan)
+    
+    # Determine the movie's frame rate and bitrate (actually kilobit rate)
+    self.D_app[ae_type]["Frame_Rate"] = str(round(float(mpeg_info["Video"]["Frame rate"])))
+    self.D_app[ae_type]["Bit_Rate"] = str(round(float(mpeg_info["Video"]["Bit rate"]) / 1000))
 
+  def scan_image(self):
+    img_info = check_picture(self.D_content["poster"])
+    img_width = img_info["Image"]["Width"]
+    img_height = img_info["Image"]["Height"]
+    self.D_app["poster"]["Image_Aspect_Ratio"] = "{}x{}".format(img_width, img_height)
+  
+  
   def list_files(self):
     package_pid = self.D_ams["package"]["Provider_ID"]
     package_paid = self.D_ams["package"]["Asset_ID"]
