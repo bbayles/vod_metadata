@@ -1,4 +1,4 @@
-This tools is designed to help import video files into a VOD back office by
+This tool is designed to help import video files into a VOD back office by
 generating valid metadata files that conform to the CableLabs VOD Metada 1.1
 specification
 (http://cablelabs.com/projects/metadata/specifications/specifications11.html).
@@ -6,11 +6,11 @@ specification
 When you run this tool from a directory containing video files it will generate
 an XML metadata file for each video file in the directory.
 
-This tool requires Python (tested with version 3.3.1) and MediaInfo. You need
+This tool requires Python (tested with version 3.3.3) and MediaInfo. You need
 to download the MediaInfo CLI executable from (http://mediainfo.sourceforge.net)
 and edit template_values.ini to specify the path.
 
-As of 2013 the generated can files have all the "Required" attributes in the
+As of 2014 the generated can files have all the "Required" attributes in the
 CableLabs specification, but the ones added in 2009 are not included by default.
 
 Edit the template_values.ini file to set custom parameters. The default
