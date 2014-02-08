@@ -97,7 +97,7 @@ class VodPackage(object):
     
     # Package AMS section
     package_AMS = etree.SubElement(package_Metadata, "AMS")
-    for key, value in self.D_ams["package"].items():
+    for key, value in sorted(self.D_ams["package"].items(), key=lambda x: x[0]):
       package_AMS.set(key, value)
     
     # Package App_Data section
@@ -112,11 +112,11 @@ class VodPackage(object):
     
     # Title AMS section
     title_AMS = etree.SubElement(title_Metadata, "AMS")
-    for key, value in self.D_ams["title"].items():
+    for key, value in sorted(self.D_ams["title"].items(), key=lambda x: x[0]):
       title_AMS.set(key, value)
     
     # Title App_Data section
-    for key, value in self.D_app["title"].items():
+    for key, value in sorted(self.D_app["title"].items(), key=lambda x: x[0]):
       # Some of the App_Data tags can be repeated
       if key in self._multiples:
         for v in value:
@@ -139,10 +139,10 @@ class VodPackage(object):
       ae_Metadata = etree.SubElement(ae_Asset, "Metadata")
       # AMS section
       ae_AMS = etree.SubElement(ae_Metadata, "AMS")
-      for key, value in self.D_ams[ae_type].items():
+      for key, value in sorted(self.D_ams[ae_type].items(), key=lambda x: x[0]):
         ae_AMS.set(key, value)
       # App_Data section
-      for key, value in self.D_app[ae_type].items():
+      for key, value in sorted(self.D_app[ae_type].items(), key=lambda x: x[0]):
         # Configuration controls whether certain values get skipped
         if key in param_skip:
           continue
@@ -211,8 +211,14 @@ class VodPackage(object):
     duration_h = format(duration_h, "02")
     duration_m = format(duration_m, "02")
     duration_s = format(duration_s, "02")
-    self.D_app[ae_type]["Run_Time"] = "{}:{}:{}".format(duration_h, duration_m, duration_s)
-    self.D_app[ae_type]["Display_Run_Time"] = "{}:{}".format(duration_h, duration_m)
+    # For the movie asset, the Run_Time and Display_Run_Time are given as part
+    # of the title's metadata. For the preview asset, the Run_Time is given
+    # as part of the preview's metadata
+    if ae_type == "movie":
+      self.D_app["title"]["Run_Time"] = "{}:{}:{}".format(duration_h, duration_m, duration_s)
+      self.D_app["title"]["Display_Run_Time"] = "{}:{}".format(duration_h, duration_m)
+    elif ae_type == "preview":
+      self.D_app["preview"]["Run_Time"] = "{}:{}:{}".format(duration_h, duration_m, duration_s)
     
     # Determine the movie's codec
     commercial_name = mpeg_info["Video"]["Commercial name"]
@@ -244,7 +250,6 @@ class VodPackage(object):
     img_width = img_info["Image"]["Width"]
     img_height = img_info["Image"]["Height"]
     self.D_app["poster"]["Image_Aspect_Ratio"] = "{}x{}".format(img_width, img_height)
-  
   
   def list_files(self):
     package_pid = self.D_ams["package"]["Provider_ID"]
