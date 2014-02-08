@@ -64,34 +64,42 @@ Next, read in an existing metadata file:
 >>> vod_package = VodPackage("The Hounds of Baskerville.xml")
 ```
 
-You can now read and edit the metadata through Python dictionaries (`VodPackage.D_ams`, `VodPackage.D_app`, `VodPackage.D_content`):
+You can now read and edit the metadata through Python dictionaries (`VodPackage.D_ams`, `VodPackage.D_app`, `VodPackage.D_content`). Have you ever needed to know what the `Provider_ID` and `Asset_ID` are for a title asset?
 ```
+>>> vod_package.D_ams["title"]["Provider_ID"]
+'example.com'
 >>> vod_package.D_ams["title"]["Asset_ID"]
-0: 'MSOT2014020814473655'
+'MSOT2014020814473655'
 ```
 
-There are some convenience functions, such as `VodPackage.has_preview()` and `VodPackage.has_poster()`:
+
+Do you need to determine whether an asset has a poster? Maybe you want to remove the poster?
 ```
->>> vod_package.has_preview
-1: True
+>>> vod_package.has_pister
+True
+>>> vod_package.remove_poster()
 >>> vod_package.has_poster
-2: False
+False
 ```
 
-You can use `VodPackage.check_files()` to scan the files described by the metadata and update the metadata:
+Maybe you suspect that your metadata is describing the wrong file?
 ```
 >>> vod_package.D_app["preview"]["Content_CheckSum"]
-3: '05b441362eccbde82a98fabcafe071c1',
+'05b441362eccbde82a98fabcafe071c1',
 >>> vod_package.D_app["preview"]["Content_FileSize"]
-4: '65116808'
+'65116808'
+```
+
+You can update it to describe the correct one:
+```
 >>> vod_package.check_files()
 >>> vod_package.D_app["preview"]["Content_CheckSum"]
-5: '2680090e51970e67b412af35201b9053'
+'2680090e51970e67b412af35201b9053'
 >>> vod_package.D_app["preview"]["Content_FileSize"]
-6: '44704888'
+'44704888'
 ```
 
-Write your edits with `VodPackage.write_xml()`. You can save the result to a new file:
+Save your edited file like so:
 ```
 >>> s = vod_package.write_xml()
 >>> with open("rewritten.xml", 'wb') as outfile:
