@@ -19,7 +19,7 @@ class VodPackage(object):
   # TODO: Audio_Type is one of these, but this is not implemented yet
   _multiples = {"Provider_Content_Tier", "Subscriber_View_Limit", "Rating",
                 "MSORating", "Advisories", "Audience", "Actors", "Director",
-                "Producers", "Category", "Chapter", "Recording_Artist",
+                "Producers", "Category", "Genre", "Chapter", "Recording_Artist",
                 "Song_Title", "Languages", "Subtitle_Languages",
                 "Dubbed_Languages"}
   

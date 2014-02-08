@@ -79,7 +79,7 @@ def generate_metadata():
                                   "Closed_Captioning": 'N',
                                   "Year": timestamp.strftime("%Y"),
                                   "Category": [title_category],
-                                  "Genre": "Other",
+                                  "Genre": ["Other"],
                                   "Show_Type": "Other",
                                   "Billing_ID": title_billing_id,
                                   "Licensing_Window_Start": creation_date,
