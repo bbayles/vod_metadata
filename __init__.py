@@ -25,3 +25,4 @@ if not ecn_2009:
 from vod_metadata.md5_checksum import *
 from vod_metadata.media_info import *
 from vod_metadata.VodPackage import *
+from vod_metadata.generate_metadata import *

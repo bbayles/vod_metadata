@@ -9,7 +9,7 @@ import datetime
 import os
 import random
 
-if __name__ == "__main__":  
+def generate_metadata():
   # The main loop - runs through movie file
   for file_path in os.listdir():
     # Only process movie files
