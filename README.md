@@ -14,13 +14,40 @@ First, get the pre-requisites:
 
 Then, get the module ready:
 * Download this module's [source archive from Github](http://github.com/bbayles/vod_metadata/zipball/master/). Then extract it to Python's `site-packages` directory (you should wind up with the files in e.g. `C:\Python33\lib\site-packages\vod_metadata-master`).
-* Edit `template_Values.ini` and set the path to the MediaInfo CLI executable and any custom parameters.
+* Edit `template_values.ini` and set the path to the MediaInfo CLI executable and any custom parameters.
 
 Finally, run the script:
 * Open up a command prompt and switch to a directory with video files (e.g. `C:\videos`)
 * Execute the script with the Python interpreter, using the `-m` switch (e.g. `C:\Python33\python.exe -m vod_metadata-master`)
 
 After it runs (it can take a bit for the checksums to be calculated) you should have minimal valid metadata files for the videos in the directory.
+
+**Before**:
+```
+C:\Users\Bo\Videos>dir /b
+11 Pink.mpg
+12 Banker.mpg
+13 Game.mpg
+```
+
+**During**:
+```
+C:\Users\Bo\Videos>C:\Python33\python.exe -m vod_metadata-master
+Processing 11 Pink.mpg...
+Processing 12 Banker.mpg...
+Processing 13 Game.mpg...
+```
+
+**After**:
+```
+C:\Users\Bo\Videos>dir /b
+11 Pink.mpg
+11 Pink_1442.xml
+12 Banker.mpg
+12 Banker_2743.xml
+13 Game.mpg
+13 Game_5056.xml
+```
 
 ## Contact the author
 I wrote this tool to save myself time hand-editing VOD metadata files.
