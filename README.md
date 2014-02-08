@@ -1,26 +1,25 @@
+## Introduction
 This project contains a library for manipulating and generating metadata files
-that conform to the CableLabs VOD Metada 1.1 specification.
-(http://cablelabs.com/projects/metadata/specifications/specifications11.html)
+that conform to the [CableLabs VOD Metada 1.1 specification](http://cablelabs.com/specification/cablelabs-video-on-demand-content-specification-version-1-1/).
 
 Included is a tool designed to help import video files into a VOD back office by
 generating valid metadata files. When you run the tool from a directory
 containing video files it will generate an XML metadata file for each video file
- in the directory.
+in the directory.
 
-This project requires Python (tested with version 3.3.3) and
-MediaInfo (tested with version 0.7.67). You will need to download the MediaInfo
-CLI executable from (http://mediainfo.sourceforge.net) and edit
-template_values.ini to specify the path.
+## Requirements and installation:
+* Download and install [Python](http://python.org/download/). This project was developed for version 3.3.
+* Download the [MediaInfo](http://mediaarea.net/en/MediaInfo) CLI archive and extract it to some folder. This project was developed for version 0.7.67 .
+* Download and install [lxml](http://lxml.de). This project was developed for version 3.3.0. Windows users can find binaries at [Christoph Gohlke's Python Extension Packages page](http://www.lfd.uci.edu/~gohlke/pythonlibs/).
+* Download the project source archive and extract it to some folder.
+* Edit the `template_values.ini` file from the source to specify the path to the MediaInfo CLI and to set custom parameters.
 
-As of 2014 the generated can files have all the "Required" attributes in the
-CableLabs specification, but the ones added in 2009 are not included by default.
+The project is written with Windows users in mind, but other platforms will
+probably work with a bit of modification.
 
-Edit the template_values.ini file to set custom parameters. The default
-parameters will produce valid metadata, but make sure to check that your system
-can use it before trying to import the results.
-
+## Contact the author
 I wrote this tool to save myself time hand-editing VOD metadata files.
 I've tested importing the generated metadata into SeaChange Axiom and Arris CMM
 back office systems.
 
-E-mail Bo Bayles (bbayles@gmail.com) with questions and feature suggestions.
+E-mail [Bo Bayles](bbayles+github@gmail.com) with questions and feature suggestions.
