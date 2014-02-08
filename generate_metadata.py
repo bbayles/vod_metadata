@@ -99,7 +99,7 @@ def generate_metadata():
                                   "Creation_Date": creation_date,
                                   "Provider_ID": provider_id,
                                   "Asset_ID": movie_asset_id,
-                                  "Asset_Class": "title"}
+                                  "Asset_Class": "movie"}
     vod_package.D_app["movie"] = {"Type": "movie"}
     vod_package.D_content = {"movie": file_path}
     
