@@ -1,5 +1,5 @@
 # VOD metadata file generator - media_info sub-module
-# Copyright 2013 Bo Bayles (bbayles@gmail.com)
+# Copyright 2014 Bo Bayles (bbayles@gmail.com)
 # See README for more information
 # See LICENSE for license
 import collections
