@@ -101,10 +101,20 @@ class VodPackage(object):
       package_AMS.set(key, value)
     
     # Package App_Data section
-    package_App_Data = etree.SubElement(package_Metadata, "App_Data")
-    package_App_Data.set("App", self.D_ams["package"]["Product"])
-    package_App_Data.set("Name", "Metadata_Spec_Version")
-    package_App_Data.set("Value", "CableLabsVOD1.1")
+    for key, value in sorted(self.D_app["package"].items(), key=lambda x: x[0]):
+      # Some of the App_Data tags can be repeated
+      if key in self._multiples:
+        for v in value:
+          package_App_Data = etree.SubElement(package_Metadata, "App_Data")
+          package_App_Data.set("App", self.D_ams["package"]["Product"])
+          package_App_Data.set("Name", key)
+          package_App_Data.set("Value", v)
+      # Others are only allowed to appear once
+      else:
+        package_App_Data = etree.SubElement(package_Metadata, "App_Data")
+        package_App_Data.set("App", self.D_ams["package"]["Product"])
+        package_App_Data.set("Name", key)
+        package_App_Data.set("Value", value)
     
     # Title asset
     title_Asset = etree.SubElement(ADI, "Asset")
