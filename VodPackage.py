@@ -113,7 +113,7 @@ class VodPackage(object):
     # Title AMS section
     title_AMS = etree.SubElement(title_Metadata, "AMS")
     for key, value in self.D_ams["title"].items():
-      package_AMS.set(key, value)
+      title_AMS.set(key, value)
     
     # Title App_Data section
     for key, value in self.D_app["title"].items():
