@@ -44,10 +44,11 @@ must be a lower-case domain name up to 20 characters""")
 alphabetic characters""")
   
   # Category must be a /-delimeted hierarchy of folder names, each folder name
-  # 20 characters or fewer  
-  title_category = config["VOD"].get("prefix", "MSO Lab").strip()
+  # 20 characters or fewer 
+  default_category = "Testing/Videos"
+  title_category = config["VOD"].get("title_category", "Testing/Videos").strip()
   if any((len(folder) > 20 for folder in title_category.split("/"))):
-    title_category == "MSO Lab"
+    title_category = default_category
     raise ConfigurationError("""Configuration file error: category must be a \
 /-delimeted hierarchy of folder names, each folder name 20 characters or fewer""")
   
