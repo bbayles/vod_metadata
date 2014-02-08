@@ -78,7 +78,7 @@ def generate_metadata():
                                   "Rating": "NR",
                                   "Closed_Captioning": 'N',
                                   "Year": timestamp.strftime("%Y"),
-                                  "Category": title_category,
+                                  "Category": [title_category],
                                   "Genre": "Other",
                                   "Show_Type": "Other",
                                   "Billing_ID": title_billing_id,
