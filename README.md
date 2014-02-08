@@ -2,20 +2,25 @@
 This project contains a library for manipulating and generating metadata files
 that conform to the [CableLabs VOD Metada 1.1 specification](http://cablelabs.com/specification/cablelabs-video-on-demand-content-specification-version-1-1/).
 
-Included is a tool designed to help import video files into a VOD back office by
-generating valid metadata files. When you run the tool from a directory
-containing video files it will generate an XML metadata file for each video file
-in the directory.
+## Quick start
+This project contains a script that will generate valid VOD metadata for all the
+video files in a directory. This guide (written with Windows users who might
+not be familiar with Python) shows how get that script up and running.
 
-## Requirements and installation:
-* Download and install [Python](http://python.org/download/). This project was developed for version 3.3.
-* Download the [MediaInfo](http://mediaarea.net/en/MediaInfo) CLI archive and extract it to some folder. This project was developed for version 0.7.67 .
-* Download and install [lxml](http://lxml.de). This project was developed for version 3.3.0. Windows users can find binaries at [Christoph Gohlke's Python Extension Packages page](http://www.lfd.uci.edu/~gohlke/pythonlibs/).
-* Download the project source archive and extract it to some folder.
-* Edit the `template_values.ini` file from the source to specify the path to the MediaInfo CLI and to set custom parameters.
+First, get the pre-requisites:
+* Make sure you've got a recent version of [Python 3](http://python.org) installed. Versions 3.2 and up should work.
+* Make sure you've got the [lxml](http://lxml.de) library installed. If you're on Windows you can use the installer from [Christoph Gohlke's Python Extension Packages](http://www.lfd.uci.edu/~gohlke/pythonlibs/#lxml)
+* Download the [MediaInfo](http://mediaarea.net/en/MediaInfo) CLI archive and extract it somewhere (e.g. to `C:\Program Files\MediaInfo`).
 
-The project is written with Windows users in mind, but other platforms will
-probably work with a bit of modification.
+Then, get the module ready:
+* Download this module's [source archive from Github](http://github.com/bbayles/vod_metadata/zipball/master/). Then extract it to Python's `site-packages` directory (you should wind up with the files in e.g. `C:\Python33\lib\site-packages\vod_metadata-master`).
+* Edit `template_Values.ini` and set the path to the MediaInfo CLI executable and any custom parameters.
+
+Finally, run the script:
+* Open up a command prompt and switch to a directory with video files (e.g. `C:\videos`)
+* Execute the script with the Python interpreter, using the `-m` switch (e.g. `C:\Python33\python.exe -m vod_metadata-master`)
+
+After it runs (it can take a bit for the checksums to be calculated) you should have minimal valid metadata files for the videos in the directory.
 
 ## Contact the author
 I wrote this tool to save myself time hand-editing VOD metadata files.
