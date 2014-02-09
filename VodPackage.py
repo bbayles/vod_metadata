@@ -176,6 +176,25 @@ class VodPackage(object):
     return etree.tostring(ADI, xml_declaration=True, doctype=doctype,
                           encoding='utf-8', pretty_print=True)
 
+  def check_files(self):
+    for ae_type, ae_name in self.D_content.items():
+      # Check to make sure the referenced files exist in the same directory as
+      # the XML file
+      ae_dir = os.path.split(self.xml_path)[0]
+      ae_path = os.path.join(ae_dir, ae_name)
+      if not os.path.isfile(ae_path):
+        raise MissingElement("Package's {} element is missing - {}".format(ae_type, ae_path))
+      # Set the file size and checksum values
+      self.D_app[ae_type]["Content_FileSize"] = str(os.path.getsize(ae_path))
+      self.D_app[ae_type]["Content_CheckSum"] = md5_checksum(ae_path)
+    # For the movie element use MediaInfo to scan the video to determine
+    # its bitrate, geometry, etc.
+    self._scan_video("movie", ae_path)
+    if self.has_preview:
+      self._scan_video("preview", ae_path)
+    if self.has_poster:
+      self._scan_image(ae_path)
+
   def _remove_ae(self, ae_type):
     try:
       del self.D_ams[ae_type]
@@ -191,28 +210,9 @@ class VodPackage(object):
   def remove_poster(self):
     self._remove_ae("poster")
     self.has_poster = False
-
-  def check_files(self):
-    for ae_type, ae_name in self.D_content.items():
-      # Check to make sure the referenced files exist in the same directory as
-      # the XML file
-      ae_dir = os.path.split(self.xml_path)[0]
-      ae_path = os.path.join(ae_dir, ae_name)
-      if not os.path.isfile(ae_path):
-        raise MissingElement("Package's {} element is missing - {}".format(ae_type, ae_path))
-      # Set the file size and checksum values
-      self.D_app[ae_type]["Content_FileSize"] = str(os.path.getsize(ae_path))
-      self.D_app[ae_type]["Content_CheckSum"] = md5_checksum(ae_path)
-    # For the movie element use MediaInfo to scan the video to determine
-    # its bitrate, geometry, etc.
-    self.scan_video("movie")
-    if self.has_preview:
-      self.scan_video("preview")
-    if self.has_poster:
-      self.scan_image()
   
-  def scan_video(self, ae_type):
-    mpeg_info = check_video(self.D_content[ae_type])
+  def _scan_video(self, ae_type, ae_path):
+    mpeg_info = check_video(ae_path)
     
     # Calculate the run time of the video
     duration_s = round(float(mpeg_info["General"]["Duration"]) / 1000)
@@ -255,8 +255,8 @@ class VodPackage(object):
     self.D_app[ae_type]["Frame_Rate"] = str(round(float(mpeg_info["Video"]["Frame rate"])))
     self.D_app[ae_type]["Bit_Rate"] = str(round(float(mpeg_info["Video"]["Bit rate"]) / 1000))
 
-  def scan_image(self):
-    img_info = check_picture(self.D_content["poster"])
+  def _scan_image(self, ae_path):
+    img_info = check_picture(ae_path)
     img_width = img_info["Image"]["Width"]
     img_height = img_info["Image"]["Height"]
     self.D_app["poster"]["Image_Aspect_Ratio"] = "{}x{}".format(img_width, img_height)
