@@ -55,7 +55,7 @@ def check_video(file_name):
   return D
 
 def check_picture(file_name):
-  """Scans the given file with MediaInfo and returns the pictures
+  """Scans the given file with MediaInfo and returns the picture
      information if all the required parameters were found."""
   D = media_info(file_name)
   # Check that the file analyzed was a valid movie
