@@ -85,61 +85,49 @@ class VodPackage(object):
     
     return D
   
+  def _write_App_Data(self, ae_type, parent_Metadata):
+    for key, value in sorted(self.D_app[ae_type].items(), key=lambda x: x[0]):
+      # Configuration controls whether certain values get skipped
+      if key in param_skip:
+        continue
+      # Some of the App_Data tags can be repeated
+      if key in self._multiples:
+        for v in value:
+          ae_App_Data = etree.SubElement(parent_Metadata, "App_Data")
+          ae_App_Data.set("App", self.D_ams["package"]["Product"])
+          ae_App_Data.set("Name", key)
+          ae_App_Data.set("Value", v)
+      # Others are only allowed to appear once
+      else:
+        ae_App_Data = etree.SubElement(parent_Metadata, "App_Data")
+        ae_App_Data.set("App", self.D_ams["package"]["Product"])
+        ae_App_Data.set("Name", key)
+        ae_App_Data.set("Value", value)
+  
   def write_xml(self, rewrite=False):
     # Over-write the given XML values with the ones determined by scanning the
     # video if needed
     if rewrite:
       self.check_files()
-    # Package asset
+    
+    # Root and doctype
     doctype = '<!DOCTYPE ADI SYSTEM "ADI.DTD">'
     ADI = etree.Element("ADI")
-    package_Metadata = etree.SubElement(ADI, "Metadata")
     
-    # Package AMS section
+    # Package asset
+    package_Metadata = etree.SubElement(ADI, "Metadata")
     package_AMS = etree.SubElement(package_Metadata, "AMS")
     for key, value in sorted(self.D_ams["package"].items(), key=lambda x: x[0]):
       package_AMS.set(key, value)
-    
-    # Package App_Data section
-    for key, value in sorted(self.D_app["package"].items(), key=lambda x: x[0]):
-      # Some of the App_Data tags can be repeated
-      if key in self._multiples:
-        for v in value:
-          package_App_Data = etree.SubElement(package_Metadata, "App_Data")
-          package_App_Data.set("App", self.D_ams["package"]["Product"])
-          package_App_Data.set("Name", key)
-          package_App_Data.set("Value", v)
-      # Others are only allowed to appear once
-      else:
-        package_App_Data = etree.SubElement(package_Metadata, "App_Data")
-        package_App_Data.set("App", self.D_ams["package"]["Product"])
-        package_App_Data.set("Name", key)
-        package_App_Data.set("Value", value)
-    
+    self._write_App_Data("package", package_Metadata)
+  
     # Title asset
     title_Asset = etree.SubElement(ADI, "Asset")
     title_Metadata = etree.SubElement(title_Asset, "Metadata")
-    
-    # Title AMS section
     title_AMS = etree.SubElement(title_Metadata, "AMS")
     for key, value in sorted(self.D_ams["title"].items(), key=lambda x: x[0]):
       title_AMS.set(key, value)
-    
-    # Title App_Data section
-    for key, value in sorted(self.D_app["title"].items(), key=lambda x: x[0]):
-      # Some of the App_Data tags can be repeated
-      if key in self._multiples:
-        for v in value:
-          title_App_Data = etree.SubElement(title_Metadata, "App_Data")
-          title_App_Data.set("App", self.D_ams["package"]["Product"])
-          title_App_Data.set("Name", key)
-          title_App_Data.set("Value", v)
-      # Others are only allowed to appear once
-      else:
-        title_App_Data = etree.SubElement(title_Metadata, "App_Data")
-        title_App_Data.set("App", self.D_ams["package"]["Product"])
-        title_App_Data.set("Name", key)
-        title_App_Data.set("Value", value)
+    self._write_App_Data("title", title_Metadata)
     
     # Asset elements
     for ae_type in ("movie", "preview", "poster"):
@@ -151,31 +139,13 @@ class VodPackage(object):
       ae_AMS = etree.SubElement(ae_Metadata, "AMS")
       for key, value in sorted(self.D_ams[ae_type].items(), key=lambda x: x[0]):
         ae_AMS.set(key, value)
-      # App_Data section
-      for key, value in sorted(self.D_app[ae_type].items(), key=lambda x: x[0]):
-        # Configuration controls whether certain values get skipped
-        if key in param_skip:
-          continue
-        # Some of the App_Data tags can be repeated
-        if key in self._multiples:
-          for v in value:
-            ae_App_Data = etree.SubElement(ae_Metadata, "App_Data")
-            ae_App_Data.set("App", self.D_ams["package"]["Product"])
-            ae_App_Data.set("Name", key)
-            ae_App_Data.set("Value", v)
-        # Others are only allowed to appear once
-        else:
-          ae_App_Data = etree.SubElement(ae_Metadata, "App_Data")
-          ae_App_Data.set("App", self.D_ams["package"]["Product"])
-          ae_App_Data.set("Name", key)
-          ae_App_Data.set("Value", value)
-      # Movie Content section
+      self._write_App_Data(ae_type, ae_Metadata)
       ae_Content = etree.SubElement(ae_Asset, "Content")
       ae_Content.set("Value", self.D_content[ae_type])
 
     return etree.tostring(ADI, xml_declaration=True, doctype=doctype,
                           encoding='utf-8', pretty_print=True)
-
+  
   def check_files(self):
     for ae_type, ae_name in self.D_content.items():
       # Check to make sure the referenced files exist in the same directory as
