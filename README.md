@@ -38,7 +38,7 @@ Execute the script with the Python interpreter, using the `-m` switch
  (e.g. `C:\Python33\python.exe -m vod_metadata`):
 
 ```
-C:\Users\Bo\Videos>C:\Python33\python.exe -m vod_metadata
+C:\Videos>C:\Python33\python.exe -m vod_metadata
 Processing 11 Pink.mpg...
 Processing 12 Banker.mpg...
 Processing 13 Game.mpg...
@@ -48,7 +48,7 @@ After it runs (it can take a bit for the checksums to be calculated) you should
  have minimal valid metadata files for the videos in the directory:
 
 ```
-C:\Users\Bo\Videos>dir /b
+C:\Videos>dir /b
 11 Pink.mpg
 11 Pink_1442.xml
 12 Banker.mpg
@@ -60,24 +60,21 @@ C:\Users\Bo\Videos>dir /b
 ## Using the library
 You can use the module to edit already-existing metadata files.
 
-First, import the module and switch to the directory where your video, metadata,
- and poster files are located:
+First, import the module:
 
 ```python
 >>> from vod_metadata import VodPackage
->>> import os
->>> os.chdir("C:/Users/Bo/Videos")
 ```
 
 Next, read in an existing metadata file:
 
 ```python
->>> vod_package = VodPackage("The Hounds of Baskerville.xml")
+>>> vod_package = VodPackage("C:/Videos/The Hounds of Baskerville.xml")
 ```
 
 You can now read and edit the metadata through Python dictionaries
  (`instance.D_ams`, `instance.D_app`, `instance.D_content`).
- Maybe you need to know the `Provider_ID` and `Asset_ID` are for the title
+ Maybe you need to know the `Provider_ID` and `Asset_ID` for the title
  asset?
 
 ```python
@@ -87,7 +84,7 @@ You can now read and edit the metadata through Python dictionaries
 'MSOT2014020814473655'
 ```
 
-Do you need to determine whether an asset package contains a poster? Or do you 
+Do you need to determine whether the asset package contains a poster? Or do you 
 need to remove it?
 
 ```python
@@ -144,15 +141,16 @@ argument. These attributes are exposed:
  See the CableLabs specification for more information. The sub-dictionaries 
  include:
   * `instance.D_ams["package"]`, `instance.D_ams["title"]`, and
- `instance.D_ams["movie"]` are required.
-  * `instance.D_ams["preview"]` and `instance.D_ams["poster"]` are optional.
+ `instance.D_ams["movie"]`. These are required.
+  * `instance.D_ams["preview"]` and `instance.D_ams["poster"]`. These are optional.
 * `instance.D_app` - A dictionary of dictionaries to hold the "App_Data"
- attributes. These describe the assets identified by the AMS sections.
+ attributes. These describe the assets identified by the AMS sections. As with the AMS
+ data, these sub-dictionaries are included:
   * `instance.D_app["package"]`, `instance.D_app["title"]`, and
- `instance.D_app["movie"]` are required.
-  * `instance.D_app["preview"]` and `instance.D_app["poster"]` are optional.
+ `instance.D_app["movie"]`. These are required.
+  * `instance.D_app["preview"]` and `instance.D_app["poster"]`. These are optional.
 * `self.has_preview` - `True` if there is a preview element, `False` otherwise.
-* `self.has_poster` - `True` if there is a preview element, `False` otherwise.
+* `self.has_poster` - `True` if there is a poster element, `False` otherwise.
 * `self.is_update` - `True` if the AMS data for the package indicates that the
  `Version_Major`.`Version_Minor` is something other than `1.0`.
 * `self.is_delete` - `True` if the AMS data for the package has
