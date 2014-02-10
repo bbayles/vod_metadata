@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE ADI SYSTEM "ADI.DTD">
+<ADI>
+  <Metadata>
+    <AMS Provider="001"
+         Product="PRD"
+         Asset_Name="Metadata test (package)"
+         Version_Major="1"
+         Version_Minor="0"
+         Description="Metadata test (package asset)"
+         Creation_Date="2003-01-02"
+         Provider_ID="example.com"
+         Asset_ID="TSTP2003010204050001"
+         Asset_Class="package"/>
+    <App_Data App="MOD" Name="Metadata_Spec_Version" Value="CableLabsVOD1.1"/>
+  </Metadata>
+  <Asset>
+    <Metadata>
+      <AMS Provider="001"
+           Product="PRD"
+           Asset_Name="Metadata test (title)"
+           Version_Major="1"
+           Version_Minor="0"
+           Description="Metadata test (title asset)"
+           Creation_Date="2003-01-02"
+           Provider_ID="example.com"
+           Asset_ID="TSTT2003010204050001"
+           Asset_Class="title"/>
+      <App_Data App="MOD" Name="Type" Value="title"/>
+      <App_Data App="MOD" Name="Title_Brief" Value="Test Title_Brief"/>
+      <App_Data App="MOD" Name="Title" Value="Test Title"/>
+      <App_Data App="MOD" Name="Summary_Short" Value="Test Summary_Short"/>
+      <App_Data App="MOD" Name="Rating" Value="NR"/>
+      <App_Data App="MOD" Name="Closed_Captioning" Value="N"/>
+      <App_Data App="MOD" Name="Run_Time" Value="01:02:03"/>
+      <App_Data App="MOD" Name="Display_Run_Time" Value="01:02"/>
+      <App_Data App="MOD" Name="Year" Value="2003"/>
+      <App_Data App="MOD" Name="Category" Value="Test Category"/>
+      <App_Data App="MOD" Name="Category" Value="Test Category/Second Level"/>
+      <App_Data App="MOD" Name="Genre" Value="Other"/>
+      <App_Data App="MOD" Name="Show_Type" Value="Other"/>
+      <App_Data App="MOD" Name="Billing_ID" Value="0241B"/>
+      <App_Data App="MOD" Name="Licensing_Window_Start" Value="2003-01-02"/>
+      <App_Data App="MOD" Name="Licensing_Window_End" Value="2023-01-02T23:59:59"/>
+      <App_Data App="MOD" Name="Preview_Period" Value="241"/>
+      <App_Data App="MOD" Name="Provider_QA_Contact" Value="username@example.com"/> 
+    </Metadata>
+    <Asset>
+      <Metadata>
+        <AMS Provider="001"
+             Product="PRD"
+             Asset_Name="Metadata test (movie)"
+             Version_Major="1"
+             Version_Minor="0"
+             Description="Metadata test (movie asset)"
+             Creation_Date="2003-01-02"
+             Provider_ID="example.com"
+             Asset_ID="TSTM2003010204050001"
+             Asset_Class="movie"/>
+        <App_Data App="MOD" Name="Type" Value="movie"/>
+        <App_Data App="MOD" Name="Audio_Type" Value="Stereo"/>
+        <App_Data App="MOD" Name="Resolution" Value="480i"/>
+        <App_Data App="MOD" Name="Frame_Rate" Value="30"/>
+        <App_Data App="MOD" Name="Codec" Value="MPEG2"/>
+        <App_Data App="MOD" Name="Bit_Rate" Value="3750"/>
+        <App_Data App="MOD" Name="Content_FileSize" Value="252706816"/>
+        <App_Data App="MOD" Name="Content_CheckSum" Value="2680090e51970e67b412af35201b9053"/>
+      </Metadata>
+      <Content Value="movie_file.mpg"/>
+    </Asset>
+    <Asset>
+      <Metadata>
+        <AMS Provider="001"
+             Product="PRD"
+             Asset_Name="Metadata test (preview)"
+             Version_Major="1"
+             Version_Minor="0"
+             Description="Metadata test (preview asset)"
+             Creation_Date="2003-01-02"
+             Provider_ID="example.com"
+             Asset_ID="TSTR2003010204050001"
+             Asset_Class="preview"/>
+        <App_Data App="MOD" Name="Rating" Value="NR"/>
+        <App_Data App="MOD" Name="Run_Time" Value="00:04:56"/>
+        <App_Data App="MOD" Name="Type" Value="preview"/>
+        <App_Data App="MOD" Name="Audio_Type" Value="Stereo"/>
+        <App_Data App="MOD" Name="Resolution" Value="480i"/>
+        <App_Data App="MOD" Name="Frame_Rate" Value="30"/>
+        <App_Data App="MOD" Name="Codec" Value="MPEG2"/>
+        <App_Data App="MOD" Name="Bit_Rate" Value="3750"/>
+        <App_Data App="MOD" Name="Content_FileSize" Value="252706816"/>
+        <App_Data App="MOD" Name="Content_CheckSum" Value="e0b1971fbe52920806190207a3036455"/>
+      </Metadata>
+      <Content Value="preview_file.mpg"/>
+    </Asset>
+    <Asset>
+      <Metadata>
+        <AMS Provider="001"
+             Product="PRD"
+             Asset_Name="Metadata test (poster)"
+             Version_Major="1"
+             Version_Minor="0"
+             Description="Metadata test (poster asset)"
+             Creation_Date="2003-01-02"
+             Provider_ID="example.com"
+             Asset_ID="TSTI2003010204050001"
+             Asset_Class="poster"/>
+        <App_Data App="MOD" Name="Type" Value="poster"/>
+        <App_Data App="MOD" Name="Image_Aspect_Ratio" Value="320x240"/>
+        <App_Data App="MOD" Name="Content_FileSize" Value="252706816"/>
+        <App_Data App="MOD" Name="Content_CheckSum" Value="410b51e0f900502809a22691537b67e3"/>
+      </Metadata>
+      <Content Value="poster_file.bmp"/>
+    </Asset>
+  </Asset>
+</ADI>
