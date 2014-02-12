@@ -114,6 +114,13 @@ You can update it to describe the correct one:
 '44704888'
 ```
 
+Have and XML file for an asset you need to delete?
+```python
+>>> vod_package.make_delete()
+>>> vod_package.D_ams["package"]["Verb"]
+'DELETE'
+```
+
 Save your edited file like so:
 
 ```python
@@ -152,7 +159,7 @@ argument. These attributes are exposed:
 * `self.has_preview` - `True` if there is a preview element, `False` otherwise.
 * `self.has_poster` - `True` if there is a poster element, `False` otherwise.
 * `self.is_update` - `True` if the AMS data for the package indicates that the
- `Version_Major`.`Version_Minor` is something other than `1.0`.
+ `Version_Major` is something other than `1`, `False` otherwise.
 * `self.is_delete` - `True` if the AMS data for the package has
  `"Verb" = "DELETE"`, `False` otherwise.
 
@@ -168,6 +175,14 @@ The `VodPackage` class exposes these methods:
  attributes (if applicable) for each of the asset elements: `Content_FileSize`,
  `Content_CheckSum`, `Run_Time`, `Display_Run_Time`, `Codec`, `Audio_Type`,
  `Resolution`, `Frame Rate`, and `Bit_Rate`.
+* `VodPackage.remove_preview(self)` - deletes the preview element from the asset
+ package, if there is one to delete.
+* `VodPackage.remove_poster(self)` - deletes the poster element from the asset
+ package, if there is one to delete.
+* `VodPackage.make_update(self)` - increments all the `Version_Major` values and
+ marks the package as a metadata update.
+* `VodPackage.make_delete(self)` - sets the `Verb` value to `DELETE` amd marks
+ the package as a metadata update.
 * `VodPackage.list_files(self)` - returns a tuple with the PID/PAID pairs for
  the package asset; title asset; and asset elements, as well as the content
  files for the asset elements. I might remove this method in the future.

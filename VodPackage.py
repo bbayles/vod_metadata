@@ -62,10 +62,7 @@ class VodPackage(object):
     self.has_preview = "preview" in self.D_content
     self.has_poster = "poster" in self.D_content
     
-    package_version = (self.D_ams["package"]["Version_Major"],
-                       self.D_ams["package"]["Version_Minor"])
-    self.is_update = package_version == ("1", "0")
-    
+    self.is_update = self.D_ams["package"]["Version_Major"] != "1"
     self.is_delete = package_AMS.get("Verb", '') == "DELETE"
   
   def _parse_App_Data(self, ae_Metadata):
@@ -180,6 +177,19 @@ class VodPackage(object):
   def remove_poster(self):
     self._remove_ae("poster")
     self.has_poster = False
+  
+  def make_update(self):
+    for ae_type in self.D_ams:
+      new_version = int(D_ams[ae_type]["Version_Major"]) + 1
+      D_ams[ae_type]["Version_Major"] = str(new_version)
+    
+    self.is_update = True
+
+  def make_delete(self):
+    for ae_type in self.D_ams:
+      D_ams[ae_type]["Verb"] = "DELETE"
+    
+    self.is_delete = True
   
   def _scan_video(self, ae_type, ae_path):
     mpeg_info = check_video(ae_path)
