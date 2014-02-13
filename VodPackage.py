@@ -137,8 +137,13 @@ class VodPackage(object):
       for key, value in sorted(self.D_ams[ae_type].items(), key=lambda x: x[0]):
         ae_AMS.set(key, value)
       self._write_App_Data(ae_type, ae_Metadata)
-      ae_Content = etree.SubElement(ae_Asset, "Content")
-      ae_Content.set("Value", self.D_content[ae_type])
+      # Updates to assets that have already been delivered should not have
+      # Content tags, per section 8.1 of the ADI spec. However, updates that add
+      # new asset elements should have content. This library only supports the
+      # former operation, however.
+      if not self.is_update:
+        ae_Content = etree.SubElement(ae_Asset, "Content")
+        ae_Content.set("Value", self.D_content[ae_type])
 
     return etree.tostring(ADI, xml_declaration=True, doctype=doctype,
                           encoding='utf-8', pretty_print=True)

@@ -1,6 +1,13 @@
 ## Introduction
-This project contains a library for manipulating and generating metadata files
-that conform to the [CableLabs VOD Metada 1.1 specification](http://cablelabs.com/specification/cablelabs-video-on-demand-content-specification-version-1-1/).
+This project contains a library and tools for manipulating and generating
+metadata files that conform to the CableLabs VOD Metada 1.1 specification, which
+is described in these two documents:
+* [Content Specification](http://cablelabs.com/specification/cablelabs-video-on-demand-content-specification-version-1-1/)
+* [Asset Distribution Interface Specification](http://www.cablelabs.com/specification/cablelabs-asset-distribution-interface-specification-version-1-1-2/)
+
+If you're looking at this project you probably have some familiarity with that
+specification. The goal of this project is to prevent its users from having to
+be _too_ familiar with its endearing quirks. 
 
 ## Using the metadata generator
 This project contains a script that will generate valid VOD metadata for all the
@@ -130,6 +137,18 @@ Save your edited file like so:
 ```
 
 ## Library reference
+
+__Note__: This library makes some assumptions about VOD metadata that you might
+need to keep in mind:
+* This library assumes that asset packages always have one `movie` asset element,
+zero or more `preview` asset elements, and zero or more `poster` asset elements.
+No other types of asset element are supported (even though the spec allows for
+others). I may add support for other types in the future.
+* This library assumes that if you're generating metadata updates to previously-
+delivered packages that you don't want to change the structure of the package.
+That is, you don't want to add or remove an asset element (like a `preview` or
+`poster`).
+
 The `VodPackage` class is defined in the `vod_metadata.VodPackage` sub-module.
  Import it with:
 
@@ -180,7 +199,9 @@ The `VodPackage` class exposes these methods:
 * `VodPackage.remove_poster(self)` - deletes the poster element from the asset
  package, if there is one to delete.
 * `VodPackage.make_update(self)` - increments all the `Version_Major` values and
- marks the package as a metadata update.
+ marks the package as a metadata update. Content tags will not be written when
+ using `instance.write_xml()`. See the note above about the assumptions the
+ library makes about updates for previously-delivered packages!
 * `VodPackage.make_delete(self)` - sets the `Verb` value to `DELETE` amd marks
  the package as a metadata update.
 * `VodPackage.list_files(self)` - returns a tuple with the PID/PAID pairs for
