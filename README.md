@@ -208,6 +208,17 @@ The `VodPackage` class exposes these methods:
  the package asset; title asset; and asset elements, as well as the content
  files for the asset elements. I might remove this method in the future.
 
+The `vod_metadata` module exposes these exceptions:
+* `MissingElement` - raised if you try to write an asset package without a `movie`
+ element, if you use MediaInfo to scan an element that is missing, or if you
+ try to remove an element that is not present.
+* `InvalidMpeg` - raised if you scan a video file and MediaInfo returns something
+ not recognized as valid by the spec. See section 5.3.1 of MD-SP-VOD-CONTENT1.1 .
+ * `MediaInfoError` - raised if you scan a video or picture file and MediaInfo
+  doesn't return all the necessary information.
+* `ConfigurationError` - raised if the values specified in the configuration
+ file, `template_values.ini` are not valid.
+
 ## Contact the author
 I wrote this tool to save myself time hand-editing VOD metadata files.
 I've tested importing the generated metadata into SeaChange Axiom and Arris CMM
