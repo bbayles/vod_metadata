@@ -57,10 +57,8 @@ class VodPackage(object):
       self.D_app[ae_type] = self._parse_App_Data(ae_Metadata)
       self.D_content[ae_type] = ae_Asset.find("Content").attrib["Value"]
     
-    if "movie" not in self.D_content:
-      raise MissingElement("Package does not specify a movie element")
-    self.has_preview = "preview" in self.D_content
-    self.has_poster = "poster" in self.D_content
+    self.has_preview = "preview" in self.D_ams
+    self.has_poster = "poster" in self.D_ams
     
     self.is_update = self.D_ams["package"]["Version_Major"] != "1"
     self.is_delete = package_AMS.get("Verb", '') == "DELETE"
@@ -102,6 +100,10 @@ class VodPackage(object):
         ae_App_Data.set("Value", value)
   
   def write_xml(self, rewrite=False):
+    # A movie element is required by this library
+    if "movie" not in self.D_ams:
+      raise MissingElement("Package does not specify a movie element")
+        
     # Over-write the given XML values with the ones determined by scanning the
     # video if needed
     if rewrite:
