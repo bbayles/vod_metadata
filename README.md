@@ -214,7 +214,7 @@ The `vod_metadata` module exposes these exceptions:
  try to remove an element that is not present.
 * `InvalidMpeg` - raised if you scan a video file and MediaInfo returns something
  not recognized as valid by the spec. See section 5.3.1 of MD-SP-VOD-CONTENT1.1 .
- * `MediaInfoError` - raised if you scan a video or picture file and MediaInfo
+* `MediaInfoError` - raised if you scan a video or picture file and MediaInfo
   doesn't return all the necessary information.
 * `ConfigurationError` - raised if the values specified in the configuration
  file, `template_values.ini` are not valid.
