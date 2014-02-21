@@ -55,7 +55,8 @@ class VodPackage(object):
       ae_type = ae_AMS.attrib["Asset_Class"]
       self.D_ams[ae_type] = ae_AMS.attrib
       self.D_app[ae_type] = self._parse_App_Data(ae_Metadata)
-      self.D_content[ae_type] = ae_Asset.find("Content").attrib["Value"]
+      if ae_Asset.find("Content"):
+        self.D_content[ae_type] = ae_Asset.find("Content").attrib["Value"]
     
     self.has_preview = "preview" in self.D_ams
     self.has_poster = "poster" in self.D_ams
@@ -187,14 +188,14 @@ class VodPackage(object):
   
   def make_update(self):
     for ae_type in self.D_ams:
-      new_version = int(D_ams[ae_type]["Version_Major"]) + 1
-      D_ams[ae_type]["Version_Major"] = str(new_version)
+      new_version = int(self.D_ams[ae_type]["Version_Major"]) + 1
+      self.D_ams[ae_type]["Version_Major"] = str(new_version)
     
     self.is_update = True
 
   def make_delete(self):
     for ae_type in self.D_ams:
-      D_ams[ae_type]["Verb"] = "DELETE"
+      self.D_ams[ae_type]["Verb"] = "DELETE"
     
     self.is_delete = True
   
@@ -253,9 +254,9 @@ class VodPackage(object):
     package_paid = self.D_ams["package"]["Asset_ID"]
     title_pid = self.D_ams["title"]["Provider_ID"]
     title_paid = self.D_ams["title"]["Asset_ID"]
-    movie_pid = self.D_ams["movie"]["Provider_ID"]
-    movie_paid = self.D_ams["movie"]["Asset_ID"]
-    movie_file = self.D_content["movie"]
+    movie_pid = self.D_ams["movie"]["Provider_ID"] if "movie" in self.D_ams else ''
+    movie_paid = self.D_ams["movie"]["Asset_ID"] if "movie" in self.D_ams else ''
+    movie_file = self.D_content["movie"] if "movie" in self.D_content else ''
     preview_pid = self.D_ams["preview"]["Provider_ID"] if self.has_preview else ''
     preview_paid = self.D_ams["preview"]["Asset_ID"] if self.has_preview else ''
     preview_file = self.D_content["preview"] if self.has_preview else ''
