@@ -41,7 +41,7 @@ def check_video(file_name):
   D = media_info(file_name)
   # Check that the file analyzed was a valid movie
   if ("General" not in D
-      or "Audio" not in D
+      or "Count of audio streams" not in D["General"]
       or "Video" not in D
       or "File size" not in D["General"]
       or "Bit rate" not in D["Video"]
