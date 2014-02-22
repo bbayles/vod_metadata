@@ -55,7 +55,7 @@ class VodPackage(object):
       ae_type = ae_AMS.attrib["Asset_Class"]
       self.D_ams[ae_type] = ae_AMS.attrib
       self.D_app[ae_type] = self._parse_App_Data(ae_Metadata)
-      if ae_Asset.find("Content"):
+      if ae_Asset.find("Content") is not None:
         self.D_content[ae_type] = ae_Asset.find("Content").attrib["Value"]
     
     self.has_preview = "preview" in self.D_ams
@@ -150,6 +150,11 @@ class VodPackage(object):
 
     return etree.tostring(ADI, xml_declaration=True, doctype=doctype,
                           encoding='utf-8', pretty_print=True)
+  
+  def overwrite_xml(self, rewrite=False):
+    s = self.write_xml(rewrite)
+    with open(self.xml_path, mode="wb") as outfile:
+      outfile.write(s)
   
   def check_files(self):
     for ae_type, ae_name in self.D_content.items():
