@@ -175,36 +175,38 @@ argument. These attributes are exposed:
   * `instance.D_app["package"]`, `instance.D_app["title"]`, and
  `instance.D_app["movie"]`. These are required.
   * `instance.D_app["preview"]` and `instance.D_app["poster"]`. These are optional.
-* `self.has_preview` - `True` if there is a preview element, `False` otherwise.
-* `self.has_poster` - `True` if there is a poster element, `False` otherwise.
-* `self.is_update` - `True` if the AMS data for the package indicates that the
+* `instance.has_preview` - `True` if there is a preview element, `False` otherwise.
+* `instance.has_poster` - `True` if there is a poster element, `False` otherwise.
+* `instance.is_update` - `True` if the AMS data for the package indicates that the
  `Version_Major` is something other than `1`, `False` otherwise.
-* `self.is_delete` - `True` if the AMS data for the package has
+* `instance.is_delete` - `True` if the AMS data for the package has
  `"Verb" = "DELETE"`, `False` otherwise.
 
 The `VodPackage` class exposes these methods:
-* `VodPackage.write_xml(self, rewrite=False)` - Creates a new XML file that
+* `VodPackage.write_xml(rewrite=False)` - Creates a new XML file that
  reflects any edits you've made to the metadata. Returns a `bytes` object that
  can be written to a file.
   * If `rewrite` is `False` then the content files specified by the `Content`
  tags won't be checked for existence or consistency with the supplied metadata.
   * If `rewrite` is True then the content files will be checked with
  `VodPackage.check_files()`.
-* `VodPackage.check_files(self)` - Calls MediaInfo and sets the following
+* `VodPackage.overwrite_xml(rewrite=False)` - Calls `VodPackage.write_xml`,
+ optionally with `rewrite`. Saves the result over the original XML file.
+* `VodPackage.check_files()` - Calls MediaInfo and sets the following
  attributes (if applicable) for each of the asset elements: `Content_FileSize`,
  `Content_CheckSum`, `Run_Time`, `Display_Run_Time`, `Codec`, `Audio_Type`,
  `Resolution`, `Frame Rate`, and `Bit_Rate`.
-* `VodPackage.remove_preview(self)` - deletes the preview element from the asset
+* `VodPackage.remove_preview()` - deletes the preview element from the asset
  package, if there is one to delete.
-* `VodPackage.remove_poster(self)` - deletes the poster element from the asset
+* `VodPackage.remove_poster()` - deletes the poster element from the asset
  package, if there is one to delete.
-* `VodPackage.make_update(self)` - increments all the `Version_Major` values and
+* `VodPackage.make_update()` - increments all the `Version_Major` values and
  marks the package as a metadata update. Content tags will not be written when
  using `instance.write_xml()`. See the note above about the assumptions the
  library makes about updates for previously-delivered packages!
-* `VodPackage.make_delete(self)` - sets the `Verb` value to `DELETE` amd marks
+* `VodPackage.make_delete()` - sets the `Verb` value to `DELETE` amd marks
  the package as a metadata update.
-* `VodPackage.list_files(self)` - returns a tuple with the PID/PAID pairs for
+* `VodPackage.list_files()` - returns a tuple with the PID/PAID pairs for
  the package asset; title asset; and asset elements, as well as the content
  files for the asset elements. I might remove this method in the future.
 
