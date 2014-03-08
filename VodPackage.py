@@ -140,11 +140,8 @@ class VodPackage(object):
       for key, value in sorted(self.D_ams[ae_type].items(), key=lambda x: x[0]):
         ae_AMS.set(key, value)
       self._write_App_Data(ae_type, ae_Metadata)
-      # Updates to assets that have already been delivered should not have
-      # Content tags, per section 8.1 of the ADI spec. However, updates that add
-      # new asset elements should have content. This library only supports the
-      # former operation, however.
-      if not self.is_update:
+      # Content element, if it is present
+      if ae_type in self.D_content:
         ae_Content = etree.SubElement(ae_Asset, "Content")
         ae_Content.set("Value", self.D_content[ae_type])
 
@@ -155,6 +152,17 @@ class VodPackage(object):
     s = self.write_xml(rewrite)
     with open(self.xml_path, mode="wb") as outfile:
       outfile.write(s)
+  
+  def files_present(self):
+    # Check the referenced content files for existence. If they are all present
+    # return True. Otherwise return False.    
+    for ae_type, ae_name in self.D_content.items():
+      ae_dir = os.path.split(self.xml_path)[0]
+      ae_path = os.path.join(ae_dir, ae_name)
+      if not os.path.isfile(ae_path):
+        return False
+    
+    return True
   
   def check_files(self):
     for ae_type, ae_name in self.D_content.items():
@@ -196,6 +204,9 @@ class VodPackage(object):
       new_version = int(self.D_ams[ae_type]["Version_Major"]) + 1
       self.D_ams[ae_type]["Version_Major"] = str(new_version)
     
+    # The Content element shouldn't be present for updates, per section 8.1
+    # of the ADI spec.  
+    self.D_content = {}
     self.is_update = True
 
   def make_delete(self):
