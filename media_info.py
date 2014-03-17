@@ -44,7 +44,7 @@ def check_video(file_name):
       or "Count of audio streams" not in D["General"]
       or "Video" not in D
       or "File size" not in D["General"]
-      or "Bit rate" not in D["Video"]
+      or "Overall bit rate" not in D["General"]
       or "Codec profile" not in D["Video"]
       or "Commercial name" not in D["Video"]
       or "Frame rate" not in D["Video"]
