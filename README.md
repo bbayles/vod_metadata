@@ -131,9 +131,12 @@ Have and XML file for an asset you need to delete?
 Save your edited file like so:
 
 ```python
+# Save a new version
 >>> s = vod_package.write_xml()
->>> with open("rewritten.xml", 'wb') as outfile:
+>>> with open("altered.xml", 'wb') as outfile:
 ...     outfile.write(s)
+# Overwrite the original file
+>>> vod_package.overwrite_xml()
 ```
 
 ## Library reference
