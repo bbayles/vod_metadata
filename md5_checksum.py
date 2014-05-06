@@ -4,7 +4,7 @@
 # See LICENSE for license
 import hashlib
 
-def md5_checksum(file_path, chunk_bytes=163840):
+def md5_checksum(file_path, chunk_bytes=4194304):
   """Return the MD5 checksum (hex digest) of the file"""
   
   with open(file_path, "rb") as infile:
