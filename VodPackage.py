@@ -175,13 +175,11 @@ class VodPackage(object):
       # Set the file size and checksum values
       self.D_app[ae_type]["Content_FileSize"] = str(os.path.getsize(ae_path))
       self.D_app[ae_type]["Content_CheckSum"] = md5_checksum(ae_path)
-    # For the movie element use MediaInfo to scan the video to determine
-    # its bitrate, geometry, etc.
-    self._scan_video("movie", ae_path)
-    if self.has_preview:
-      self._scan_video("preview", ae_path)
-    if self.has_poster:
-      self._scan_image(ae_path)
+      # Use MediaInfo to determine the correct information about the content files
+      if ae_type == "poster":
+        self._scan_image(ae_path)
+      else:
+        self._scan_video(ae_type, ae_path)
 
   def _remove_ae(self, ae_type):
     try:
