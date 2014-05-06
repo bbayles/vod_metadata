@@ -5,8 +5,7 @@
 import os.path
 from vod_metadata.parse_config import *
 
-_script_path = os.path.abspath(__file__)
-_script_dir = os.path.split(_script_path)[0]
+_script_dir = os.path.dirname(__file__)
 config_path = os.path.join(_script_dir, "template_values.ini")
 template_path = os.path.join(_script_dir, "metadata_template.xml")
 
