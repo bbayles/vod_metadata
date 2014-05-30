@@ -3,10 +3,9 @@
 # Copyright 2014 Bo Bayles (bbayles@gmail.com)
 # See README for more information
 # See LICENSE for license
-
-from lxml import etree
-from vod_metadata import check_video, check_picture, md5_checksum, param_skip
 import os.path
+from vod_metadata import check_video, check_picture, md5_checksum, param_skip
+from vod_metadata.xml_helper import etree, tobytes
 
 class MissingElement(Exception):
   pass
@@ -145,8 +144,7 @@ class VodPackage(object):
         ae_Content = etree.SubElement(ae_Asset, "Content")
         ae_Content.set("Value", self.D_content[ae_type])
 
-    return etree.tostring(ADI, xml_declaration=True, doctype=doctype,
-                          encoding='utf-8', pretty_print=True)
+    return tobytes(ADI)
   
   def overwrite_xml(self, rewrite=False):
     s = self.write_xml(rewrite)
