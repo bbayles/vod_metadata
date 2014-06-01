@@ -4,7 +4,10 @@
 # Copyright 2014 Bo Bayles (bbayles@gmail.com)
 # See README for more information
 # See LICENSE for license
+from __future__ import print_function
+from __future__ import with_statement
 from vod_metadata import *
+from io import open
 
 if __name__ == "__main__":
   for file_path in os.listdir():
@@ -17,5 +20,5 @@ if __name__ == "__main__":
     vod_package = generate_metadata(file_path)
     # Write the result
     s = vod_package.write_xml(rewrite=True)
-    with open(vod_package.xml_path, 'wb') as outfile:
+    with open(vod_package.xml_path, "wb") as outfile:
       _ = outfile.write(s)

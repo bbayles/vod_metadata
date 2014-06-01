@@ -3,6 +3,9 @@
 # Copyright 2014 Bo Bayles (bbayles@gmail.com)
 # See README for more information
 # See LICENSE for license
+from __future__ import division
+from __future__ import with_statement
+from io import open
 import os.path
 from vod_metadata import check_video, check_picture, md5_checksum, param_skip
 from vod_metadata.xml_helper import etree, tobytes
