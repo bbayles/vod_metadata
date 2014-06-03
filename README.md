@@ -15,21 +15,24 @@ video files in a directory. This guide (written with Windows users who might
 not be familiar with Python) shows how get that script up and running.
 
 First, get the pre-requisites:
-* Make sure you've got a recent version of [Python 3](http://python.org)
- installed. Versions 3.2 and up should work.
-* Make sure you've got the [lxml](http://lxml.de) library installed. If you're
+* Make sure you've got a recent version of [Python](http://python.org)
+ installed. I develop for version 3.4, but will try to support 2.7
+* Download the [MediaInfo](http://mediaarea.net/en/MediaInfo) CLI archive and
+ extract it somewhere (e.g. to `C:\Program Files\MediaInfo`)
+* (Optional) Make sure you've got the [lxml](http://lxml.de) library installed. If you're
  on Windows you can use the installer from
  [Christoph Gohlke's Python Extension Packages](http://www.lfd.uci.edu/~gohlke/pythonlibs/#lxml)
-* Download the [MediaInfo](http://mediaarea.net/en/MediaInfo) CLI archive and
- extract it somewhere (e.g. to `C:\Program Files\MediaInfo`).
 
 Then, get the module ready:
 * Download this module's
- [source archive from Github](http://github.com/bbayles/vod_metadata/zipball/master/).
- Then extract it to Python's `site-packages` directory (you should wind up with
- the files in e.g. `C:\Python33\lib\site-packages\vod_metadata`).
-* Edit `template_values.ini` and set the path to the MediaInfo CLI executable
- and any custom parameters.
+ [source archive from Github](http://github.com/bbayles/vod_metadata/zipball/master/)
+ and extract it somewhere (e.g. to `C:\temp\vod_metadata-master`)
+* Edit `vod_metadata/template_values.ini` and set the path to the MediaInfo CLI executable
+ and any custom parameters
+* Run `setup.py install` to install the module
+    * Open a command prompt to the directory where you extracted the source archive
+    * Run the `setup.py` script (e.g. `py setup.py install` or `C:\Python34\python.exe setup.py install`)
+
 
 Once you're set up, open up a command prompt and switch to a directory with
  video files (e.g. `C:\videos`):
@@ -42,10 +45,10 @@ C:\Videos>dir /b
 ```
 
 Execute the script with the Python interpreter, using the `-m` switch
- (e.g. `C:\Python33\python.exe -m vod_metadata`):
+ (e.g. `C:\Python34\python.exe -m vod_metadata`):
 
 ```
-C:\Videos>C:\Python33\python.exe -m vod_metadata
+C:\Videos>C:\Python34\python.exe -m vod_metadata
 Processing 11 Pink.mpg...
 Processing 12 Banker.mpg...
 Processing 13 Game.mpg...
