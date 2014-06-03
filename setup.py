@@ -4,6 +4,7 @@ import sys
 
 long_description = """This project contains a library and tools for manipulating and generating metadata files that conform to the CableLabs VOD Metada 1.1 specification"""
 
+# Install requires configparser for Python 2.x
 if sys.version_info[0] < 3:
   install_requires=['configparser'],
 else:
@@ -35,5 +36,7 @@ setup(name='vod_metadata',
       packages=find_packages(exclude=[]),
       
       install_requires=install_requires,
-      
-      package_data={'vod_metadata': ["*.ini", "*.mp4", "*.xml"],})
+      # lxml is not required, but is recommended
+      package_data = {'vod_metadata': ["*.ini", "*.mp4", "*.xml"]},
+      extras_require = {'Speed':  ["lxml"]}
+)
