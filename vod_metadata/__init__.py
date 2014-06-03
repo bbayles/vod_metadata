@@ -10,7 +10,6 @@ config_path = os.path.join(_script_dir, "template_values.ini")
 template_path = os.path.join(_script_dir, "metadata_template.xml")
 
 (extensions,
- MediaInfo_path,
  product,
  provider_id,
  prefix,
@@ -24,6 +23,13 @@ if not ecn_2009:
   param_skip.add("Resolution")
   param_skip.add("Frame_Rate")
   param_skip.add("Codec")
+
+# Find MediaInfo
+with open(os.path.join(_script_dir, "MediaInfo.pth"), mode='r') as _infile:
+  for MediaInfo_path in _infile:
+    MediaInfo_path = MediaInfo_path.strip()
+    if os.path.isfile(MediaInfo_path):
+      break
 
 from vod_metadata.md5_checksum import *
 from vod_metadata.media_info import *

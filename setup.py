@@ -1,14 +1,27 @@
+from __future__ import print_function
 from setuptools import setup, find_packages
-from os import path
+import os
 import sys
 
 long_description = """This project contains a library and tools for manipulating and generating metadata files that conform to the CableLabs VOD Metada 1.1 specification"""
 
+install_dir = os.path.abspath(os.path.dirname(__file__))
+
 # Install requires configparser for Python 2.x
-if sys.version_info[0] < 3:
-  install_requires=['configparser'],
-else:
-  install_requires=[]
+install_requires = ['configparser'] if (sys.version_info[0] < 3) else []
+
+# The path to MediaInfo should be supplied
+MediaInfo_path = None
+with open(os.path.join(install_dir, "MediaInfo.pth"), mode='r') as infile:
+  for file_path in infile:
+    file_path = file_path.strip()
+    if os.path.isfile(file_path):
+      MediaInfo_path = file_path
+      break
+
+if MediaInfo_path is not None:
+  with open(os.path.join(install_dir, "vod_metadata", "MediaInfo.pth"), mode='w') as outfile:
+    print(MediaInfo_path, file=outfile, end='')
 
 setup(name='vod_metadata',
       
@@ -37,6 +50,6 @@ setup(name='vod_metadata',
       
       install_requires=install_requires,
       # lxml is not required, but is recommended
-      package_data = {'vod_metadata': ["*.ini", "*.mp4", "*.xml"]},
+      package_data = {'vod_metadata': ["*.ini", "*.mp4", "*.pth", "*.xml"]},
       extras_require = {'Speed':  ["lxml"]}
 )

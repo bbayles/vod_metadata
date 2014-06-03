@@ -9,6 +9,7 @@ from vod_metadata import MediaInfo_path
 class MediaInfoError(Exception):
   pass
 
+
 def media_info(file_name):
   """Returns a dictionary of dictionaries with the output of
      MediaInfo -f file_name"""
@@ -62,6 +63,6 @@ def check_picture(file_name):
   if ("Image" not in D
       or "Width" not in D["Image"]
       or "Height" not in D["Image"]):
-    raise MediaInfoError("Could not determine all video paramters")
+    raise MediaInfoError("Could not determine all picture paramters")
   
   return D

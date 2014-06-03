@@ -11,9 +11,6 @@ def parse_config(config_path):
   config = configparser.ConfigParser()
   _ = config.read(config_path)
   
-  # MediaInfo_path specifies the path to the MediaInfo executable
-  MediaInfo_path = config["MediaInfo"]["MediaInfo_path"]
-  
   # extensions determines what files will be processed
   extensions = config["Extensions"].get("extensions", "mpg, ts, mp4")
   extensions = set(".{}".format(x.strip()) for x in extensions.split(','))
@@ -60,7 +57,6 @@ characters or fewer""")
   ecn_2009 = True if (ecn_2009 == "True") else False
   
   return (extensions,
-          MediaInfo_path,
           product,
           provider_id,
           prefix,
