@@ -6,9 +6,9 @@ from vod_metadata import *
 from io import BytesIO
 import unittest
 
-class compare_to_reference(unittest.TestCase):
+class VodMetadataTests(unittest.TestCase):
   def test_dictionaries(self):
-    vod_package = VodPackage(reference_path)
+    vod_package = VodPackage(reference_xml)
     # Package
     self.assertEqual(vod_package.D_ams["package"], ams_package)
     self.assertEqual(vod_package.D_app["package"], app_package)
@@ -24,20 +24,36 @@ class compare_to_reference(unittest.TestCase):
     # Poster
     self.assertEqual(vod_package.D_ams["poster"], ams_poster)
     self.assertEqual(vod_package.D_app["poster"], app_poster)
-
-class compare_roundtrip(unittest.TestCase):
+  
   def test_roundtrip(self):
-    ref_package = VodPackage(reference_path)
+    ref_package = VodPackage(reference_xml)
     file_out = BytesIO()
     _ = file_out.write(ref_package.write_xml())
     _ = file_out.seek(0)
     new_package = VodPackage(file_out)
     self.assertEqual(file_out.getvalue(), new_package.write_xml())
+  
+  def test_checksum(self):
+    test_value = md5_checksum(reference_mp4)
+    known_value = "f5f66bd6e6b2ed02153d6fa94787626c"
+    self.assertEqual(test_value, known_value)
+  
+  def test_MediaInfo_video(self):
+    D = call_MediaInfo(reference_mp4)
+    self.assertEqual(D["General"]["Count of audio streams"], '1')
+    self.assertEqual(D["General"]["File size"], '251404')
+    self.assertEqual(D["General"]["Overall bit rate"], '274758')
+    self.assertEqual(D["Video"]["Format profile"], 'High 4:4:4 Predictive@L3.0')
+    self.assertEqual(D["Video"]["Commercial name"], 'AVC')
+    self.assertEqual(D["Video"]["Frame rate"], '25.000')
+    self.assertEqual(D["Video"]["Height"], '480')
+    self.assertEqual(D["Video"]["Scan type"], 'Progressive')
 
 # Reference values
 script_path = os.path.abspath(__file__)
 script_dir = os.path.split(script_path)[0]
-reference_path = os.path.join(script_dir, "reference.xml")
+reference_xml = os.path.join(script_dir, "reference.xml")
+reference_mp4 = os.path.join(script_dir, "reference.mp4")
 
 ams_package = {'Asset_Class': 'package',
                'Asset_ID': 'TSTP2003010204050001',
