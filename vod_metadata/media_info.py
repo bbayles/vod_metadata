@@ -10,7 +10,7 @@ class MediaInfoError(Exception):
   pass
 
 
-def media_info(file_name):
+def call_MediaInfo(file_name):
   """Returns a dictionary of dictionaries with the output of
      MediaInfo -f file_name"""
   
@@ -39,7 +39,7 @@ def media_info(file_name):
 def check_video(file_name):
   """Scans the given file with MediaInfo and returns the video and audio codec
      information if all the required parameters were found."""
-  D = media_info(file_name)
+  D = call_MediaInfo(file_name)
   # Check that the file analyzed was a valid movie
   if ("General" not in D
       or "Count of audio streams" not in D["General"]
@@ -58,7 +58,7 @@ def check_video(file_name):
 def check_picture(file_name):
   """Scans the given file with MediaInfo and returns the picture
      information if all the required parameters were found."""
-  D = media_info(file_name)
+  D = call_MediaInfo(file_name)
   # Check that the file analyzed was a valid movie
   if ("Image" not in D
       or "Width" not in D["Image"]
