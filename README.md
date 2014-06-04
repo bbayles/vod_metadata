@@ -28,7 +28,8 @@ Then, get the module ready:
  [source archive from Github](http://github.com/bbayles/vod_metadata/zipball/master/)
  and extract it somewhere (e.g. to `C:\temp\vod_metadata-master`)
 * Edit `MediaInfo.pth` and make sure it contains the path to your MediaInfo CLI executable
- (e.g. `C:\Program Files\MediaInfo\MediaInfo.exe`)
+  (e.g. `C:\Program Files\MediaInfo\MediaInfo.exe`)
+* Edit `vod_metadata/template_values.ini` to set custom parameters
 * Run `setup.py install` to install the module
     * Open a command prompt to the directory where you extracted the source archive
     * Run the `setup.py` script (e.g. `py setup.py install` or `C:\Python34\python.exe setup.py install`)
@@ -83,7 +84,7 @@ Next, read in an existing metadata file:
 ```
 
 You can now read and edit the metadata through Python dictionaries
- (`instance.D_ams`, `instance.D_app`, `instance.D_content`).
+ (`vod_package.D_ams`, `vod_package.D_app`, `vod_package.D_content`).
  Maybe you need to know the `Provider_ID` and `Asset_ID` for the title
  asset?
 
@@ -105,23 +106,14 @@ True
 False
 ```
 
-Maybe you suspect that your metadata is describing the wrong file?
+Maybe you suspect that your metadata is describing the wrong file? You can update it to describe the correct one:
 
 ```python
 >>> vod_package.D_app["preview"]["Content_CheckSum"]
 '05b441362eccbde82a98fabcafe071c1',
->>> vod_package.D_app["preview"]["Content_FileSize"]
-'65116808'
-```
-
-You can update it to describe the correct one:
-
-```python
 >>> vod_package.check_files()
 >>> vod_package.D_app["preview"]["Content_CheckSum"]
 '2680090e51970e67b412af35201b9053'
->>> vod_package.D_app["preview"]["Content_FileSize"]
-'44704888'
 ```
 
 Have and XML file for an asset you need to delete?
