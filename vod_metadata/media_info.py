@@ -20,7 +20,7 @@ def call_MediaInfo(file_name):
                                    universal_newlines=True)
   D = collections.defaultdict(dict)
   for line in result.splitlines():
-    line = line.split(':')
+    line = line.split(':', 1)
     # Skip separators
     if line[0] == '':
       continue
@@ -46,7 +46,7 @@ def check_video(file_name):
       or "Video" not in D
       or "File size" not in D["General"]
       or "Overall bit rate" not in D["General"]
-      or "Codec profile" not in D["Video"]
+      or "Format profile" not in D["Video"]
       or "Commercial name" not in D["Video"]
       or "Frame rate" not in D["Video"]
       or "Height" not in D["Video"]
