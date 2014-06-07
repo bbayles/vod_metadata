@@ -263,24 +263,3 @@ class VodPackage(object):
     img_width = img_info["Image"]["Width"]
     img_height = img_info["Image"]["Height"]
     self.D_app["poster"]["Image_Aspect_Ratio"] = "{}x{}".format(img_width, img_height)
-  
-  def list_files(self):
-    package_pid = self.D_ams["package"]["Provider_ID"]
-    package_paid = self.D_ams["package"]["Asset_ID"]
-    title_pid = self.D_ams["title"]["Provider_ID"]
-    title_paid = self.D_ams["title"]["Asset_ID"]
-    movie_pid = self.D_ams["movie"]["Provider_ID"] if "movie" in self.D_ams else ''
-    movie_paid = self.D_ams["movie"]["Asset_ID"] if "movie" in self.D_ams else ''
-    movie_file = self.D_content["movie"] if "movie" in self.D_content else ''
-    preview_pid = self.D_ams["preview"]["Provider_ID"] if self.has_preview else ''
-    preview_paid = self.D_ams["preview"]["Asset_ID"] if self.has_preview else ''
-    preview_file = self.D_content["preview"] if self.has_preview else ''
-    poster_pid = self.D_ams["poster"]["Provider_ID"] if self.has_poster else ''
-    poster_paid = self.D_ams["poster"]["Asset_ID"] if self.has_poster else ''
-    poster_file = self.D_content["poster"] if self.has_poster else ''
-    
-    return (package_pid, package_paid,
-            title_pid, title_paid,
-            movie_pid, movie_paid, movie_file,
-            preview_pid, preview_paid, preview_file,
-            poster_pid, poster_paid, poster_file)

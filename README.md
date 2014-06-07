@@ -204,9 +204,6 @@ The `VodPackage` class exposes these methods:
  library makes about updates for previously-delivered packages!
 * `VodPackage.make_delete()` - sets the `Verb` value to `DELETE` amd marks
  the package as a metadata update.
-* `VodPackage.list_files()` - returns a tuple with the PID/PAID pairs for
- the package asset; title asset; and asset elements, as well as the content
- files for the asset elements. I might remove this method in the future.
 
 The `vod_metadata` module exposes these exceptions:
 * `MissingElement` - raised if you try to write an asset package without a `movie`
