@@ -8,6 +8,7 @@ from __future__ import print_function
 from __future__ import with_statement
 from vod_metadata import *
 from io import open
+import os
 
 if __name__ == "__main__":
   for file_path in os.listdir():
