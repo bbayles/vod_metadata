@@ -5,9 +5,8 @@
 # See README for more information
 # See LICENSE for license
 from __future__ import print_function
-from __future__ import with_statement
-from vod_metadata import *
 from io import open
+from vod_metadata import *
 
 if __name__ == "__main__":
   for file_path in os.listdir():
