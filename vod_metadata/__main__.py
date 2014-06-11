@@ -6,6 +6,7 @@
 # See LICENSE for license
 from __future__ import print_function
 from io import open
+import os
 from vod_metadata import *
 
 if __name__ == "__main__":
