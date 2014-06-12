@@ -3,11 +3,21 @@
 # See README for more information
 # See LICENSE for license
 import os.path
+import sys
 from vod_metadata.parse_config import *
 
-_script_dir = os.path.dirname(__file__)
-config_path = os.path.join(_script_dir, "template_values.ini")
-template_path = os.path.join(_script_dir, "metadata_template.xml")
+# Find data files when frozen. Adapted from cx_Freeze documentation:
+# http://cx-freeze.readthedocs.org/en/latest/faq.html
+def find_data_file(filename):
+  if getattr(sys, 'frozen', False):
+    datadir = os.path.dirname(sys.executable)
+  else:
+    datadir = os.path.dirname(__file__)
+  
+  return os.path.join(datadir, filename)
+
+config_path = find_data_file("template_values.ini")
+template_path = find_data_file("metadata_template.xml")
 
 (extensions,
  product,
@@ -25,7 +35,7 @@ if not ecn_2009:
   param_skip.add("Codec")
 
 # Find MediaInfo
-with open(os.path.join(_script_dir, "MediaInfo.pth"), mode='r') as _infile:
+with open(find_data_file("MediaInfo.pth"), mode='r') as _infile:
   for MediaInfo_path in _infile:
     MediaInfo_path = MediaInfo_path.strip()
     if os.path.isfile(MediaInfo_path):
