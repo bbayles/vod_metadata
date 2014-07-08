@@ -116,7 +116,7 @@ Maybe you suspect that your metadata is describing the wrong file? You can updat
 '2680090e51970e67b412af35201b9053'
 ```
 
-Have and XML file for an asset you need to delete?
+Have an XML file for an asset you need to delete?
 ```python
 >>> vod_package.make_delete()
 >>> vod_package.D_ams["package"]["Verb"]
