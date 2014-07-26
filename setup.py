@@ -27,7 +27,7 @@ setup(name='vod_metadata',
       
       version='2014.06.01',
 
-      description='A sample Python project',
+      description='CableLabs VOD Metadata 1.1 library and tools',
       long_description="Library and tools for CableLabs VOD Metadata 1.1",
       
       url='https://github.com/bbayles/vod_metadata',
