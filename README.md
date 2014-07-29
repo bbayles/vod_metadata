@@ -27,7 +27,7 @@ Then, get the module ready:
 * Download this module's
  [source archive from Github](http://github.com/bbayles/vod_metadata/zipball/master/)
  and extract it somewhere (e.g. to `C:\temp\vod_metadata-master`)
-* Edit `MediaInfo.pth` and make sure it contains the path to your MediaInfo CLI executable
+* Edit `vod_metadata/MediaInfo.pth` and make sure it contains the path to your MediaInfo CLI executable
   (e.g. `C:\Program Files\MediaInfo\MediaInfo.exe`)
 * Edit `vod_metadata/template_values.ini` to set custom parameters
 * Run `setup.py install` to install the module
