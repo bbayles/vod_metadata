@@ -10,22 +10,9 @@ install_dir = os.path.abspath(os.path.dirname(__file__))
 # Install requires configparser for Python 2.x
 install_requires = ['configparser'] if (sys.version_info[0] < 3) else []
 
-# The path to MediaInfo should be supplied
-MediaInfo_path = None
-with open(os.path.join(install_dir, "MediaInfo.pth"), mode='r') as infile:
-  for file_path in infile:
-    file_path = file_path.strip()
-    if os.path.isfile(file_path):
-      MediaInfo_path = file_path
-      break
-
-if MediaInfo_path is not None:
-  with open(os.path.join(install_dir, "vod_metadata", "MediaInfo.pth"), mode='w') as outfile:
-    print(MediaInfo_path, file=outfile, end='')
-
 setup(name='vod_metadata',
       
-      version='2014.06.01',
+      version='2014.07.28',
 
       description='CableLabs VOD Metadata 1.1 library and tools',
       long_description="Library and tools for CableLabs VOD Metadata 1.1",

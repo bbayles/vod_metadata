@@ -4,7 +4,7 @@
 # See LICENSE for license
 import os.path
 import sys
-from vod_metadata.parse_config import parse_config
+from vod_metadata.config_read import parse_config
 
 # Find data files when frozen. Adapted from cx_Freeze documentation:
 # http://cx-freeze.readthedocs.org/en/latest/faq.html
@@ -40,8 +40,11 @@ with open(find_data_file("MediaInfo.pth"), mode='r') as _infile:
     MediaInfo_path = MediaInfo_path.strip()
     if os.path.isfile(MediaInfo_path):
       break
+  else:
+    raise RuntimeError("MediaInfo not found. Specify the path to MediaInfo in\
+      the install directory's MediaInfo.pth file.")
 
-from vod_metadata.md5_checksum import *
+from vod_metadata.md5_calc import *
 from vod_metadata.media_info import *
-from vod_metadata.VodPackage import *
-from vod_metadata.generate_metadata import *
+from vod_metadata.vodpackage import *
+from vod_metadata.md_gen import *
