@@ -4,6 +4,8 @@
 # See LICENSE for license
 import configparser
 
+__all__ = ["ConfigurationError", "parse_config"]
+
 class ConfigurationError(Exception):
   pass
 

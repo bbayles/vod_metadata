@@ -4,7 +4,7 @@
 # See LICENSE for license
 import os.path
 import sys
-from vod_metadata.parse_config import *
+from vod_metadata.parse_config import parse_config
 
 # Find data files when frozen. Adapted from cx_Freeze documentation:
 # http://cx-freeze.readthedocs.org/en/latest/faq.html

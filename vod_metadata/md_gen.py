@@ -7,6 +7,8 @@ import datetime
 import os
 import random
 
+__all__ = ["generate_metadata"]
+
 def generate_metadata(file_path):
   # Time-sensitive values
   timestamp = datetime.datetime.today()

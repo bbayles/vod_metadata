@@ -6,8 +6,12 @@
 from __future__ import division
 from io import open
 import os.path
-from vod_metadata import check_video, check_picture, md5_checksum, param_skip
+from vod_metadata import param_skip
+from vod_metadata.md5_calc import md5_checksum
+from vod_metadata.media_info import check_video, check_picture
 from vod_metadata.xml_helper import etree, tobytes
+
+__all__ = ["MissingElement", "InvalidMpeg", "VodPackage"]
 
 class MissingElement(Exception):
   pass
