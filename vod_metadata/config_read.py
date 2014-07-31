@@ -1,7 +1,3 @@
-# VOD metadata file generator - parse_config sub-module
-# Copyright 2014 Bo Bayles (bbayles@gmail.com)
-# See README for more information
-# See LICENSE for license
 import configparser
 
 __all__ = ["ConfigurationError", "parse_config"]

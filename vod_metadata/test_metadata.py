@@ -1,7 +1,3 @@
-# VOD metadata file generator - test_metadata sub-module
-# Copyright 2014 Bo Bayles (bbayles@gmail.com)
-# See README for more information
-# See LICENSE for license
 from vod_metadata import *
 from io import BytesIO
 import unittest

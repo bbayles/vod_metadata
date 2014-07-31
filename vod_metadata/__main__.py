@@ -1,9 +1,7 @@
-# VOD metadata file generator. When run as a script against a  directory with
-# video files will generate XML files for each video file that conform to the
-# CableLabs VOD Metadata 1.1 specification
+# VOD metadata file generator
 # Copyright 2014 Bo Bayles (bbayles@gmail.com)
-# See README for more information
-# See LICENSE for license
+# See http://github.com/bbayles/vod_metadata for documentation and license
+
 from __future__ import print_function
 from io import open
 import os

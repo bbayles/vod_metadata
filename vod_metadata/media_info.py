@@ -1,7 +1,3 @@
-# VOD metadata file generator - media_info sub-module
-# Copyright 2014 Bo Bayles (bbayles@gmail.com)
-# See README for more information
-# See LICENSE for license
 import collections
 import subprocess
 from vod_metadata import MediaInfo_path

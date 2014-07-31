@@ -1,11 +1,7 @@
-# VOD metadata library. Can generate and manipulate XML files that conform to
-# the CableLabs VOD Metadata 1.1 specification
-# Copyright 2014 Bo Bayles (bbayles@gmail.com)
-# See README for more information
-# See LICENSE for license
 from __future__ import division
 from io import open
 import os.path
+
 from vod_metadata import param_skip
 from vod_metadata.md5_calc import md5_checksum
 from vod_metadata.media_info import check_video, check_picture

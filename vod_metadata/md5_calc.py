@@ -1,7 +1,3 @@
-# VOD metadata file generator - md5_checksum sub-module
-# Copyright 2013 Bo Bayles (bbayles@gmail.com)
-# See README for more information
-# See LICENSE for license
 from io import open
 import hashlib
 

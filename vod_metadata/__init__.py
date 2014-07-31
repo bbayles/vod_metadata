@@ -1,7 +1,7 @@
-# VOD metadata file generator - __init__ sub-module
+# VOD metadata file generator
 # Copyright 2014 Bo Bayles (bbayles@gmail.com)
-# See README for more information
-# See LICENSE for license
+# See http://github.com/bbayles/vod_metadata for documentation and license
+
 import os.path
 import sys
 from vod_metadata.config_read import parse_config

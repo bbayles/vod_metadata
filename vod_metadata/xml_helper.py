@@ -1,8 +1,3 @@
-# VOD metadata file generator - xml_helper sub-module
-# Copyright 2014 Bo Bayles (bbayles@gmail.com)
-# See README for more information
-# See LICENSE for license
-
 # lxml's etree.tostring() function supports a different set of arguments than
 # Python's xml.etree.ElementTree.tostring() function. This module calls lxml's
 # if it is installed, otherwise it uses Python's.
