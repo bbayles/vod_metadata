@@ -1,9 +1,19 @@
-from vod_metadata import *
 import datetime
 import os
 import random
 
+from vod_metadata import (
+    VodPackage,
+    prefix,
+    product,
+    provider,
+    provider_id,
+    template_path,
+    title_category,
+)
+
 __all__ = ["generate_metadata"]
+
 
 def generate_metadata(file_path):
     # Time-sensitive values
@@ -28,7 +38,9 @@ def generate_metadata(file_path):
 
     # Package section
     package_asset_name = "{} {} (package)".format(file_name[:20], suffix)
-    package_description = "{} {} (package asset)".format(file_name[:20], suffix)
+    package_description = "{} {} (package asset)".format(
+        file_name[:20], suffix
+    )
     package_asset_id = "{}P{}{}".format(prefix, asset_id, suffix)
 
     vod_package.D_ams["package"] = {"Provider":  provider,
@@ -41,7 +53,9 @@ def generate_metadata(file_path):
                                     "Provider_ID": provider_id,
                                     "Asset_ID": package_asset_id,
                                     "Asset_Class": "package"}
-    vod_package.D_app["package"] = {"Metadata_Spec_Version": "CableLabsVOD1.1"}
+    vod_package.D_app["package"] = {
+        "Metadata_Spec_Version": "CableLabsVOD1.1"
+    }
 
     # Title section
     title_asset_name = "{} {} (title)".format(file_name[:20], suffix)

@@ -2,6 +2,7 @@ import collections
 import subprocess
 from vod_metadata import MediaInfo_path
 
+
 class MediaInfoError(Exception):
     pass
 
@@ -10,10 +11,9 @@ def call_MediaInfo(file_name):
     """Returns a dictionary of dictionaries with the output of
        MediaInfo -f file_name"""
 
-    result = subprocess.check_output([MediaInfo_path,
-                                     "-f",
-                                     file_name],
-                                     universal_newlines=True)
+    result = subprocess.check_output(
+        [MediaInfo_path, "-f", file_name], universal_newlines=True
+    )
     D = collections.defaultdict(dict)
     for line in result.splitlines():
         line = line.split(':', 1)
@@ -32,33 +32,50 @@ def call_MediaInfo(file_name):
 
     return D
 
+
 def check_video(file_name):
-    """Scans the given file with MediaInfo and returns the video and audio codec
-       information if all the required parameters were found."""
+    """
+    Scans the given file with MediaInfo and returns the video and audio codec
+    information if all the required parameters were found.
+    """
     D = call_MediaInfo(file_name)
-    # Check that the file analyzed was a valid movie
-    if ("General" not in D
-        or "Count of audio streams" not in D["General"]
-        or "Video" not in D
-        or "File size" not in D["General"]
-        or "Overall bit rate" not in D["General"]
-        or "Format profile" not in D["Video"]
-        or "Commercial name" not in D["Video"]
-        or "Frame rate" not in D["Video"]
-        or "Height" not in D["Video"]
-        or "Scan type" not in D["Video"]):
+    valid = True
+
+    if ("General" not in D) or ("Video" not in D):
+        valid = False
+
+    general_keys = ("Count of audio streams", "File size", "Overall bit rate")
+    if any(k not in D["General"] for k in general_keys):
+        valid = False
+
+    video_keys = (
+        "Format profile",
+        "Commercial name",
+        "Frame rate",
+        "Height",
+        "Scan type",
+    )
+    if any(k not in D["Video"] for k in video_keys):
+        valid = False
+
+    if not valid:
         raise MediaInfoError("Could not determine all video paramters")
 
     return D
 
+
 def check_picture(file_name):
-    """Scans the given file with MediaInfo and returns the picture
-       information if all the required parameters were found."""
+    """
+    Scans the given file with MediaInfo and returns the picture
+    information if all the required parameters were found.
+    """
     D = call_MediaInfo(file_name)
     # Check that the file analyzed was a valid movie
-    if ("Image" not in D
-        or "Width" not in D["Image"]
-        or "Height" not in D["Image"]):
+    if (
+        ("Image" not in D) or
+        ("Width" not in D["Image"]) or
+        ("Height" not in D["Image"])
+    ):
         raise MediaInfoError("Could not determine all picture paramters")
 
     return D

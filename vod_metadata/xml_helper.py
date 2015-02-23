@@ -8,6 +8,7 @@ except ImportError:
     import xml.etree.ElementTree as etree
     lxml = False
 
+
 # Taken from Fredrik Lundh's effbot.org:
 # http://effbot.org/zone/element-lib.htm#prettyprint
 def indent(elem, level=0):
@@ -24,6 +25,7 @@ def indent(elem, level=0):
     else:
         if level and (not elem.tail or not elem.tail.strip()):
             elem.tail = i
+
 
 def tobytes(ADI):
     doctype = b'<!DOCTYPE ADI SYSTEM "ADI.DTD">'

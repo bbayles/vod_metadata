@@ -1,11 +1,13 @@
 # VOD metadata file generator
 # Copyright 2014 Bo Bayles (bbayles@gmail.com)
 # See http://github.com/bbayles/vod_metadata for documentation and license
-
 from __future__ import print_function
+
 from io import open
 import os
-from vod_metadata import *
+
+from vod_metadata import extensions
+from vod_metadata.md_gen import generate_metadata
 
 
 if __name__ == "__main__":
