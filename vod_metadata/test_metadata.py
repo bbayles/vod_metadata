@@ -1,49 +1,55 @@
 from vod_metadata import *
 from io import BytesIO
 import unittest
+import unittest.mock
+
+class Md5CalcTests(unittest.TestCase):
+    @unittest.mock('vod_metadata.md5_calc.open', autospec=True)
+    def test_md5(self, mock_open):
+        m
 
 class VodMetadataTests(unittest.TestCase):
-  def test_dictionaries(self):
-    vod_package = VodPackage(reference_xml)
-    # Package
-    self.assertEqual(vod_package.D_ams["package"], ams_package)
-    self.assertEqual(vod_package.D_app["package"], app_package)
-    # Title
-    self.assertEqual(vod_package.D_ams["title"], ams_title)
-    self.assertEqual(vod_package.D_app["title"], app_title)
-    # Movie
-    self.assertEqual(vod_package.D_ams["movie"], ams_movie)
-    self.assertEqual(vod_package.D_app["movie"], app_movie)
-    # Preview
-    self.assertEqual(vod_package.D_ams["preview"], ams_preview)
-    self.assertEqual(vod_package.D_app["preview"], app_preview)
-    # Poster
-    self.assertEqual(vod_package.D_ams["poster"], ams_poster)
-    self.assertEqual(vod_package.D_app["poster"], app_poster)
-  
-  def test_roundtrip(self):
-    ref_package = VodPackage(reference_xml)
-    file_out = BytesIO()
-    _ = file_out.write(ref_package.write_xml())
-    _ = file_out.seek(0)
-    new_package = VodPackage(file_out)
-    self.assertEqual(file_out.getvalue(), new_package.write_xml())
-  
-  def test_checksum(self):
-    test_value = md5_checksum(reference_mp4)
-    known_value = "f5f66bd6e6b2ed02153d6fa94787626c"
-    self.assertEqual(test_value, known_value)
-  
-  def test_MediaInfo_video(self):
-    D = call_MediaInfo(reference_mp4)
-    self.assertEqual(D["General"]["Count of audio streams"], '1')
-    self.assertEqual(D["General"]["File size"], '251404')
-    self.assertEqual(D["General"]["Overall bit rate"], '274758')
-    self.assertEqual(D["Video"]["Format profile"], 'High 4:4:4 Predictive@L3.0')
-    self.assertEqual(D["Video"]["Commercial name"], 'AVC')
-    self.assertEqual(D["Video"]["Frame rate"], '25.000')
-    self.assertEqual(D["Video"]["Height"], '480')
-    self.assertEqual(D["Video"]["Scan type"], 'Progressive')
+    def test_dictionaries(self):
+        vod_package = VodPackage(reference_xml)
+        # Package
+        self.assertEqual(vod_package.D_ams["package"], ams_package)
+        self.assertEqual(vod_package.D_app["package"], app_package)
+        # Title
+        self.assertEqual(vod_package.D_ams["title"], ams_title)
+        self.assertEqual(vod_package.D_app["title"], app_title)
+        # Movie
+        self.assertEqual(vod_package.D_ams["movie"], ams_movie)
+        self.assertEqual(vod_package.D_app["movie"], app_movie)
+        # Preview
+        self.assertEqual(vod_package.D_ams["preview"], ams_preview)
+        self.assertEqual(vod_package.D_app["preview"], app_preview)
+        # Poster
+        self.assertEqual(vod_package.D_ams["poster"], ams_poster)
+        self.assertEqual(vod_package.D_app["poster"], app_poster)
+
+    def test_roundtrip(self):
+        ref_package = VodPackage(reference_xml)
+        file_out = BytesIO()
+        _ = file_out.write(ref_package.write_xml())
+        _ = file_out.seek(0)
+        new_package = VodPackage(file_out)
+        self.assertEqual(file_out.getvalue(), new_package.write_xml())
+
+    def test_checksum(self):
+        test_value = md5_checksum(reference_mp4)
+        known_value = "f5f66bd6e6b2ed02153d6fa94787626c"
+        self.assertEqual(test_value, known_value)
+
+    def test_MediaInfo_video(self):
+        D = call_MediaInfo(reference_mp4)
+        self.assertEqual(D["General"]["Count of audio streams"], '1')
+        self.assertEqual(D["General"]["File size"], '251404')
+        self.assertEqual(D["General"]["Overall bit rate"], '274758')
+        self.assertEqual(D["Video"]["Format profile"], 'High 4:4:4 Predictive@L3.0')
+        self.assertEqual(D["Video"]["Commercial name"], 'AVC')
+        self.assertEqual(D["Video"]["Frame rate"], '25.000')
+        self.assertEqual(D["Video"]["Height"], '480')
+        self.assertEqual(D["Video"]["Scan type"], 'Progressive')
 
 # Reference values
 script_path = os.path.abspath(__file__)
@@ -147,4 +153,4 @@ app_poster = {'Content_CheckSum': '410b51e0f900502809a22691537b67e3',
               'Type': 'poster',}
 
 if __name__ == "__main__":
-  unittest.main()
+    unittest.main()
