@@ -1,10 +1,68 @@
+from copy import deepcopy
 from io import BytesIO
 import unittest
+from unittest.mock import patch
 import os.path
 
-from vod_metadata.media_info import call_MediaInfo
+from vod_metadata.media_info import call_MediaInfo, check_video, MediaInfoError
 from vod_metadata.md5_calc import md5_checksum
 from vod_metadata.vodpackage import VodPackage
+
+
+class Md5CalcTests(unittest.TestCase):
+    def test_checksum(self):
+        test_value = md5_checksum(reference_mp4)
+        known_value = "f5f66bd6e6b2ed02153d6fa94787626c"
+        self.assertEqual(test_value, known_value)
+
+
+class MediaInfoTests(unittest.TestCase):
+    def setUp(self):
+        self.D_reference = {
+            "General": {
+                "Count of audio streams": '1',
+                "Count of audio streams": '1',
+                "File size": '251404',
+                "Overall bit rate": '274758',
+            },
+            "Video": {
+                "Format profile": 'High 4:4:4 Predictive@L3.0',
+                "Commercial name": 'AVC',
+                "Frame rate": '25.000',
+                "Height": '480',
+                "Scan type": 'Progressive',
+            },
+        }
+
+    def test_call_MediaInfo(self):
+        D = call_MediaInfo(reference_mp4)
+        for section in self.D_reference.keys():
+            for key, expected in self.D_reference[section].items():
+                actual = D[section][key]
+                self.assertEqual(actual, expected)
+
+    @patch('vod_metadata.media_info.call_MediaInfo', autospec=True)
+    def test_check_video(self, mock_call_MediaInfo):
+        # No modification -> should return normally
+        mock_call_MediaInfo.return_value = self.D_reference
+        self.assertEqual(check_video(reference_mp4), self.D_reference)
+
+        # No General or Video section -> should fail
+        for key in self.D_reference.keys():
+            D = deepcopy(self.D_reference)
+            del D[key]
+            mock_call_MediaInfo.return_value = D
+            with self.assertRaises(MediaInfoError):
+                check_video(reference_mp4)
+
+        # Missing keyss -> should fail
+        for section in ("General", "Video"):
+            for key in self.D_reference[section]:
+                D = deepcopy(self.D_reference)
+                del D[section][key]
+                mock_call_MediaInfo.return_value = D
+                with self.assertRaises(MediaInfoError):
+                    check_video(reference_mp4)
 
 
 class VodMetadataTests(unittest.TestCase):
@@ -33,11 +91,6 @@ class VodMetadataTests(unittest.TestCase):
         file_out.seek(0)
         new_package = VodPackage(file_out)
         self.assertEqual(file_out.getvalue(), new_package.write_xml())
-
-    def test_checksum(self):
-        test_value = md5_checksum(reference_mp4)
-        known_value = "f5f66bd6e6b2ed02153d6fa94787626c"
-        self.assertEqual(test_value, known_value)
 
     def test_MediaInfo_video(self):
         D = call_MediaInfo(reference_mp4)

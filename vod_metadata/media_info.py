@@ -39,14 +39,14 @@ def check_video(file_name):
     information if all the required parameters were found.
     """
     D = call_MediaInfo(file_name)
-    valid = True
+    err_msg = "Could not determine all video paramters"
 
     if ("General" not in D) or ("Video" not in D):
-        valid = False
+        raise MediaInfoError(err_msg)
 
     general_keys = ("Count of audio streams", "File size", "Overall bit rate")
     if any(k not in D["General"] for k in general_keys):
-        valid = False
+        raise MediaInfoError(err_msg)
 
     video_keys = (
         "Format profile",
@@ -56,10 +56,7 @@ def check_video(file_name):
         "Scan type",
     )
     if any(k not in D["Video"] for k in video_keys):
-        valid = False
-
-    if not valid:
-        raise MediaInfoError("Could not determine all video paramters")
+        raise MediaInfoError(err_msg)
 
     return D
 
