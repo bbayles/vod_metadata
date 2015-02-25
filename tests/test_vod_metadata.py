@@ -7,6 +7,7 @@ import os.path
 from vod_metadata.media_info import call_MediaInfo, check_video, MediaInfoError
 from vod_metadata.md5_calc import md5_checksum
 from vod_metadata.vodpackage import VodPackage
+from vod_metadata.xml_helper import etree, tobytes
 
 
 class Md5CalcTests(unittest.TestCase):
@@ -55,7 +56,7 @@ class MediaInfoTests(unittest.TestCase):
             with self.assertRaises(MediaInfoError):
                 check_video(reference_mp4)
 
-        # Missing keyss -> should fail
+        # Missing keys -> should fail
         for section in ("General", "Video"):
             for key in self.D_reference[section]:
                 D = deepcopy(self.D_reference)
@@ -63,6 +64,27 @@ class MediaInfoTests(unittest.TestCase):
                 mock_call_MediaInfo.return_value = D
                 with self.assertRaises(MediaInfoError):
                     check_video(reference_mp4)
+
+
+class XmlHelperTests(unittest.TestCase):
+    def setUp(self):
+        self.zero = etree.Element('zero')
+        self.one = etree.SubElement(self.zero, 'one')
+        self.two = etree.SubElement(self.one, 'two', attrib={'key': 'value'})
+        self.expected = (
+            b'<?xml version="1.0" encoding="utf-8"?>'
+            b'<!DOCTYPE ADI SYSTEM "ADI.DTD">'
+            b'<zero>\n  <one>\n    <two key="value" />\n  </one>\n</zero>\n'
+        )
+
+    def test_tobytes_lxml(self):
+        actual = tobytes(self.zero)
+        self.assertEqual(actual, self.expected)
+
+    @patch('vod_metadata.xml_helper.lxml', False)  # Force pure-Python version
+    def test_tobytes_python(self):
+        actual = tobytes(self.zero)
+        self.assertEqual(actual, self.expected)
 
 
 class VodMetadataTests(unittest.TestCase):

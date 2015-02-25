@@ -12,7 +12,7 @@ except ImportError:
 # Taken from Fredrik Lundh's effbot.org:
 # http://effbot.org/zone/element-lib.htm#prettyprint
 def indent(elem, level=0):
-    i = "\n" + level*"  "
+    i = "\n" + (level * "  ")
     if len(elem):
         if not elem.text or not elem.text.strip():
             elem.text = i + "  "
@@ -30,11 +30,13 @@ def indent(elem, level=0):
 def tobytes(ADI):
     doctype = b'<!DOCTYPE ADI SYSTEM "ADI.DTD">'
     if lxml:
-        return etree.tostring(ADI,
-                              xml_declaration=True,
-                              doctype=doctype,
-                              encoding='utf-8',
-                              pretty_print=True)
+        return etree.tostring(
+            ADI,
+            xml_declaration=True,
+            doctype=doctype,
+            encoding='utf-8',
+            pretty_print=True
+        )
     else:
         declaration = b'<?xml version="1.0" encoding="utf-8"?>'
         indent(ADI)
