@@ -11,7 +11,7 @@ from vod_metadata.md_gen import generate_metadata
 
 
 if __name__ == "__main__":
-    for file_path in os.listdir():
+    for file_path in os.listdir(os.getcwd()):
         # Only process movie files
         file_name, file_ext = os.path.splitext(file_path)
         if file_ext not in extensions:
