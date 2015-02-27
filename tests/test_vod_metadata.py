@@ -1,13 +1,120 @@
 from copy import deepcopy
-from io import BytesIO
+from configparser import ConfigParser
+from io import BytesIO, open
 import unittest
-from unittest.mock import patch
+try:
+    from unittest.mock import patch
+except ImportError:
+    from mock import patch
 import os.path
 
-from vod_metadata.media_info import call_MediaInfo, check_video, MediaInfoError
+from vod_metadata import find_data_file
+from vod_metadata.config_read import ConfigurationError, parse_config
 from vod_metadata.md5_calc import md5_checksum
+from vod_metadata.media_info import call_MediaInfo, check_video, MediaInfoError
 from vod_metadata.vodpackage import VodPackage
 from vod_metadata.xml_helper import etree, tobytes
+
+
+@patch(
+    "vod_metadata.config_read.configparser.ConfigParser.read",
+    ConfigParser.read_file
+)
+class ConfigReadTests(unittest.TestCase):
+    def setUp(self):
+        with open(find_data_file("template_values.ini"), mode='r') as infile:
+            self.config_lines = [line.strip() for line in infile if line]
+
+    def _modify_key(self, key, value):
+        find_str = "{} = ".format(key)
+        if value is None:
+            replace_str = ''
+        else:
+            replace_str = "{} = {}".format(key, value)
+
+        ret = self.config_lines[:]
+        for i, line in enumerate(ret):
+            if line.startswith(find_str):
+                ret[i] = replace_str
+                return ret
+
+    def test_extensions(self):
+        # Test default value
+        actual = parse_config(self._modify_key("extensions", None))[0]
+        expected = {".mpg", ".ts", ".mp4"}
+        self.assertEqual(actual, expected)
+
+        # Test custom value
+        config_lines = self._modify_key("extensions", "mpg, mpg")
+        actual = parse_config(config_lines)[0]
+        expected = {'.mpg'}
+        self.assertEqual(actual, expected)
+
+    def test_product(self):
+        # Test default value
+        config_lines = self._modify_key("product", None)
+        actual = parse_config(config_lines)[1]
+        expected = "MOD"
+        self.assertEqual(actual, expected)
+
+        # Test custom value
+        config_lines = self._modify_key("product", "FOD")
+        actual = parse_config(config_lines)[1]
+        expected = "FOD"
+        self.assertEqual(actual, expected)
+
+        # Test incorrect value
+        config_lines = self._modify_key("product", 'x' * 21)
+        with self.assertRaises(ConfigurationError):
+            parse_config(config_lines)[1]
+
+    def test_provider_id(self):
+        # Test default value
+        config_lines = self._modify_key("provider_id", None)
+        actual = parse_config(config_lines)[2]
+        expected = "example.com"
+        self.assertEqual(actual, expected)
+
+        # Test custom value
+        config_lines = self._modify_key("provider_id", "example.org")
+        actual = parse_config(config_lines)[2]
+        expected = "example.org"
+        self.assertEqual(actual, expected)
+
+        # Test incorrect value
+        incorrect_values = [
+            "{}.com".format("x" * 17),  # Too long
+            "examplecom",  # Too few dots
+            "www.example.com",  # Too many dots
+            "example.c",  # The bit after the dot is too short
+        ]
+        for value in incorrect_values:
+            config_lines = self._modify_key("provider_id", value)
+            with self.assertRaises(ConfigurationError):
+                parse_config(config_lines)[2]
+
+    def test_prefix(self):
+        # Test default value
+        config_lines = self._modify_key("prefix", None)
+        actual = parse_config(config_lines)[3]
+        expected = "MSO"
+        self.assertEqual(actual, expected)
+
+        # Test custom value
+        config_lines = self._modify_key("prefix", "ABC")
+        actual = parse_config(config_lines)[3]
+        expected = "ABC"
+        self.assertEqual(actual, expected)
+
+        # Test incorrect values
+        incorrect_values = [
+            "ABCD",  # Too many letters
+            "!!!",  # Not alphanumeric
+        ]
+        for value in incorrect_values:
+            config_lines = self._modify_key("prefix", value)
+            with self.assertRaises(ConfigurationError):
+                parse_config(config_lines)[3]
 
 
 class Md5CalcTests(unittest.TestCase):

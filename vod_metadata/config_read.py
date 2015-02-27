@@ -30,7 +30,6 @@ def parse_config(config_path):
     if (
         len(provider_id) > 20 or
         len(domain) != 2 or
-        len(domain[0]) == 0 or
         len(domain[1]) == 1
     ):
         raise ConfigurationError(
@@ -40,7 +39,7 @@ def parse_config(config_path):
 
     # Prefix must be 3 alphabetic characters
     prefix = config["VOD"].get("prefix", "MSO").upper().strip()
-    if not prefix.isalpha():
+    if (len(prefix) != 3) or (not prefix.isalpha()):
         raise ConfigurationError(
             "Configuration file error: prefix must be 3 alphabetic characters"
         )
