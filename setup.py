@@ -8,7 +8,12 @@ long_description = (
 )
 
 # Install requires configparser for Python 2.x
-install_requires = ['configparser'] if (sys.version_info[0] < 3) else []
+if sys.version_info[0] < 3:
+    install_requires = ['configparser']
+    tests_require = ['mock']
+else:
+    install_requires = []
+    tests_require = []
 
 setup(
     name='vod_metadata',
@@ -38,6 +43,7 @@ setup(
     # lxml is not required, but is recommended
     install_requires=install_requires,
     extras_require={'Speed':  ["lxml"]},
+    tests_require=tests_require,
 
     package_data={'vod_metadata': ["*.ini", "*.mp4", "*.pth", "*.xml"]},
 )
