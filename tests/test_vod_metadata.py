@@ -76,12 +76,12 @@ class ConfigReadTests(unittest.TestCase):
         self.assertEqual(actual, expected)
 
         # Test custom value
-        config_lines = self._modify_key("provider_id", "example.org")
+        config_lines = self._modify_key("provider_id", "EXAMPLE.org")
         actual = parse_config(config_lines)[2]
         expected = "example.org"
         self.assertEqual(actual, expected)
 
-        # Test incorrect value
+        # Test incorrect values
         incorrect_values = [
             "{}.com".format("x" * 17),  # Too long
             "examplecom",  # Too few dots
@@ -115,6 +115,55 @@ class ConfigReadTests(unittest.TestCase):
             config_lines = self._modify_key("prefix", value)
             with self.assertRaises(ConfigurationError):
                 parse_config(config_lines)[3]
+
+    def test_category(self):
+        # Test default value
+        config_lines = self._modify_key("title_category", None)
+        actual = parse_config(config_lines)[4]
+        expected = "Testing/Videos"
+        self.assertEqual(actual, expected)
+
+        # Test custom value
+        config_lines = self._modify_key("title_category", "Testing/HD")
+        actual = parse_config(config_lines)[4]
+        expected = "Testing/HD"
+        self.assertEqual(actual, expected)
+
+        # Test incorrect value
+        config_lines = self._modify_key("title_category", 'x' * 21)
+        with self.assertRaises(ConfigurationError):
+            parse_config(config_lines)[4]
+
+    def test_provider(self):
+        # Test default value
+        config_lines = self._modify_key("provider", None)
+        actual = parse_config(config_lines)[5]
+        expected = "001"
+        self.assertEqual(actual, expected)
+    
+        # Test custom value
+        config_lines = self._modify_key("provider", "002")
+        actual = parse_config(config_lines)[5]
+        expected = "002"
+        self.assertEqual(actual, expected)
+
+        # Test incorrect value
+        config_lines = self._modify_key("provider", 'x' * 21)
+        with self.assertRaises(ConfigurationError):
+            parse_config(config_lines)[5]
+
+    def test_ecn_2009(self):
+        # Test default value
+        config_lines = self._modify_key("ecn_2009", None)
+        actual = parse_config(config_lines)[6]
+        expected = False
+        self.assertEqual(actual, expected)
+
+        # Test custom value
+        config_lines = self._modify_key("ecn_2009", "True")
+        actual = parse_config(config_lines)[6]
+        expected = True
+        self.assertEqual(actual, expected)
 
 
 class Md5CalcTests(unittest.TestCase):
