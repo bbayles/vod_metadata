@@ -13,7 +13,12 @@ from vod_metadata import find_data_file
 from vod_metadata.config_read import ConfigurationError, parse_config
 from vod_metadata.md5_calc import md5_checksum
 from vod_metadata.md_gen import generate_metadata
-from vod_metadata.media_info import call_MediaInfo, check_video, MediaInfoError
+from vod_metadata.media_info import (
+    call_MediaInfo,
+    check_picture,
+    check_video,
+    MediaInfoError,
+)
 from vod_metadata.vodpackage import VodPackage
 from vod_metadata.xml_helper import etree, tobytes
 
@@ -328,6 +333,21 @@ class MediaInfoTests(unittest.TestCase):
                 mock_call_MediaInfo.return_value = D
                 with self.assertRaises(MediaInfoError):
                     check_video(reference_mp4)
+
+    @patch('vod_metadata.media_info.call_MediaInfo', autospec=True)
+    def test_check_picture(self, mock_call_MediaInfo):
+        # No modification -> should return normally
+        D_image = {"Image": {"Width": "320", "Height": "240"}}
+        mock_call_MediaInfo.return_value = D_image
+        self.assertEqual(check_picture(None), D_image)
+
+        # Missing keys -> should fail
+        for D_image in (
+            {}, {"Image": {"Width": "320"}}, {"Image": {"Height": "320"}}
+        ):
+            mock_call_MediaInfo.return_value = D_image
+            with self.assertRaises(MediaInfoError):
+                check_picture(None)
 
 
 class XmlHelperTests(unittest.TestCase):
