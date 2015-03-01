@@ -3,7 +3,6 @@ import os
 import random
 
 from vod_metadata import (
-    VodPackage,
     prefix,
     product,
     provider,
@@ -11,6 +10,7 @@ from vod_metadata import (
     template_path,
     title_category,
 )
+from vod_metadata.vodpackage import VodPackage
 
 __all__ = ["generate_metadata"]
 

@@ -1,10 +1,25 @@
 import collections
+import os
 import subprocess
-from vod_metadata import MediaInfo_path
 
+from vod_metadata.utils import find_data_file
 
 class MediaInfoError(Exception):
     pass
+
+
+def find_MediaInfo():
+    # Find MediaInfo
+    with open(find_data_file("MediaInfo.pth"), mode='r') as _infile:
+        for MediaInfo_path in _infile:
+            MediaInfo_path = MediaInfo_path.strip()
+            if os.path.isfile(MediaInfo_path):
+                return MediaInfo_path
+        else:
+            raise RuntimeError(
+                "MediaInfo not found. Specify the path to MediaInfo in the "
+                "install directory's MediaInfo.pth file."
+            )
 
 
 def call_MediaInfo(file_name):
@@ -12,7 +27,7 @@ def call_MediaInfo(file_name):
        MediaInfo -f file_name"""
 
     result = subprocess.check_output(
-        [MediaInfo_path, "-f", file_name], universal_newlines=True
+        [find_MediaInfo(), "-f", file_name], universal_newlines=True
     )
     D = collections.defaultdict(dict)
     for line in result.splitlines():

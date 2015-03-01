@@ -33,7 +33,6 @@ class VodPackage(object):
     def __init__(self, xml_path):
         self.xml_path = xml_path
         self.tree = etree.parse(self.xml_path)
-        ADI = self.tree.getroot()
 
         # The CableLabs VOD Metadata 1.1 specification stores metadata in "AMS"
         # and "App_Data" tags. The files that are part of the package are
@@ -42,21 +41,29 @@ class VodPackage(object):
         self.D_app = {}
         self.D_content = {}
 
-        # Package section
+        ADI = self.tree.getroot()
+        self._read_package(ADI)
+        self._read_title(ADI)
+        self._read_elements(ADI)
+
+        self.has_preview = "preview" in self.D_ams
+        self.has_poster = "poster" in self.D_ams
+        self.is_delete = self.D_ams.get("Verb", '') == "DELETE"
+        self.is_update = self.D_ams["package"]["Version_Major"] != "1"
+
+    def _read_package(self, ADI):
         package_Metadata = ADI.find("Metadata")
-        package_AMS = package_Metadata.find("AMS")
-        self.D_ams["package"] = package_AMS.attrib
+        self.D_ams["package"] = package_Metadata.find("AMS").attrib
         self.D_app["package"] = self._parse_App_Data(package_Metadata)
 
-        # Title section
-        title_Asset = ADI.find("Asset")
-        title_Metadata = title_Asset.find("Metadata")
-        title_AMS = title_Metadata.find("AMS")
-        self.D_ams["title"] = title_AMS.attrib
+    def _read_title(self, ADI):
+        title_Metadata = ADI.find("Asset").find("Metadata")
+        self.D_ams["title"] = title_Metadata.find("AMS").attrib
         self.D_app["title"] = self._parse_App_Data(title_Metadata)
 
+    def _read_elements(self, ADI):
         # Asset elements section: "movie", "poster", and "preview" are allowed.
-        for ae_Asset in title_Asset.findall("Asset"):
+        for ae_Asset in ADI.find("Asset").findall("Asset"):
             ae_Metadata = ae_Asset.find("Metadata")
             ae_AMS = ae_Metadata.find("AMS")
             ae_type = ae_AMS.attrib["Asset_Class"]
@@ -66,12 +73,6 @@ class VodPackage(object):
                 self.D_content[ae_type] = (
                     ae_Asset.find("Content").attrib["Value"]
                 )
-
-        self.has_preview = "preview" in self.D_ams
-        self.has_poster = "poster" in self.D_ams
-
-        self.is_update = self.D_ams["package"]["Version_Major"] != "1"
-        self.is_delete = package_AMS.get("Verb", '') == "DELETE"
 
     def _parse_App_Data(self, ae_Metadata):
         D = {}
