@@ -38,8 +38,8 @@ def tobytes(ADI):
             pretty_print=True
         )
     else:
-        declaration = b'<?xml version="1.0" encoding="utf-8"?>'
+        declaration = b"<?xml version='1.0' encoding='utf-8'?>"
         indent(ADI)
         elements = etree.tostring(ADI, encoding="utf-8")
 
-        return b''.join((declaration, doctype, elements))
+        return b'\n'.join((declaration, doctype, elements))

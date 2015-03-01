@@ -17,6 +17,7 @@ from vod_metadata.media_info import (
     call_MediaInfo,
     check_picture,
     check_video,
+    find_MediaInfo,
     MediaInfoError,
 )
 from vod_metadata.vodpackage import VodPackage
@@ -304,6 +305,15 @@ class MediaInfoTests(unittest.TestCase):
             },
         }
 
+    @patch('vod_metadata.media_info.os.path.isfile', autospec=True)
+    def test_find_MediaInfo(self, mock_isfile):
+        mock_isfile.return_value = True
+        self.assertIsNotNone(find_MediaInfo())
+
+        mock_isfile.return_value = False
+        with self.assertRaises(RuntimeError):
+            find_MediaInfo()
+
     def test_call_MediaInfo(self):
         D = call_MediaInfo(reference_mp4)
         for section in self.D_reference.keys():
@@ -356,9 +366,9 @@ class XmlHelperTests(unittest.TestCase):
         self.one = etree.SubElement(self.zero, 'one')
         self.two = etree.SubElement(self.one, 'two', attrib={'key': 'value'})
         self.expected = (
-            b'<?xml version="1.0" encoding="utf-8"?>'
-            b'<!DOCTYPE ADI SYSTEM "ADI.DTD">'
-            b'<zero>\n  <one>\n    <two key="value" />\n  </one>\n</zero>\n'
+            b'<?xml version=\'1.0\' encoding=\'utf-8\'?>\n'
+            b'<!DOCTYPE ADI SYSTEM "ADI.DTD">\n'
+            b'<zero>\n  <one>\n    <two key="value"/>\n  </one>\n</zero>\n'
         )
 
     def test_tobytes_lxml(self):
@@ -398,18 +408,6 @@ class VodMetadataTests(unittest.TestCase):
         new_package = VodPackage(file_out)
         self.assertEqual(file_out.getvalue(), new_package.write_xml())
 
-    def test_MediaInfo_video(self):
-        D = call_MediaInfo(reference_mp4)
-        self.assertEqual(D["General"]["Count of audio streams"], '1')
-        self.assertEqual(D["General"]["File size"], '251404')
-        self.assertEqual(D["General"]["Overall bit rate"], '274758')
-        self.assertEqual(
-            D["Video"]["Format profile"], 'High 4:4:4 Predictive@L3.0'
-        )
-        self.assertEqual(D["Video"]["Commercial name"], 'AVC')
-        self.assertEqual(D["Video"]["Frame rate"], '25.000')
-        self.assertEqual(D["Video"]["Height"], '480')
-        self.assertEqual(D["Video"]["Scan type"], 'Progressive')
 
 # Reference values
 script_path = os.path.abspath(__file__)
