@@ -28,7 +28,7 @@ def generate_metadata(file_path):
 
     # Start with a minimal metadata template
     vod_package = VodPackage(template_path)
-    file_name = os.path.splitext(file_path)[0]
+    file_name = os.path.splitext(os.path.split(file_path)[1])[0]
     outfile_path = "{}_{}.xml".format(file_name, suffix)
     vod_package.xml_path = os.path.join(os.getcwd(), outfile_path)
 
@@ -43,19 +43,19 @@ def generate_metadata(file_path):
     )
     package_asset_id = "{}P{}{}".format(prefix, asset_id, suffix)
 
-    vod_package.D_ams["package"] = {"Provider":  provider,
-                                    "Product": product,
-                                    "Asset_Name": package_asset_name,
-                                    "Version_Major": '1',
-                                    "Version_Minor": '0',
-                                    "Description": package_description,
-                                    "Creation_Date": creation_date,
-                                    "Provider_ID": provider_id,
-                                    "Asset_ID": package_asset_id,
-                                    "Asset_Class": "package"}
-    vod_package.D_app["package"] = {
-        "Metadata_Spec_Version": "CableLabsVOD1.1"
+    vod_package.D_ams["package"] = {
+        "Provider":  provider,
+        "Product": product,
+        "Asset_Name": package_asset_name,
+        "Version_Major": '1',
+        "Version_Minor": '0',
+        "Description": package_description,
+        "Creation_Date": creation_date,
+        "Provider_ID": provider_id,
+        "Asset_ID": package_asset_id,
+        "Asset_Class": "package"
     }
+    vod_package.D_app["package"] = {"Metadata_Spec_Version": "CableLabsVOD1.1"}
 
     # Title section
     title_asset_name = "{} {} (title)".format(file_name[:20], suffix)
@@ -64,48 +64,53 @@ def generate_metadata(file_path):
     title_title_brief = "{} {}".format(file_name[:14], suffix)
     title_title = "{} {}".format(file_name[:124], suffix)
 
-    vod_package.D_ams["title"] = {"Provider":  provider,
-                                  "Product": product,
-                                  "Asset_Name": title_asset_name,
-                                  "Version_Major": '1',
-                                  "Version_Minor": '0',
-                                  "Description": title_description,
-                                  "Creation_Date": creation_date,
-                                  "Provider_ID": provider_id,
-                                  "Asset_ID": title_asset_id,
-                                  "Asset_Class": "title"}
-    vod_package.D_app["title"] = {"Type": "title",
-                                  "Title_Brief": title_title_brief,
-                                  "Title": title_title,
-                                  "Summary_Short": title_title,
-                                  "Rating": ["NR"],
-                                  "Closed_Captioning": 'N',
-                                  "Year": timestamp.strftime("%Y"),
-                                  "Category": [title_category],
-                                  "Genre": ["Other"],
-                                  "Show_Type": "Other",
-                                  "Billing_ID": title_billing_id,
-                                  "Licensing_Window_Start": creation_date,
-                                  "Licensing_Window_End": end_date,
-                                  "Preview_Period": "300",
-                                  "Provider_QA_Contact": "N/A"}
+    vod_package.D_ams["title"] = {
+        "Provider":  provider,
+        "Product": product,
+        "Asset_Name": title_asset_name,
+        "Version_Major": '1',
+        "Version_Minor": '0',
+        "Description": title_description,
+        "Creation_Date": creation_date,
+        "Provider_ID": provider_id,
+        "Asset_ID": title_asset_id,
+        "Asset_Class": "title"
+    }
+    vod_package.D_app["title"] = {
+        "Type": "title",
+        "Title_Brief": title_title_brief,
+        "Title": title_title,
+        "Summary_Short": title_title,
+        "Rating": ["NR"],
+        "Closed_Captioning": 'N',
+        "Year": timestamp.strftime("%Y"),
+        "Category": [title_category],
+        "Genre": ["Other"],
+        "Show_Type": "Other",
+        "Billing_ID": title_billing_id,
+        "Licensing_Window_Start": creation_date,
+        "Licensing_Window_End": end_date,
+        "Preview_Period": "300",
+        "Provider_QA_Contact": "N/A"
+    }
 
     # Movie section
     movie_asset_name = "{} {} (movie)".format(file_name[:20], suffix)
     movie_description = "{} {} (movie asset)".format(file_name[:20], suffix)
     movie_asset_id = "{}M{}{}".format(prefix, asset_id, suffix)
 
-    vod_package.D_ams["movie"] = {"Provider":  provider,
-                                  "Product": product,
-                                  "Asset_Name": movie_asset_name,
-                                  "Version_Major": '1',
-                                  "Version_Minor": '0',
-                                  "Description": movie_description,
-                                  "Creation_Date": creation_date,
-                                  "Provider_ID": provider_id,
-                                  "Asset_ID": movie_asset_id,
-                                  "Asset_Class": "movie"}
-    vod_package.D_app["movie"] = {"Type": "movie"}
-    vod_package.D_content = {"movie": file_path}
+    vod_package.D_ams["movie"] = {
+        "Provider":  provider,
+        "Product": product,
+        "Asset_Name": movie_asset_name,
+        "Version_Major": '1',
+        "Version_Minor": '0',
+        "Description": movie_description,
+        "Creation_Date": creation_date,
+        "Provider_ID": provider_id,
+        "Asset_ID": movie_asset_id,
+        "Asset_Class": "movie"
+    }
+    vod_package.D_app["movie"]["Type"] = "movie"
 
     return vod_package

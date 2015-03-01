@@ -1,5 +1,6 @@
 from copy import deepcopy
 from configparser import ConfigParser
+from datetime import datetime
 from io import BytesIO, open
 import unittest
 try:
@@ -11,6 +12,7 @@ import os.path
 from vod_metadata import find_data_file
 from vod_metadata.config_read import ConfigurationError, parse_config
 from vod_metadata.md5_calc import md5_checksum
+from vod_metadata.md_gen import generate_metadata
 from vod_metadata.media_info import call_MediaInfo, check_video, MediaInfoError
 from vod_metadata.vodpackage import VodPackage
 from vod_metadata.xml_helper import etree, tobytes
@@ -140,7 +142,7 @@ class ConfigReadTests(unittest.TestCase):
         actual = parse_config(config_lines)[5]
         expected = "001"
         self.assertEqual(actual, expected)
-    
+
         # Test custom value
         config_lines = self._modify_key("provider", "002")
         actual = parse_config(config_lines)[5]
@@ -171,6 +173,112 @@ class Md5CalcTests(unittest.TestCase):
         test_value = md5_checksum(reference_mp4)
         known_value = "f5f66bd6e6b2ed02153d6fa94787626c"
         self.assertEqual(test_value, known_value)
+
+
+class MdGenTests(unittest.TestCase):
+    @patch('vod_metadata.md_gen.random', autospec=True)
+    @patch('vod_metadata.md_gen.datetime.datetime', autospec=True)
+    def setUp(self, mock_datetime, mock_random):
+        mock_random.randint.return_value = 1020
+        mock_datetime.today.return_value = datetime(1999, 9, 9, 1, 2)
+        self.vod_package = generate_metadata(reference_mp4)
+        self.ams_expected = {
+            "Provider":  "001",
+            "Product": "MOD",
+            "Version_Major": '1',
+            "Version_Minor": '0',
+            "Creation_Date": "1999-09-09",
+            "Provider_ID": "example.com",
+        }
+
+    def test_package(self):
+        # XML path
+        actual = os.path.split(self.vod_package.xml_path)[1]
+        expected = "reference_1020.xml"
+        self.assertEqual(actual, expected)
+
+        # Package AMS values
+        actual = self.vod_package.D_ams["package"]
+        expected = self.ams_expected.copy()
+        package_expected = {
+            "Asset_Name": "reference 1020 (package)",
+            "Description": "reference 1020 (package asset)",
+            "Asset_Class": "package",
+            "Asset_ID": "MSOP1999090901021020",
+        }
+        expected.update(package_expected)
+        self.assertEqual(actual, expected)
+
+        # Package APP values
+        actual = self.vod_package.D_app["package"]
+        expected = {"Metadata_Spec_Version": "CableLabsVOD1.1"}
+        self.assertEqual(actual, expected)
+
+    def test_title(self):
+        # Title AMS values
+        actual = self.vod_package.D_ams["title"]
+        expected = self.ams_expected.copy()
+        title_expected = {
+            "Asset_Name": "reference 1020 (title)",
+            "Description": "reference 1020 (title asset)",
+            "Asset_Class": "title",
+            "Asset_ID": "MSOT1999090901021020",
+        }
+        expected.update(title_expected)
+        self.assertEqual(actual, expected)
+
+        # Title APP values
+        actual = self.vod_package.D_app["title"]
+        expected = {
+            "Type": "title",
+            "Title_Brief": "reference 1020",
+            "Title": "reference 1020",
+            "Summary_Short": "reference 1020",
+            "Rating": ["NR"],
+            "Closed_Captioning": 'N',
+            "Year": "1999",
+            "Category": ["MSO Lab"],
+            "Genre": ["Other"],
+            "Show_Type": "Other",
+            "Billing_ID": "1020B",
+            "Licensing_Window_Start": "1999-09-09",
+            "Licensing_Window_End": "2002-06-04",
+            "Preview_Period": "300",
+            "Provider_QA_Contact": "N/A"
+        }
+        self.assertEqual(actual, expected)
+
+    def test_movie(self):
+        # Movie AMS values
+        actual = self.vod_package.D_ams["movie"]
+        expected = self.ams_expected.copy()
+        movie_expected = {
+            "Asset_Name": "reference 1020 (movie)",
+            "Description": "reference 1020 (movie asset)",
+            "Asset_Class": "movie",
+            "Asset_ID": "MSOM1999090901021020",
+        }
+        expected.update(movie_expected)
+        self.assertEqual(actual, expected)
+
+        # Movie APP values
+        actual = self.vod_package.D_app["movie"]
+        expected = {
+            'Audio_Type': 'Stereo',
+            'Bit_Rate': '275',
+            'Codec': 'AVC HP@L30',
+            'Content_CheckSum': 'f5f66bd6e6b2ed02153d6fa94787626c',
+            'Content_FileSize': '251404',
+            'Frame_Rate': '25',
+            'Resolution': '480p',
+            'Type': 'movie',
+        }
+        self.assertEqual(actual, expected)
+
+        # Movie Content values
+        actual = self.vod_package.D_content["movie"]
+        expected = reference_mp4
+        self.assertEqual(actual, expected)
 
 
 class MediaInfoTests(unittest.TestCase):
