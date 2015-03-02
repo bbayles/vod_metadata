@@ -292,12 +292,11 @@ class VodPackage(object):
         )
 
         # Determine the movie's frame rate and bitrate (actually kilobit rate)
-        self.D_app[ae_type]["Frame_Rate"] = str(
-            round(float(mpeg_info["Video"]["Frame rate"]))
-        )
-        self.D_app[ae_type]["Bit_Rate"] = str(
-            round(float(mpeg_info["General"]["Overall bit rate"]) / 1000)
-        )
+        frame_rate = float(mpeg_info["Video"]["Frame rate"])
+        self.D_app[ae_type]["Frame_Rate"] = format(frame_rate, '.0f')
+
+        bit_rate = float(mpeg_info["General"]["Overall bit rate"]) / 1000
+        self.D_app[ae_type]["Bit_Rate"] = format(bit_rate, '.0f')
 
     def _scan_image(self, ae_path):
         img_info = check_picture(ae_path)

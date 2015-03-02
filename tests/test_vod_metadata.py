@@ -21,7 +21,7 @@ from vod_metadata.media_info import (
     MediaInfoError,
 )
 from vod_metadata.vodpackage import VodPackage
-from vod_metadata.xml_helper import etree, tobytes
+from vod_metadata.xml_helper import etree, lxml, tobytes
 
 
 @patch(
@@ -365,20 +365,24 @@ class XmlHelperTests(unittest.TestCase):
         self.zero = etree.Element('zero')
         self.one = etree.SubElement(self.zero, 'one')
         self.two = etree.SubElement(self.one, 'two', attrib={'key': 'value'})
-        self.expected = (
-            b'<?xml version=\'1.0\' encoding=\'utf-8\'?>\n'
-            b'<!DOCTYPE ADI SYSTEM "ADI.DTD">\n'
-            b'<zero>\n  <one>\n    <two key="value"/>\n  </one>\n</zero>\n'
-        )
+        self.expected_lines = [
+            b'<?xml version=\'1.0\' encoding=\'utf-8\'?>\n',
+            b'<!DOCTYPE ADI SYSTEM "ADI.DTD">\n',
+        ]
 
-    def test_tobytes_lxml(self):
-        actual = tobytes(self.zero)
-        self.assertEqual(actual, self.expected)
+        if lxml:
+            self.expected_lines.append(
+                b'<zero>\n  <one>\n    <two key="value"/>\n  </one>\n</zero>\n'
+            )
+        else:
+            self.expected_lines.append(
+                b'<zero>\n  <one>\n    <two key="value" />\n  </one>\n</zero>\n'
+            )
 
-    @patch('vod_metadata.xml_helper.lxml', False)  # Force pure-Python version
-    def test_tobytes_python(self):
+    def test_tobytes(self):
         actual = tobytes(self.zero)
-        self.assertEqual(actual, self.expected)
+        expected = b''.join(self.expected_lines)
+        self.assertEqual(actual, expected)
 
 
 class VodMetadataTests(unittest.TestCase):
