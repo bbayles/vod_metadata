@@ -173,6 +173,19 @@ class ConfigReadTests(unittest.TestCase):
         expected = True
         self.assertEqual(actual, expected)
 
+    def test_no_config(self):
+        actual = parse_config([])
+        expected = (
+            {".mpg", ".ts", ".mp4"},
+            "MOD",
+            "example.com",
+            "MSO",
+            "Testing/Videos",
+            "001",
+            False
+        )
+        self.assertEqual(actual, expected)
+
 
 class Md5CalcTests(unittest.TestCase):
     def test_checksum(self):
@@ -376,7 +389,10 @@ class XmlHelperTests(unittest.TestCase):
             )
         else:
             self.expected_lines.append(
-                b'<zero>\n  <one>\n    <two key="value" />\n  </one>\n</zero>\n'
+                b'<zero>\n'
+                b'  <one>\n'
+                b'    <two key="value" />\n'
+                b'  </one>\n</zero>\n'
             )
 
     def test_tobytes(self):
