@@ -17,7 +17,7 @@ else:
 
 setup(
     name='vod_metadata',
-    version='2014.07.28',
+    version='2015.3.2',
     license='MIT',
     url='https://github.com/bbayles/vod_metadata',
 
