@@ -1,3 +1,4 @@
+from collections import namedtuple
 import configparser
 
 __all__ = ["ConfigurationError", "parse_config"]
@@ -5,6 +6,12 @@ __all__ = ["ConfigurationError", "parse_config"]
 
 class ConfigurationError(Exception):
     pass
+
+
+VodConfig = namedtuple(
+    "VodConfig", 
+    "extensions,product,provider_id,prefix,title_category,provider,ecn_2009"
+)
 
 
 def parse_config(config_path):
@@ -70,7 +77,7 @@ def parse_config(config_path):
     ecn_2009 = config.get("VOD", "ecn_2009", fallback="False")
     ecn_2009 = ecn_2009 == "True"
 
-    return (
+    return VodConfig(
         extensions,
         product,
         provider_id,
