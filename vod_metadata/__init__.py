@@ -9,3 +9,4 @@ template_path = find_data_file("metadata_template.xml")
 
 # Expose the main VodPackage class
 from vod_metadata.vodpackage import VodPackage  # noqa
+__all__ = ["VodPackage"]
