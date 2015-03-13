@@ -2,7 +2,7 @@ from __future__ import division
 from io import open
 import os.path
 
-from vod_metadata import param_skip
+from vod_metadata import vod_config
 from vod_metadata.md5_calc import md5_checksum
 from vod_metadata.media_info import check_video, check_picture
 from vod_metadata.xml_helper import etree, tobytes
@@ -31,6 +31,13 @@ class VodPackage(object):
     }
 
     def __init__(self, xml_path):
+        # The ECN 2009 options are not always supported - check configuration
+        # to see whether they should be added.
+        if vod_config.ecn_2009:
+            self.param_skip = {"Resolution", "Frame_Rate", "Codec"}
+        else:
+            self.param_skip = set()
+
         self.xml_path = xml_path
         self.tree = etree.parse(self.xml_path)
 
@@ -97,7 +104,7 @@ class VodPackage(object):
             self.D_app[ae_type].items(), key=lambda x: x[0]
         ):
             # Configuration controls whether certain values get skipped
-            if key in param_skip:
+            if key in self.param_skip:
                 continue
             # Some of the App_Data tags can be repeated
             if key in self._multiples:

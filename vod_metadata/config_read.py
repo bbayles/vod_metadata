@@ -9,7 +9,7 @@ class ConfigurationError(Exception):
 
 
 VodConfig = namedtuple(
-    "VodConfig", 
+    "VodConfig",
     "extensions,product,provider_id,prefix,title_category,provider,ecn_2009"
 )
 

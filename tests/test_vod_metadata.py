@@ -502,7 +502,7 @@ app_movie = {
     'Frame_Rate': '30',
     'Resolution': '480i',
     'Type': 'movie',
- }
+}
 
 ams_preview = {
     'Asset_Class': 'preview',

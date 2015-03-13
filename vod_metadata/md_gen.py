@@ -2,14 +2,7 @@ import datetime
 import os
 import random
 
-from vod_metadata import (
-    prefix,
-    product,
-    provider,
-    provider_id,
-    template_path,
-    title_category,
-)
+from vod_metadata import vod_config, template_path
 from vod_metadata.vodpackage import VodPackage
 
 __all__ = ["generate_metadata"]
@@ -41,17 +34,17 @@ def generate_metadata(file_path):
     package_description = "{} {} (package asset)".format(
         file_name[:20], suffix
     )
-    package_asset_id = "{}P{}{}".format(prefix, asset_id, suffix)
+    package_asset_id = "{}P{}{}".format(vod_config.prefix, asset_id, suffix)
 
     vod_package.D_ams["package"] = {
-        "Provider":  provider,
-        "Product": product,
+        "Provider":  vod_config.provider,
+        "Product": vod_config.product,
         "Asset_Name": package_asset_name,
         "Version_Major": '1',
         "Version_Minor": '0',
         "Description": package_description,
         "Creation_Date": creation_date,
-        "Provider_ID": provider_id,
+        "Provider_ID": vod_config.provider_id,
         "Asset_ID": package_asset_id,
         "Asset_Class": "package"
     }
@@ -60,19 +53,19 @@ def generate_metadata(file_path):
     # Title section
     title_asset_name = "{} {} (title)".format(file_name[:20], suffix)
     title_description = "{} {} (title asset)".format(file_name[:20], suffix)
-    title_asset_id = "{}T{}{}".format(prefix, asset_id, suffix)
+    title_asset_id = "{}T{}{}".format(vod_config.prefix, asset_id, suffix)
     title_title_brief = "{} {}".format(file_name[:14], suffix)
     title_title = "{} {}".format(file_name[:124], suffix)
 
     vod_package.D_ams["title"] = {
-        "Provider":  provider,
-        "Product": product,
+        "Provider":  vod_config.provider,
+        "Product": vod_config.product,
         "Asset_Name": title_asset_name,
         "Version_Major": '1',
         "Version_Minor": '0',
         "Description": title_description,
         "Creation_Date": creation_date,
-        "Provider_ID": provider_id,
+        "Provider_ID": vod_config.provider_id,
         "Asset_ID": title_asset_id,
         "Asset_Class": "title"
     }
@@ -84,7 +77,7 @@ def generate_metadata(file_path):
         "Rating": ["NR"],
         "Closed_Captioning": 'N',
         "Year": timestamp.strftime("%Y"),
-        "Category": [title_category],
+        "Category": [vod_config.title_category],
         "Genre": ["Other"],
         "Show_Type": "Other",
         "Billing_ID": title_billing_id,
@@ -97,17 +90,17 @@ def generate_metadata(file_path):
     # Movie section
     movie_asset_name = "{} {} (movie)".format(file_name[:20], suffix)
     movie_description = "{} {} (movie asset)".format(file_name[:20], suffix)
-    movie_asset_id = "{}M{}{}".format(prefix, asset_id, suffix)
+    movie_asset_id = "{}M{}{}".format(vod_config.prefix, asset_id, suffix)
 
     vod_package.D_ams["movie"] = {
-        "Provider":  provider,
-        "Product": product,
+        "Provider":  vod_config.provider,
+        "Product": vod_config.product,
         "Asset_Name": movie_asset_name,
         "Version_Major": '1',
         "Version_Minor": '0',
         "Description": movie_description,
         "Creation_Date": creation_date,
-        "Provider_ID": provider_id,
+        "Provider_ID": vod_config.provider_id,
         "Asset_ID": movie_asset_id,
         "Asset_Class": "movie"
     }

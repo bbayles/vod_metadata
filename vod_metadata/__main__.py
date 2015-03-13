@@ -6,7 +6,7 @@ from __future__ import print_function
 from io import open
 import os
 
-from vod_metadata import extensions
+from vod_metadata import vod_config
 from vod_metadata.md_gen import generate_metadata
 
 
@@ -14,7 +14,7 @@ if __name__ == "__main__":
     for file_path in os.listdir(os.getcwd()):
         # Only process movie files
         file_name, file_ext = os.path.splitext(file_path)
-        if file_ext not in extensions:
+        if file_ext not in vod_config.extensions:
             continue
         # Create the VodPackage instace
         print("Processing {}...".format(file_path))
