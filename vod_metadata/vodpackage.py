@@ -2,7 +2,8 @@ from __future__ import division
 from io import open
 import os.path
 
-from vod_metadata import vod_config
+from vod_metadata import config_path
+from vod_metadata.config_read import parse_config
 from vod_metadata.md5_calc import md5_checksum
 from vod_metadata.media_info import check_video, check_picture
 from vod_metadata.xml_helper import etree, tobytes
@@ -33,6 +34,7 @@ class VodPackage(object):
     def __init__(self, xml_path):
         # The ECN 2009 options are not always supported - check configuration
         # to see whether they should be added.
+        vod_config = parse_config(config_path)
         if vod_config.ecn_2009:
             self.param_skip = {"Resolution", "Frame_Rate", "Codec"}
         else:
