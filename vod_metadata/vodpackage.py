@@ -31,10 +31,13 @@ class VodPackage(object):
         "Song_Title", "Languages", "Subtitle_Languages", "Dubbed_Languages"
     }
 
-    def __init__(self, xml_path):
+    def __init__(self, xml_path, vod_config=None):
+        # Retrieve configuration if it's not set already
+        if vod_config is None:
+            vod_config = parse_config(config_path)
+
         # The ECN 2009 options are not always supported - check configuration
         # to see whether they should be added.
-        vod_config = parse_config(config_path)
         if vod_config.ecn_2009:
             self.param_skip = {"Resolution", "Frame_Rate", "Codec"}
         else:

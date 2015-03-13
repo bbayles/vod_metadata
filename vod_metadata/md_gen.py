@@ -24,7 +24,7 @@ def generate_metadata(file_path):
     title_billing_id = "{}B".format(suffix)
 
     # Start with a minimal metadata template
-    vod_package = VodPackage(template_path)
+    vod_package = VodPackage(template_path, vod_config=vod_config)
     file_name = os.path.splitext(os.path.split(file_path)[1])[0]
     outfile_path = "{}_{}.xml".format(file_name, suffix)
     vod_package.xml_path = os.path.join(os.getcwd(), outfile_path)
