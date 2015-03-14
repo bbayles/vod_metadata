@@ -9,30 +9,17 @@ If you're looking at this project you probably have some familiarity with that
 specification. The goal of this project is to prevent its users from having to
 be _too_ familiar with its endearing quirks. 
 
-## Using the metadata generator
+### Quick start (for beginners and Windows users)
 This project contains a script that will generate valid VOD metadata for all the
-video files in a directory. This guide (written with Windows users who might
-not be familiar with Python) shows how get that script up and running.
+video files in a directory.
 
-First, get the pre-requisites:
-* Make sure you've got a recent version of [Python](http://python.org)
- installed. I develop for version 3.4, but will try to support 2.7
+* Download and install [Python](http://python.or). Get version 3.4 or later.
 * Download the [MediaInfo](http://mediaarea.net/en/MediaInfo) CLI archive and
  extract it somewhere (e.g. to `C:\Program Files\MediaInfo`)
-
-Then, get the module ready:
-* Download this module's
- [source archive from Github](http://github.com/bbayles/vod_metadata/zipball/master/)
- and extract it somewhere (e.g. to `C:\temp\vod_metadata-master`)
-* Edit `vod_metadata/vod_config.ini` to set custom parameters
-* Run `setup.py install` to install the module
-    * Open a command prompt to the directory where you extracted the source archive
-    * Run the `setup.py` script (e.g. `python setup.py install` or `C:\Python34\python.exe setup.py install`)
+* Open a command prompt. Then run this command: `C:\Python34\python.exe -m pip install vod_metadata`
 
 
-Once you're set up, open up a command prompt and switch to a directory with
- video files (e.g. `C:\videos`):
-
+Once you're set up, switch to a directory with some video files (e.g. `cd C:\videos`):
 ```
 C:\Videos>dir /b
 11 Pink.mpg
@@ -40,14 +27,10 @@ C:\Videos>dir /b
 13 Game.mpg
 ```
 
-Execute the script with the Python interpreter, using the `-m` switch
- (e.g. `C:\Python34\python.exe -m vod_metadata`):
+Execute the script with the Python interpreter, using the `-m` switch:
 
 ```
-C:\Videos>C:\Python34\python.exe -m vod_metadata
-Processing 11 Pink.mpg...
-Processing 12 Banker.mpg...
-Processing 13 Game.mpg...
+C:\Python34\python.exe -m vod_metadata
 ```
 
 After it runs (it can take a bit for the checksums to be calculated) you should
@@ -61,6 +44,11 @@ C:\Videos>dir /b
 12 Banker_2743.xml
 13 Game.mpg
 13 Game_5056.xml
+```
+
+You may process videos in some other directory with the `--video-dir` argument.
+```
+C:\Videos>C:\Python34\python.exe -m vod_metadata  --video-dir "C:\Somewhere\Videos"
 ```
 
 ## Troubleshooting
