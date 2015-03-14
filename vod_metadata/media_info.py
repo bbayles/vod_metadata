@@ -2,8 +2,6 @@ import collections
 import os
 import subprocess
 
-from vod_metadata.utils import find_data_file
-
 
 class MediaInfoError(Exception):
     pass
