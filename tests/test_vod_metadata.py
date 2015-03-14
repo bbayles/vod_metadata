@@ -34,7 +34,8 @@ class ConfigReadTests(unittest.TestCase):
             self.config_lines = [line.strip() for line in infile if line]
 
     def _modify_key(self, key, value):
-        find_str = "{} = ".format(key)
+        target = "{} = ".format(key)
+        commented_target = "# {} = ".format(key)
         if value is None:
             replace_str = ''
         else:
@@ -42,7 +43,7 @@ class ConfigReadTests(unittest.TestCase):
 
         ret = self.config_lines[:]
         for i, line in enumerate(ret):
-            if line.startswith(find_str):
+            if line.startswith(target) or line.startswith(commented_target):
                 ret[i] = replace_str
                 return ret
 
@@ -171,6 +172,18 @@ class ConfigReadTests(unittest.TestCase):
         config_lines = self._modify_key("ecn_2009", "True")
         actual = parse_config(config_lines)[6]
         expected = True
+        self.assertEqual(actual, expected)
+
+    def test_mediainfo_path(self):
+        # Test default value
+        config_lines = self._modify_key("path", None)
+        actual = parse_config(config_lines)[7]
+        self.assertIsNone(actual)
+
+        # Test custom value
+        config_lines = self._modify_key("path", "/usr/bin/mediainfo")
+        actual = parse_config(config_lines)[7]
+        expected = "/usr/bin/mediainfo"
         self.assertEqual(actual, expected)
 
     def test_no_config(self):
