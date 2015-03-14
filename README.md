@@ -19,9 +19,6 @@ First, get the pre-requisites:
  installed. I develop for version 3.4, but will try to support 2.7
 * Download the [MediaInfo](http://mediaarea.net/en/MediaInfo) CLI archive and
  extract it somewhere (e.g. to `C:\Program Files\MediaInfo`)
-* (Optional) Make sure you've got the [lxml](http://lxml.de) library installed. If you're
- on Windows you can use the installer from
- [Christoph Gohlke's Python Extension Packages](http://www.lfd.uci.edu/~gohlke/pythonlibs/#lxml)
 
 Then, get the module ready:
 * Download this module's
@@ -65,6 +62,15 @@ C:\Videos>dir /b
 13 Game.mpg
 13 Game_5056.xml
 ```
+
+## Troubleshooting
+If you find that you get a `RuntimeError: MediaInfo not found.` error message, you can specify the path to MediaInfo on the command line:
+
+```
+C:\Videos>C:\Python34\python.exe -m vod_metadata  --mediainfo-path "C:\Somewhere\MediaInfo.exe"
+```
+
+Be sure that you've got the command line version of MediaInfo and not the GUI version.
 
 ## Using the library
 You can use the module to edit already-existing metadata files.
