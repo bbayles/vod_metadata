@@ -218,7 +218,7 @@ The `vod_metadata` module exposes these exceptions:
 * `MediaInfoError` - raised if you scan a video or picture file and MediaInfo
   doesn't return all the necessary information.
 * `ConfigurationError` - raised if the values specified in the configuration
- file, `template_values.ini` are not valid.
+ file, `vod_config.ini` are not valid.
 
 ## Contact the author
 I wrote this tool to save myself time hand-editing VOD metadata files.
