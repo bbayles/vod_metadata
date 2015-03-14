@@ -23,12 +23,14 @@ def find_MediaInfo():
             )
 
 
-def call_MediaInfo(file_name):
+def call_MediaInfo(file_name, mediainfo_path=None):
     """Returns a dictionary of dictionaries with the output of
        MediaInfo -f file_name"""
+    if mediainfo_path is None:
+        mediainfo_path = find_MediaInfo()
 
     result = subprocess.check_output(
-        [find_MediaInfo(), "-f", file_name], universal_newlines=True
+        [mediainfo_path, "-f", file_name], universal_newlines=True
     )
     D = collections.defaultdict(dict)
     for line in result.splitlines():
@@ -49,12 +51,12 @@ def call_MediaInfo(file_name):
     return D
 
 
-def check_video(file_name):
+def check_video(file_name, mediainfo_path=None):
     """
     Scans the given file with MediaInfo and returns the video and audio codec
     information if all the required parameters were found.
     """
-    D = call_MediaInfo(file_name)
+    D = call_MediaInfo(file_name, mediainfo_path)
     err_msg = "Could not determine all video paramters"
 
     if ("General" not in D) or ("Video" not in D):
@@ -77,12 +79,12 @@ def check_video(file_name):
     return D
 
 
-def check_picture(file_name):
+def check_picture(file_name, mediainfo_path=None):
     """
     Scans the given file with MediaInfo and returns the picture
     information if all the required parameters were found.
     """
-    D = call_MediaInfo(file_name)
+    D = call_MediaInfo(file_name, mediainfo_path)
     # Check that the file analyzed was a valid movie
     if (
         ("Image" not in D) or

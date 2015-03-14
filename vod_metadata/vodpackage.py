@@ -34,11 +34,13 @@ class VodPackage(object):
     def __init__(self, xml_path, vod_config=None):
         # Retrieve configuration if it's not set already
         if vod_config is None:
-            vod_config = parse_config(config_path)
+            self.vod_config = parse_config(config_path)
+        else:
+            self.vod_config = vod_config
 
         # The ECN 2009 options are not always supported - check configuration
         # to see whether they should be added.
-        if vod_config.ecn_2009:
+        if self.vod_config.ecn_2009:
             self.param_skip = {"Resolution", "Frame_Rate", "Codec"}
         else:
             self.param_skip = set()
@@ -248,7 +250,7 @@ class VodPackage(object):
         self.is_delete = True
 
     def _scan_video(self, ae_type, ae_path):
-        mpeg_info = check_video(ae_path)
+        mpeg_info = check_video(ae_path, self.vod_config.mediainfo_path)
 
         # Calculate the run time of the video
         duration_s = round(float(mpeg_info["General"]["Duration"]) / 1000)
@@ -311,7 +313,7 @@ class VodPackage(object):
         self.D_app[ae_type]["Bit_Rate"] = format(bit_rate, '.0f')
 
     def _scan_image(self, ae_path):
-        img_info = check_picture(ae_path)
+        img_info = check_picture(ae_path, self.vod_config.mediainfo_path)
         img_width = img_info["Image"]["Width"]
         img_height = img_info["Image"]["Height"]
         self.D_app["poster"]["Image_Aspect_Ratio"] = "{}x{}".format(
