@@ -30,7 +30,7 @@ from vod_metadata.xml_helper import etree, lxml, tobytes
 )
 class ConfigReadTests(unittest.TestCase):
     def setUp(self):
-        with open(find_data_file("template_values.ini"), mode='r') as infile:
+        with open(find_data_file(config_path), mode='r') as infile:
             self.config_lines = [line.strip() for line in infile if line]
 
     def _modify_key(self, key, value):
@@ -182,7 +182,8 @@ class ConfigReadTests(unittest.TestCase):
             "MSO",
             "Testing/Videos",
             "001",
-            False
+            False,
+            None,
         )
         self.assertEqual(actual, expected)
 

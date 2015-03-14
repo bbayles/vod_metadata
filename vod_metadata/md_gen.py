@@ -2,8 +2,7 @@ import datetime
 import os
 import random
 
-from vod_metadata import config_path, template_path
-from vod_metadata.config_read import parse_config
+from vod_metadata import template_path
 from vod_metadata.vodpackage import VodPackage
 
 __all__ = ["generate_metadata"]

@@ -10,7 +10,10 @@ class ConfigurationError(Exception):
 
 VodConfig = namedtuple(
     "VodConfig",
-    "extensions,product,provider_id,prefix,title_category,provider,ecn_2009"
+    (
+        "extensions,product,provider_id,prefix,title_category,provider,"
+        "ecn_2009,mediainfo_path"
+    )
 )
 
 
@@ -23,6 +26,9 @@ def parse_config(config_path):
         "Extensions", "extensions", fallback="mpg, ts, mp4"
     )
     extensions = set(".{}".format(x.strip()) for x in extensions.split(','))
+
+    # mediainfo_path may or may not be set
+    mediainfo_path = config.get("MediaInfo", "path", fallback=None)
 
     # Product can be up to 20 characters
     product = config.get("VOD", "product", fallback="MOD").strip()
@@ -84,5 +90,6 @@ def parse_config(config_path):
         prefix,
         title_category,
         provider,
-        ecn_2009
+        ecn_2009,
+        mediainfo_path,
     )
