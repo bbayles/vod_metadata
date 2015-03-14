@@ -46,7 +46,7 @@ C:\Videos>dir /b
 13 Game_5056.xml
 ```
 
-You may process videos in some other directory with the ``--video-dir` argument.
+You may process videos in some other directory with the `--video-dir` argument.
 ```
 C:\Videos>C:\Python34\python.exe -m vod_metadata  --video-dir "C:\Somewhere\Videos"
 ```
