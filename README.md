@@ -27,12 +27,10 @@ Then, get the module ready:
 * Download this module's
  [source archive from Github](http://github.com/bbayles/vod_metadata/zipball/master/)
  and extract it somewhere (e.g. to `C:\temp\vod_metadata-master`)
-* Edit `vod_metadata/MediaInfo.pth` and make sure it contains the path to your MediaInfo CLI executable
-  (e.g. `C:\Program Files\MediaInfo\MediaInfo.exe`)
-* Edit `vod_metadata/template_values.ini` to set custom parameters
+* Edit `vod_metadata/vod_config.ini` to set custom parameters
 * Run `setup.py install` to install the module
     * Open a command prompt to the directory where you extracted the source archive
-    * Run the `setup.py` script (e.g. `py setup.py install` or `C:\Python34\python.exe setup.py install`)
+    * Run the `setup.py` script (e.g. `python setup.py install` or `C:\Python34\python.exe setup.py install`)
 
 
 Once you're set up, open up a command prompt and switch to a directory with
