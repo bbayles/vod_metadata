@@ -12,10 +12,10 @@ from vod_metadata.md_gen import generate_metadata
 
 
 if __name__ == "__main__":
-    for file_path in os.listdir(os.getcwd()):
-        # Retrieve the user's configuration
-        vod_config = parse_config(config_path)
+    # Retrieve the user's configuration
+    vod_config = parse_config(config_path)
 
+    for file_path in os.listdir(os.getcwd()):
         # Only process movie files
         file_name, file_ext = os.path.splitext(file_path)
         if file_ext not in vod_config.extensions:
@@ -23,7 +23,7 @@ if __name__ == "__main__":
 
         # Create the VodPackage instace
         print("Processing {}...".format(file_path))
-        vod_package = generate_metadata(file_path)
+        vod_package = generate_metadata(file_path, vod_config)
 
         # Write the result
         s = vod_package.write_xml(rewrite=True)

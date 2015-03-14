@@ -9,11 +9,7 @@ from vod_metadata.vodpackage import VodPackage
 __all__ = ["generate_metadata"]
 
 
-def generate_metadata(file_path, vod_config=None):
-    # Check the user's configuration
-    if vod_config is None:
-        vod_config = parse_config(config_path)
-
+def generate_metadata(file_path, vod_config):
     # Time-sensitive values
     timestamp = datetime.datetime.today()
     creation_date = timestamp.strftime("%Y-%m-%d")

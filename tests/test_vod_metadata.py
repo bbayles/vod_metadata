@@ -9,7 +9,7 @@ except ImportError:
     from mock import patch
 import os.path
 
-from vod_metadata import find_data_file
+from vod_metadata import config_path, find_data_file
 from vod_metadata.config_read import ConfigurationError, parse_config
 from vod_metadata.md5_calc import md5_checksum
 from vod_metadata.md_gen import generate_metadata
@@ -200,7 +200,8 @@ class MdGenTests(unittest.TestCase):
     def setUp(self, mock_datetime, mock_random):
         mock_random.randint.return_value = 1020
         mock_datetime.today.return_value = datetime(1999, 9, 9, 1, 2)
-        self.vod_package = generate_metadata(reference_mp4)
+        vod_config = parse_config(find_data_file(config_path))
+        self.vod_package = generate_metadata(reference_mp4, vod_config)
         self.ams_expected = {
             "Provider":  "001",
             "Product": "MOD",
