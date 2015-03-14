@@ -10,17 +10,18 @@ class MediaInfoError(Exception):
 
 
 def find_MediaInfo():
-    # Find MediaInfo
-    with open(find_data_file("MediaInfo.pth"), mode='r') as _infile:
-        for MediaInfo_path in _infile:
-            MediaInfo_path = MediaInfo_path.strip()
-            if os.path.isfile(MediaInfo_path):
-                return MediaInfo_path
-        else:
-            raise RuntimeError(
-                "MediaInfo not found. Specify the path to MediaInfo in the "
-                "install directory's MediaInfo.pth file."
-            )
+    typical_paths = [
+        "C:\Program Files\MediaInfo\MediaInfo.exe",
+        "C:\Program Files (x86)\MediaInfo\MediaInfo.exe",
+        "/usr/bin/mediainfo",
+    ]
+    for mediainfo_path in typical_paths:
+        if os.path.isfile(mediainfo_path):
+            return mediainfo_path
+    raise RuntimeError(
+        "MediaInfo not found. Specify the path to MediaInfo in the "
+        "configuration file."
+    )
 
 
 def call_MediaInfo(file_name, mediainfo_path=None):
