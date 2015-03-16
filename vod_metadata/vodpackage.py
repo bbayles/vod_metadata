@@ -41,9 +41,9 @@ class VodPackage(object):
         # The ECN 2009 options are not always supported - check configuration
         # to see whether they should be added.
         if self.vod_config.ecn_2009:
-            self.param_skip = {"Resolution", "Frame_Rate", "Codec"}
-        else:
             self.param_skip = set()
+        else:
+            self.param_skip = {"Resolution", "Frame_Rate", "Codec"}
 
         self.xml_path = xml_path
         self.tree = etree.parse(self.xml_path)
