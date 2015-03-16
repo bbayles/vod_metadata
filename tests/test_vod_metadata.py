@@ -215,6 +215,7 @@ class MdGenTests(unittest.TestCase):
         mock_random.randint.return_value = 1020
         mock_datetime.today.return_value = datetime(1999, 9, 9, 1, 2)
         vod_config = parse_config(find_data_file(config_path))
+        vod_config = vod_config._replace(ecn_2009=True)
         self.vod_package = generate_metadata(reference_mp4, vod_config)
         self.ams_expected = {
             "Provider":  "001",

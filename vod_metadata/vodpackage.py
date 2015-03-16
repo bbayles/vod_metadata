@@ -274,41 +274,43 @@ class VodPackage(object):
                 duration_h, duration_m, duration_s
             )
 
-        # Determine the movie's codec
-        commercial_name = mpeg_info["Video"]["Commercial name"]
-        format_profile = mpeg_info["Video"]["Format profile"]
-        if commercial_name == "MPEG-2 Video":
-            self.D_app[ae_type]["Codec"] = "MPEG2"
-        elif commercial_name == "AVC":
-            avc_profile = format_profile[0]
-            avc_level = format_profile[format_profile.find("@"):].replace(
-                ".", ""
-            )
-            self.D_app[ae_type]["Codec"] = "AVC {}P{}".format(
-                avc_profile, avc_level
-            )
-        else:
-            raise InvalidMpeg("Could not determine codec for {}".format(
-                self.D_content[ae_type])
-            )
-
         # Determine the audio type
         audio_type = int(mpeg_info["Audio"].get("Channel(s)", 0))
         self.D_app[ae_type]["Audio_Type"] = (
             "Stereo" if (audio_type > 1) else "Mono"
         )
 
-        # Determine the geometry
-        movie_resolution_height = mpeg_info["Video"]["Height"]
-        move_resolution_scan = mpeg_info["Video"]["Scan type"][0].lower()
-        self.D_app[ae_type]["Resolution"] = "{}{}".format(
-            movie_resolution_height, move_resolution_scan
-        )
+        if self.vod_config.ecn_2009:
+            # Determine the movie's codec
+            commercial_name = mpeg_info["Video"]["Commercial name"]
+            format_profile = mpeg_info["Video"]["Format profile"]
+            if commercial_name == "MPEG-2 Video":
+                self.D_app[ae_type]["Codec"] = "MPEG2"
+            elif commercial_name == "AVC":
+                avc_profile = format_profile[0]
+                avc_level = format_profile[format_profile.find("@"):].replace(
+                    ".", ""
+                )
+                self.D_app[ae_type]["Codec"] = "AVC {}P{}".format(
+                    avc_profile, avc_level
+                )
+            else:
+                raise InvalidMpeg("Could not determine codec for {}".format(
+                    self.D_content[ae_type])
+                )
 
-        # Determine the movie's frame rate and bitrate (actually kilobit rate)
-        frame_rate = float(mpeg_info["Video"]["Frame rate"])
-        self.D_app[ae_type]["Frame_Rate"] = format(frame_rate, '.0f')
+            # Determine the geometry
+            movie_resolution_height = mpeg_info["Video"]["Height"]
+            move_resolution_scan = mpeg_info["Video"]["Scan type"][0].lower()
+            self.D_app[ae_type]["Resolution"] = "{}{}".format(
+                movie_resolution_height, move_resolution_scan
+            )
 
+            # Determine the movie's frame rate
+            frame_rate = float(mpeg_info["Video"]["Frame rate"])
+            self.D_app[ae_type]["Frame_Rate"] = format(frame_rate, '.0f')
+
+        # Determine the movie's bitrate (actually kilobit rate)
         bit_rate = float(mpeg_info["General"]["Overall bit rate"]) / 1000
         self.D_app[ae_type]["Bit_Rate"] = format(bit_rate, '.0f')
 
