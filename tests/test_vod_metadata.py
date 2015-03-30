@@ -6,7 +6,7 @@ import unittest
 try:
     from unittest.mock import MagicMock, patch
 except ImportError:
-    from mock import patch
+    from mock import MagicMock, patch
 import os.path
 
 from vod_metadata import config_path, find_data_file
