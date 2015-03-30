@@ -1,12 +1,4 @@
-# lxml's etree.tostring() function supports a different set of arguments than
-# Python's xml.etree.ElementTree.tostring() function. This module calls lxml's
-# if it is installed, otherwise it uses Python's.
-try:
-    from lxml import etree
-    lxml = True
-except ImportError:
-    import xml.etree.ElementTree as etree
-    lxml = False
+import xml.etree.ElementTree as etree
 
 
 # Taken from Fredrik Lundh's effbot.org:
@@ -28,17 +20,8 @@ def indent(elem, level=0):
 
 
 def tobytes(doctype, root_elem):
-    if lxml:
-        return etree.tostring(
-            root_elem,
-            xml_declaration=True,
-            doctype=doctype,
-            encoding='utf-8',
-            pretty_print=True
-        )
-    else:
-        declaration = b"<?xml version='1.0' encoding='utf-8'?>"
-        indent(root_elem)
-        elements = etree.tostring(root_elem, encoding="utf-8")
+    declaration = b"<?xml version='1.0' encoding='utf-8'?>"
+    indent(root_elem)
+    elements = etree.tostring(root_elem, encoding="utf-8")
 
-        return b'\n'.join((declaration, doctype, elements))
+    return b'\n'.join((declaration, doctype, elements))

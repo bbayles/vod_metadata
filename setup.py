@@ -40,9 +40,7 @@ setup(
     packages=find_packages(exclude=[]),
     test_suite='tests',
 
-    # lxml is not required, but is recommended
     install_requires=install_requires,
-    extras_require={'Speed':  ["lxml"]},
     tests_require=tests_require,
 
     package_data={'vod_metadata': ["*.ini", "*.mp4", "*.pth", "*.xml"]},
