@@ -4,7 +4,7 @@ from datetime import datetime
 from io import BytesIO, open
 import unittest
 try:
-    from unittest.mock import patch
+    from unittest.mock import MagicMock, patch
 except ImportError:
     from mock import patch
 import os.path
@@ -20,8 +20,8 @@ from vod_metadata.media_info import (
     find_MediaInfo,
     MediaInfoError,
 )
-from vod_metadata.vodpackage import VodPackage
-from vod_metadata.xml_helper import etree, lxml, tobytes
+from vod_metadata.vodpackage import MissingElement, VodPackage
+from vod_metadata.xml_helper import etree, tobytes
 
 
 @patch(
@@ -397,19 +397,11 @@ class XmlHelperTests(unittest.TestCase):
         self.expected_lines = [
             b'<?xml version=\'1.0\' encoding=\'utf-8\'?>\n',
             b'<!DOCTYPE ADI SYSTEM "ADI.DTD">\n',
+            b'<zero>\n'
+            b'  <one>\n'
+            b'    <two key="value" />\n'
+            b'  </one>\n</zero>\n'
         ]
-
-        if lxml:
-            self.expected_lines.append(
-                b'<zero>\n  <one>\n    <two key="value"/>\n  </one>\n</zero>\n'
-            )
-        else:
-            self.expected_lines.append(
-                b'<zero>\n'
-                b'  <one>\n'
-                b'    <two key="value" />\n'
-                b'  </one>\n</zero>\n'
-            )
 
     def test_tobytes(self):
         actual = tobytes(b'<!DOCTYPE ADI SYSTEM "ADI.DTD">', self.zero)
@@ -443,6 +435,26 @@ class VodMetadataTests(unittest.TestCase):
         file_out.seek(0)
         new_package = VodPackage(file_out)
         self.assertEqual(file_out.getvalue(), new_package.write_xml())
+
+    def test_missing_movie(self):
+        vod_package = VodPackage(reference_xml)
+        del vod_package.D_ams["movie"]
+        with self.assertRaises(MissingElement):
+            vod_package.write_xml()
+
+    @patch('vod_metadata.vodpackage.VodPackage.check_files', autospec=True)
+    def test_rewrite(self, mock_check_file):
+        vod_package = VodPackage(reference_xml)
+        vod_package.write_xml(rewrite=True)
+        mock_check_file.assert_called_once_with(vod_package)
+
+    @patch('vod_metadata.vodpackage.open', autospec=True)
+    def test_overwrite_xml(self, mock_open):
+        mock_open.return_value = MagicMock()
+        file_handle = mock_open.return_value.__enter__.return_value
+        vod_package = VodPackage(reference_xml)
+        vod_package.overwrite_xml()
+        file_handle.write.assert_called_once_with(vod_package.write_xml())
 
 
 # Reference values
