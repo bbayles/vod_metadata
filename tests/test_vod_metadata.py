@@ -412,7 +412,7 @@ class XmlHelperTests(unittest.TestCase):
             )
 
     def test_tobytes(self):
-        actual = tobytes(self.zero)
+        actual = tobytes(b'<!DOCTYPE ADI SYSTEM "ADI.DTD">', self.zero)
         expected = b''.join(self.expected_lines)
         self.assertEqual(actual, expected)
 

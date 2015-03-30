@@ -151,7 +151,7 @@ Parse an existing metadata file by instantiating a VodPackage class:
 `VodPackage.__init__(self, xml_path)` parses the file given by the `xml_path`
 argument. These attributes are exposed:
 * `instance.xml_path` - the path to the XML file.
-* `instance.tree` - the XML tree as parsed by lxml.
+* `instance.tree` - the XML tree as parsed by etree.
 * `instance.D_ams` - A dictionary of dictionaries to hold the "AMS"
  attributes. These identify the asset package, title asset, and asset elements.
  See the CableLabs specification for more information. The sub-dictionaries 

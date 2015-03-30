@@ -138,6 +138,7 @@ class VodPackage(object):
             self.check_files()
 
         # Root element
+        doctype = b'<!DOCTYPE ADI SYSTEM "ADI.DTD">'
         ADI = etree.Element("ADI")
 
         # Package asset
@@ -177,7 +178,7 @@ class VodPackage(object):
                 ae_Content = etree.SubElement(ae_Asset, "Content")
                 ae_Content.set("Value", self.D_content[ae_type])
 
-        return tobytes(ADI)
+        return tobytes(doctype, ADI)
 
     def overwrite_xml(self, rewrite=False):
         s = self.write_xml(rewrite)

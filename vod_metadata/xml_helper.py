@@ -27,11 +27,10 @@ def indent(elem, level=0):
             elem.tail = i
 
 
-def tobytes(ADI):
-    doctype = b'<!DOCTYPE ADI SYSTEM "ADI.DTD">'
+def tobytes(doctype, root_elem):
     if lxml:
         return etree.tostring(
-            ADI,
+            root_elem,
             xml_declaration=True,
             doctype=doctype,
             encoding='utf-8',
@@ -39,7 +38,7 @@ def tobytes(ADI):
         )
     else:
         declaration = b"<?xml version='1.0' encoding='utf-8'?>"
-        indent(ADI)
-        elements = etree.tostring(ADI, encoding="utf-8")
+        indent(root_elem)
+        elements = etree.tostring(root_elem, encoding="utf-8")
 
         return b'\n'.join((declaration, doctype, elements))
