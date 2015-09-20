@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/bbayles/vod_metadata.svg?branch=master)](https://travis-ci.org/bbayles/vod_metadata)
+[![Coverage Status](https://coveralls.io/repos/bbayles/vod_metadata/badge.svg?branch=master&service=github)](https://coveralls.io/github/bbayles/vod_metadata?branch=master)
+
 ## Introduction
 This project contains a library and tools for manipulating and generating
 metadata files that conform to the CableLabs VOD Metada 1.1 specification, which
