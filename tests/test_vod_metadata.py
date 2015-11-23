@@ -461,6 +461,28 @@ class VodMetadataTests(unittest.TestCase):
         vod_package.overwrite_xml()
         file_handle.write.assert_called_once_with(vod_package.write_xml())
 
+    def test_files_present(self):
+        vod_package = VodPackage(reference_xml)
+        self.assertFalse(vod_package.files_present())
+        vod_package.remove_poster()
+        vod_package.remove_preview()
+        vod_package.D_content["movie"] = reference_mp4
+        self.assertTrue(vod_package.files_present())
+
+    def test_make_update(self):
+        vod_package = VodPackage(reference_xml)
+        vod_package.make_update()
+        for ae_type in vod_package.D_ams:
+            self.assertEqual(vod_package.D_ams[ae_type]["Version_Major"], '2')
+        self.assertTrue(vod_package.is_update)
+
+    def test_make_delete(self):
+        vod_package = VodPackage(reference_xml)
+        vod_package.make_delete()
+        for ae_type in vod_package.D_ams:
+            self.assertEqual(vod_package.D_ams[ae_type]["Verb"], "DELETE")
+        self.assertTrue(vod_package.is_delete)
+
 
 # Reference values
 script_path = os.path.abspath(__file__)
