@@ -348,7 +348,12 @@ class MediaInfoTests(unittest.TestCase):
         for section in self.D_reference.keys():
             for key, expected in self.D_reference[section].items():
                 actual = D[section][key]
-                self.assertEqual(actual, expected)
+                # Different MediaInfo versions give different strings for
+                # Format profile
+                if key == "Format profile":
+                    self.assertTrue(expected.startswith(actual))
+                else:
+                    self.assertEqual(actual, expected)
 
     @patch('vod_metadata.media_info.call_MediaInfo', autospec=True)
     def test_check_video(self, mock_call_MediaInfo):
@@ -455,6 +460,28 @@ class VodMetadataTests(unittest.TestCase):
         vod_package = VodPackage(reference_xml)
         vod_package.overwrite_xml()
         file_handle.write.assert_called_once_with(vod_package.write_xml())
+
+    def test_files_present(self):
+        vod_package = VodPackage(reference_xml)
+        self.assertFalse(vod_package.files_present())
+        vod_package.remove_poster()
+        vod_package.remove_preview()
+        vod_package.D_content["movie"] = reference_mp4
+        self.assertTrue(vod_package.files_present())
+
+    def test_make_update(self):
+        vod_package = VodPackage(reference_xml)
+        vod_package.make_update()
+        for ae_type in vod_package.D_ams:
+            self.assertEqual(vod_package.D_ams[ae_type]["Version_Major"], '2')
+        self.assertTrue(vod_package.is_update)
+
+    def test_make_delete(self):
+        vod_package = VodPackage(reference_xml)
+        vod_package.make_delete()
+        for ae_type in vod_package.D_ams:
+            self.assertEqual(vod_package.D_ams[ae_type]["Verb"], "DELETE")
+        self.assertTrue(vod_package.is_delete)
 
 
 # Reference values
