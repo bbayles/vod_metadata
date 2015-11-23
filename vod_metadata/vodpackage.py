@@ -289,12 +289,10 @@ class VodPackage(object):
                 self.D_app[ae_type]["Codec"] = "MPEG2"
             elif commercial_name == "AVC":
                 avc_profile = format_profile[0]
-                avc_level = format_profile[format_profile.find("@"):].replace(
-                    ".", ""
-                )
-                self.D_app[ae_type]["Codec"] = "AVC {}P{}".format(
-                    avc_profile, avc_level
-                )
+                avc_level = format_profile.split('@')[1][1:]
+                avc_level = format(float(avc_level), '0.1f').replace('.', '')
+                codec = "AVC {}P@L{}".format(avc_profile, avc_level)
+                self.D_app[ae_type]["Codec"] = codec
             else:
                 raise InvalidMpeg("Could not determine codec for {}".format(
                     self.D_content[ae_type])

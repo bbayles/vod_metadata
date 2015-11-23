@@ -348,7 +348,12 @@ class MediaInfoTests(unittest.TestCase):
         for section in self.D_reference.keys():
             for key, expected in self.D_reference[section].items():
                 actual = D[section][key]
-                self.assertEqual(actual, expected)
+                # Different MediaInfo versions give different strings for
+                # Format profile
+                if key == "Format profile":
+                    self.assertTrue(expected.startswith(actual))
+                else:
+                    self.assertEqual(actual, expected)
 
     @patch('vod_metadata.media_info.call_MediaInfo', autospec=True)
     def test_check_video(self, mock_call_MediaInfo):
