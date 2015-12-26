@@ -105,9 +105,9 @@
              Asset_ID="%poster_asset_id%"
              Asset_Class="poster"/>
         <App_Data App="MOD" Name="Type" Value="poster"/>
-        <App_Data App="MOD" Name="%poster_image_aspect_ratio%" Value="320x240"/>
-        <App_Data App="MOD" Name="%poster_content_file_size%" Value="252706816"/>
-        <App_Data App="MOD" Name="%poster_content_checksum%" Value="410b51e0f900502809a22691537b67e3"/>
+        <App_Data App="MOD" Name="Image_Aspect_Ratio" Value="%poster_image_aspect_ratio%"/>
+        <App_Data App="MOD" Name="Content_FileSize" Value="%poster_content_file_size%"/>
+        <App_Data App="MOD" Name="Content_CheckSum" Value="%poster_content_checksum%"/>
       </Metadata>
       <Content Value="%poster_file_name%"/>
     </Asset>
