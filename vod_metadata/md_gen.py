@@ -151,6 +151,7 @@ def generate_metadata(file_path, vod_config):
             "Asset_Class": "preview"
         }
         vod_package.D_app["preview"]["Type"] = "preview"
+        vod_package.D_app["preview"]["Rating"] = ["NR"]
 
     if has_poster:
         poster_asset_name = "{} {} (poster)".format(file_name[:20], suffix)
