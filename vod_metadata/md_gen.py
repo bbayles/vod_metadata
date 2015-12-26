@@ -25,8 +25,19 @@ def generate_metadata(file_path, vod_config):
     outfile_path = "{}_{}.xml".format(file_name, suffix)
     vod_package.xml_path = os.path.join(os.getcwd(), outfile_path)
 
-    # Video file-specific value
+    # File-specific values
     vod_package.D_content["movie"] = file_path
+
+    movie_name, movie_ext = os.path.splitext(file_path)
+    preview_path = '{}_preview{}'.format(movie_name, movie_ext)
+    if not os.path.exists(preview_path):
+        vod_package.remove_preview()
+
+    if (
+        not os.path.exists('{}_preview{}'.format(movie_name, '.bmp')) and
+        not os.path.exists('{}_preview{}'.format(movie_name, '.jpg'))
+    ):
+        vod_package.remove_poster()
     vod_package.check_files()
 
     # Package section

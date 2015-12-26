@@ -67,5 +67,49 @@
       </Metadata>
       <Content Value="%movie_file_name%"/>
     </Asset>
+    <Asset>
+      <Metadata>
+        <AMS Provider="%preview_provider%"
+             Product="%preview_product%"
+             Asset_Name="%preview_asset_name%"
+             Version_Major="%preview_version_major%"
+             Version_Minor="%preview_version_minor%"
+             Description="%preview_description%"
+             Creation_Date="%preview_creation_date%"
+             Provider_ID="%preview_provider_id%"
+             Asset_ID="%preview_asset_id%"
+             Asset_Class="preview"/>
+        <App_Data App="MOD" Name="Type" Value="preview"/>
+        <App_Data App="MOD" Name="Audio_Type" Value="%preview_%"/>
+        <App_Data App="MOD" Name="Resolution" Value="%preview_resolution%"/>
+        <App_Data App="MOD" Name="Frame_Rate" Value="%preview_frame_rate%"/>
+        <App_Data App="MOD" Name="Codec" Value="%preview_codec%"/>
+        <App_Data App="MOD" Name="Bit_Rate" Value="%preview_bit_rate%"/>
+        <App_Data App="MOD" Name="Rating" Value="%preview_rating%"/>
+        <App_Data App="MOD" Name="Run_Time" Value="%preview_run_time%"/>
+        <App_Data App="MOD" Name="Content_FileSize" Value="%preview_content_filesize%"/>
+        <App_Data App="MOD" Name="Content_CheckSum" Value="%preview_content_checksum%"/>
+      </Metadata>
+      <Content Value="%preview_file_name%"/>
+    </Asset>
+    <Asset>
+      <Metadata>
+        <AMS Provider="%poster_provider%"
+             Product="%poster_product%"
+             Asset_Name="%poster_asset_name%"
+             Version_Major="%poster_version_major%"
+             Version_Minor="%poster_version_minor%"
+             Description="%poster_description%"
+             Creation_Date="%poster_creation_date%"
+             Provider_ID="%poster_provider_id%"
+             Asset_ID="%poster_asset_id%"
+             Asset_Class="poster"/>
+        <App_Data App="MOD" Name="Type" Value="poster"/>
+        <App_Data App="MOD" Name="%poster_image_aspect_ratio%" Value="320x240"/>
+        <App_Data App="MOD" Name="%poster_content_file_size%" Value="252706816"/>
+        <App_Data App="MOD" Name="%poster_content_checksum%" Value="410b51e0f900502809a22691537b67e3"/>
+      </Metadata>
+      <Content Value="%poster_file_name%"/>
+    </Asset>
   </Asset>
 </ADI>
