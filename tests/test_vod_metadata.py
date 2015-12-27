@@ -249,9 +249,9 @@ class MdGenTests(unittest.TestCase):
         expected = {"Metadata_Spec_Version": "CableLabsVOD1.1"}
         self.assertEqual(actual, expected)
 
-        # Should have a poster and no preview
+        # Should have a poster and a preview
         self.assertTrue(self.vod_package.has_poster)
-        self.assertFalse(self.vod_package.has_preview)
+        self.assertTrue(self.vod_package.has_preview)
 
     def test_title(self):
         # Title AMS values
@@ -319,6 +319,40 @@ class MdGenTests(unittest.TestCase):
         expected = reference_mp4
         self.assertEqual(actual, expected)
 
+    def test_preview(self):
+        # Preview AMS values
+        actual = self.vod_package.D_ams["preview"]
+        expected = self.ams_expected.copy()
+        preview_expected = {
+            "Asset_Name": "reference 1020 (preview)",
+            "Description": "reference 1020 (preview asset)",
+            "Asset_Class": "preview",
+            "Asset_ID": "MSOR1999090901021020",
+        }
+        expected.update(preview_expected)
+        self.assertEqual(actual, expected)
+
+        # Preview APP values
+        actual = self.vod_package.D_app["preview"]
+        expected = {
+            'Audio_Type': 'Stereo',
+            'Bit_Rate': '771',
+            'Codec': 'AVC HP@L30',
+            'Content_CheckSum': 'c3707c2c5c42847da0bfc06bcc33e251',
+            'Content_FileSize': '165487',
+            'Frame_Rate': '26',
+            'Rating': ['NR'],
+            'Type': 'preview',
+            'Resolution': '480p',
+            'Run_Time': '00:00:02',
+        }
+        self.assertEqual(actual, expected)
+
+        # Preview Content values
+        actual = self.vod_package.D_content["preview"]
+        expected = reference_preview
+        self.assertEqual(actual, expected)
+
     def test_poster(self):
         # Poster AMS values
         actual = self.vod_package.D_ams["poster"]
@@ -346,6 +380,17 @@ class MdGenTests(unittest.TestCase):
         actual = self.vod_package.D_content["poster"]
         expected = reference_poster
         self.assertEqual(actual, expected)
+
+    def test_metadata(self):
+        # Make sure there are no missing attributes
+        xml_output = self.vod_package.write_xml()
+        self.assertNotIn('%', xml_output.decode('utf-8'))
+
+    @patch('vod_metadata.md_gen.os.path.exists', lambda x: False)
+    def test_movie_only(self):
+        vod_package = generate_metadata(reference_mp4, self.vod_config)
+        self.assertFalse(vod_package.has_preview)
+        self.assertFalse(vod_package.has_poster)
 
 
 class MediaInfoTests(unittest.TestCase):
@@ -501,6 +546,17 @@ class VodMetadataTests(unittest.TestCase):
         vod_package.D_content["movie"] = reference_mp4
         self.assertTrue(vod_package.files_present())
 
+    def test_failed_remove(self):
+        vod_package = VodPackage(reference_xml)
+
+        vod_package.remove_preview()
+        with self.assertRaises(MissingElement):
+            vod_package.remove_preview()
+
+        vod_package.remove_poster()
+        with self.assertRaises(MissingElement):
+            vod_package.remove_poster()
+
     def test_make_update(self):
         vod_package = VodPackage(reference_xml)
         vod_package.make_update()
@@ -521,6 +577,7 @@ script_path = os.path.abspath(__file__)
 script_dir = os.path.split(script_path)[0]
 reference_xml = os.path.join(script_dir, "reference.xml")
 reference_mp4 = os.path.join(script_dir, "reference.mp4")
+reference_preview = os.path.join(script_dir, "reference_preview.mp4")
 reference_poster = os.path.join(script_dir, "reference_poster.bmp")
 
 ams_package = {
