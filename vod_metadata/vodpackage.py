@@ -254,7 +254,7 @@ class VodPackage(object):
         mpeg_info = check_video(ae_path, self.vod_config.mediainfo_path)
 
         # Calculate the run time of the video
-        duration_s = round(float(mpeg_info["General"]["Duration"]) / 1000)
+        duration_s = int(round(float(mpeg_info["General"]["Duration"]) / 1000))
         duration_h, duration_s = divmod(duration_s, 3600)
         duration_m, duration_s = divmod(duration_s, 60)
         duration_h = format(duration_h, "02")
