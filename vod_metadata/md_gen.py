@@ -22,6 +22,7 @@ def generate_metadata(file_path, vod_config):
     # Start with a minimal metadata template
     vod_package = VodPackage(template_path, vod_config=vod_config)
     file_name = os.path.splitext(os.path.split(file_path)[1])[0]
+    short_name = file_name[:20]
     outfile_path = "{}_{}.xml".format(file_name, suffix)
     vod_package.xml_path = os.path.join(os.getcwd(), outfile_path)
 
@@ -53,10 +54,8 @@ def generate_metadata(file_path, vod_config):
     vod_package.check_files()
 
     # Package section
-    package_asset_name = "{} {} (package)".format(file_name[:20], suffix)
-    package_description = "{} {} (package asset)".format(
-        file_name[:20], suffix
-    )
+    package_asset_name = "{} {} (package)".format(short_name, suffix)
+    package_description = "{} {} (package asset)".format(short_name, suffix)
     package_asset_id = "{}P{}{}".format(vod_config.prefix, asset_id, suffix)
 
     vod_package.D_ams["package"] = {
@@ -74,8 +73,8 @@ def generate_metadata(file_path, vod_config):
     vod_package.D_app["package"] = {"Metadata_Spec_Version": "CableLabsVOD1.1"}
 
     # Title section
-    title_asset_name = "{} {} (title)".format(file_name[:20], suffix)
-    title_description = "{} {} (title asset)".format(file_name[:20], suffix)
+    title_asset_name = "{} {} (title)".format(short_name, suffix)
+    title_description = "{} {} (title asset)".format(short_name, suffix)
     title_asset_id = "{}T{}{}".format(vod_config.prefix, asset_id, suffix)
     title_title_brief = "{} {}".format(file_name[:14], suffix)
     title_title = "{} {}".format(file_name[:124], suffix)
@@ -111,8 +110,8 @@ def generate_metadata(file_path, vod_config):
     }
 
     # Movie section
-    movie_asset_name = "{} {} (movie)".format(file_name[:20], suffix)
-    movie_description = "{} {} (movie asset)".format(file_name[:20], suffix)
+    movie_asset_name = "{} {} (movie)".format(short_name, suffix)
+    movie_description = "{} {} (movie asset)".format(short_name, suffix)
     movie_asset_id = "{}M{}{}".format(vod_config.prefix, asset_id, suffix)
 
     vod_package.D_ams["movie"] = {
@@ -131,9 +130,9 @@ def generate_metadata(file_path, vod_config):
 
     # Preview section
     if has_preview:
-        preview_asset_name = "{} {} (preview)".format(file_name[:20], suffix)
+        preview_asset_name = "{} {} (preview)".format(short_name, suffix)
         preview_description = "{} {} (preview asset)".format(
-            file_name[:20], suffix
+            short_name, suffix
         )
         preview_asset_id = "{}R{}{}".format(
             vod_config.prefix, asset_id, suffix
@@ -154,11 +153,9 @@ def generate_metadata(file_path, vod_config):
         vod_package.D_app["preview"]["Rating"] = ["NR"]
 
     if has_poster:
-        poster_asset_name = "{} {} (poster)".format(file_name[:20], suffix)
-        poster_description = "{} {} (poster asset)".format(
-            file_name[:20], suffix
-        )
-        poster_asset_id = "{}R{}{}".format(vod_config.prefix, asset_id, suffix)
+        poster_asset_name = "{} {} (poster)".format(short_name, suffix)
+        poster_description = "{} {} (poster asset)".format(short_name, suffix)
+        poster_asset_id = "{}I{}{}".format(vod_config.prefix, asset_id, suffix)
         vod_package.D_ams["poster"] = {
             "Provider":  vod_config.provider,
             "Product": vod_config.product,

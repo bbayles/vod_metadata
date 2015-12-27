@@ -215,8 +215,8 @@ class MdGenTests(unittest.TestCase):
         mock_random.randint.return_value = 1020
         mock_datetime.today.return_value = datetime(1999, 9, 9, 1, 2)
         vod_config = parse_config(find_data_file(config_path))
-        vod_config = vod_config._replace(ecn_2009=True)
-        self.vod_package = generate_metadata(reference_mp4, vod_config)
+        self.vod_config = vod_config._replace(ecn_2009=True)
+        self.vod_package = generate_metadata(reference_mp4, self.vod_config)
         self.ams_expected = {
             "Provider":  "001",
             "Product": "MOD",
@@ -248,6 +248,10 @@ class MdGenTests(unittest.TestCase):
         actual = self.vod_package.D_app["package"]
         expected = {"Metadata_Spec_Version": "CableLabsVOD1.1"}
         self.assertEqual(actual, expected)
+
+        # Should have a poster and no preview
+        self.assertTrue(self.vod_package.has_poster)
+        self.assertFalse(self.vod_package.has_preview)
 
     def test_title(self):
         # Title AMS values
@@ -313,6 +317,34 @@ class MdGenTests(unittest.TestCase):
         # Movie Content values
         actual = self.vod_package.D_content["movie"]
         expected = reference_mp4
+        self.assertEqual(actual, expected)
+
+    def test_poster(self):
+        # Poster AMS values
+        actual = self.vod_package.D_ams["poster"]
+        expected = self.ams_expected.copy()
+        poster_expected = {
+            "Asset_Name": "reference 1020 (poster)",
+            "Description": "reference 1020 (poster asset)",
+            "Asset_Class": "poster",
+            "Asset_ID": "MSOI1999090901021020",
+        }
+        expected.update(poster_expected)
+        self.assertEqual(actual, expected)
+
+        # Poster APP values
+        actual = self.vod_package.D_app["poster"]
+        expected = {
+            'Content_FileSize': '70',
+            'Content_CheckSum': '3ac9e2860d2e78c2a571f2ffc90b9e0c',
+            'Image_Aspect_Ratio': '2x2',
+            'Type': 'poster',
+        }
+        self.assertEqual(actual, expected)
+
+        # Poster Content values
+        actual = self.vod_package.D_content["poster"]
+        expected = reference_poster
         self.assertEqual(actual, expected)
 
 
@@ -489,6 +521,7 @@ script_path = os.path.abspath(__file__)
 script_dir = os.path.split(script_path)[0]
 reference_xml = os.path.join(script_dir, "reference.xml")
 reference_mp4 = os.path.join(script_dir, "reference.mp4")
+reference_poster = os.path.join(script_dir, "reference_poster.bmp")
 
 ams_package = {
     'Asset_Class': 'package',
