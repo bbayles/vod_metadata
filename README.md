@@ -54,6 +54,13 @@ You may process videos in some other directory with the `--video-dir` argument.
 C:\Videos>C:\Python34\python.exe -m vod_metadata  --video-dir "C:\Somewhere\Videos"
 ```
 
+To incorporate a preview and/or poster element for the file `something.mpg`:
+* Put a `something_preview.mpg` file in the same directory
+* Put a `something_poster.bmp` file in the same directory.
+
+The preview file must have the same extension as the movie file,
+and the poster can have either a .bmp or .jpg extension.
+
 ## Troubleshooting
 If you find that you get a `RuntimeError: MediaInfo not found.` error message, you can specify the path to MediaInfo on the command line:
 
