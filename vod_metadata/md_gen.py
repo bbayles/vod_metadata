@@ -22,18 +22,40 @@ def generate_metadata(file_path, vod_config):
     # Start with a minimal metadata template
     vod_package = VodPackage(template_path, vod_config=vod_config)
     file_name = os.path.splitext(os.path.split(file_path)[1])[0]
+    short_name = file_name[:20]
     outfile_path = "{}_{}.xml".format(file_name, suffix)
     vod_package.xml_path = os.path.join(os.getcwd(), outfile_path)
 
-    # Video file-specific value
+    # File-specific values: looks for a preview of the same type as the movie,
+    # and a poster with a suitable extension.
+    movie_name, movie_ext = os.path.splitext(file_path)
     vod_package.D_content["movie"] = file_path
+
+    has_preview = True
+    preview_path = '{}_preview{}'.format(movie_name, movie_ext)
+    if not os.path.exists(preview_path):
+        has_preview = False
+        vod_package.remove_preview()
+    else:
+        vod_package.D_content["preview"] = preview_path
+
+    has_poster = True
+    for poster_path in (
+        '{}_poster{}'.format(movie_name, '.bmp'),
+        '{}_poster{}'.format(movie_name, '.jpg'),
+    ):
+        if os.path.exists(poster_path):
+            vod_package.D_content["poster"] = poster_path
+            break
+    else:
+        has_poster = False
+        vod_package.remove_poster()
+
     vod_package.check_files()
 
     # Package section
-    package_asset_name = "{} {} (package)".format(file_name[:20], suffix)
-    package_description = "{} {} (package asset)".format(
-        file_name[:20], suffix
-    )
+    package_asset_name = "{} {} (package)".format(short_name, suffix)
+    package_description = "{} {} (package asset)".format(short_name, suffix)
     package_asset_id = "{}P{}{}".format(vod_config.prefix, asset_id, suffix)
 
     vod_package.D_ams["package"] = {
@@ -51,8 +73,8 @@ def generate_metadata(file_path, vod_config):
     vod_package.D_app["package"] = {"Metadata_Spec_Version": "CableLabsVOD1.1"}
 
     # Title section
-    title_asset_name = "{} {} (title)".format(file_name[:20], suffix)
-    title_description = "{} {} (title asset)".format(file_name[:20], suffix)
+    title_asset_name = "{} {} (title)".format(short_name, suffix)
+    title_description = "{} {} (title asset)".format(short_name, suffix)
     title_asset_id = "{}T{}{}".format(vod_config.prefix, asset_id, suffix)
     title_title_brief = "{} {}".format(file_name[:14], suffix)
     title_title = "{} {}".format(file_name[:124], suffix)
@@ -88,8 +110,8 @@ def generate_metadata(file_path, vod_config):
     }
 
     # Movie section
-    movie_asset_name = "{} {} (movie)".format(file_name[:20], suffix)
-    movie_description = "{} {} (movie asset)".format(file_name[:20], suffix)
+    movie_asset_name = "{} {} (movie)".format(short_name, suffix)
+    movie_description = "{} {} (movie asset)".format(short_name, suffix)
     movie_asset_id = "{}M{}{}".format(vod_config.prefix, asset_id, suffix)
 
     vod_package.D_ams["movie"] = {
@@ -105,5 +127,47 @@ def generate_metadata(file_path, vod_config):
         "Asset_Class": "movie"
     }
     vod_package.D_app["movie"]["Type"] = "movie"
+
+    # Preview section
+    if has_preview:
+        preview_asset_name = "{} {} (preview)".format(short_name, suffix)
+        preview_description = "{} {} (preview asset)".format(
+            short_name, suffix
+        )
+        preview_asset_id = "{}R{}{}".format(
+            vod_config.prefix, asset_id, suffix
+        )
+        vod_package.D_ams["preview"] = {
+            "Provider":  vod_config.provider,
+            "Product": vod_config.product,
+            "Asset_Name": preview_asset_name,
+            "Version_Major": '1',
+            "Version_Minor": '0',
+            "Description": preview_description,
+            "Creation_Date": creation_date,
+            "Provider_ID": vod_config.provider_id,
+            "Asset_ID": preview_asset_id,
+            "Asset_Class": "preview"
+        }
+        vod_package.D_app["preview"]["Type"] = "preview"
+        vod_package.D_app["preview"]["Rating"] = ["NR"]
+
+    if has_poster:
+        poster_asset_name = "{} {} (poster)".format(short_name, suffix)
+        poster_description = "{} {} (poster asset)".format(short_name, suffix)
+        poster_asset_id = "{}I{}{}".format(vod_config.prefix, asset_id, suffix)
+        vod_package.D_ams["poster"] = {
+            "Provider":  vod_config.provider,
+            "Product": vod_config.product,
+            "Asset_Name": poster_asset_name,
+            "Version_Major": '1',
+            "Version_Minor": '0',
+            "Description": poster_description,
+            "Creation_Date": creation_date,
+            "Provider_ID": vod_config.provider_id,
+            "Asset_ID": poster_asset_id,
+            "Asset_Class": "poster"
+        }
+        vod_package.D_app["poster"]["Type"] = "poster"
 
     return vod_package

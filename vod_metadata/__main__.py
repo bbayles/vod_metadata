@@ -34,9 +34,11 @@ if __name__ == "__main__":
         chdir(args.video_dir)
 
     for file_path in listdir(getcwd()):
-        # Only process movie files
+        # Only process movie files (skip previews)
         file_name, file_ext = splitext(file_path)
         if file_ext not in vod_config.extensions:
+            continue
+        if file_name.endswith('_preview'):
             continue
 
         # Create the VodPackage instace
