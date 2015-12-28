@@ -249,9 +249,9 @@ class MdGenTests(unittest.TestCase):
         expected = {"Metadata_Spec_Version": "CableLabsVOD1.1"}
         self.assertEqual(actual, expected)
 
-        # Should have a poster and a preview
-        self.assertTrue(self.vod_package.has_poster)
         self.assertTrue(self.vod_package.has_preview)
+        self.assertTrue(self.vod_package.has_poster)
+        self.assertTrue(self.vod_package.has_box_cover)
 
     def test_title(self):
         # Title AMS values
@@ -381,6 +381,34 @@ class MdGenTests(unittest.TestCase):
         expected = reference_poster
         self.assertEqual(actual, expected)
 
+    def test_box_cover(self):
+        # Poster AMS values
+        actual = self.vod_package.D_ams["box cover"]
+        expected = self.ams_expected.copy()
+        box_cover_expected = {
+            "Asset_Name": "reference 1020 (box cover)",
+            "Description": "reference 1020 (box cover asset)",
+            "Asset_Class": "box cover",
+            "Asset_ID": "MSOB1999090901021020",
+        }
+        expected.update(box_cover_expected)
+        self.assertEqual(actual, expected)
+
+        # Box cover APP values
+        actual = self.vod_package.D_app["box cover"]
+        expected = {
+            'Content_FileSize': '70',
+            'Content_CheckSum': '8798e5e9ce9f811700ada4e1a4bef6f1',
+            'Image_Aspect_Ratio': '2x2',
+            'Type': 'box cover',
+        }
+        self.assertEqual(actual, expected)
+
+        # Box cover Content values
+        actual = self.vod_package.D_content["box cover"]
+        expected = reference_box_cover
+        self.assertEqual(actual, expected)
+
     def test_metadata(self):
         # Make sure there are no missing attributes
         xml_output = self.vod_package.write_xml()
@@ -391,6 +419,7 @@ class MdGenTests(unittest.TestCase):
         vod_package = generate_metadata(reference_mp4, self.vod_config)
         self.assertFalse(vod_package.has_preview)
         self.assertFalse(vod_package.has_poster)
+        self.assertFalse(vod_package.has_box_cover)
 
 
 class MediaInfoTests(unittest.TestCase):
@@ -579,6 +608,7 @@ reference_xml = os.path.join(script_dir, "reference.xml")
 reference_mp4 = os.path.join(script_dir, "reference.mp4")
 reference_preview = os.path.join(script_dir, "reference_preview.mp4")
 reference_poster = os.path.join(script_dir, "reference_poster.bmp")
+reference_box_cover = os.path.join(script_dir, "reference_box_cover.bmp")
 
 ams_package = {
     'Asset_Class': 'package',
