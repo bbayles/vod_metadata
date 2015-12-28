@@ -140,14 +140,11 @@ Save your edited file like so:
 
 __Note__: This library makes some assumptions about VOD metadata that you might
 need to keep in mind:
-* This library assumes that asset packages always have one `movie` asset element,
-zero or more `preview` asset elements, and zero or more `poster` asset elements.
-No other types of asset element are supported (even though the spec allows for
-others). I may add support for other types in the future.
-* This library assumes that if you're generating metadata updates to previously-
-delivered packages that you don't want to change the structure of the package.
-That is, you don't want to add or remove an asset element (like a `preview` or
-`poster`).
+* Asset packages must have one `movie` asset element.
+* Asset packages _may_ have zero or one `preview`, `poster`, or `box cover` asset elements.
+* Asset packages may not have any other types of asset element (even though the spec allows for custom ones).
+* Metadata updates may not alter the asset elements in the package
+ (i.e. the `preview`, `poster`, or `box cover` asset elements cannot be removed).
 
 The `VodPackage` class is defined in the `vod_metadata.VodPackage` sub-module.
  Import it with:
@@ -177,6 +174,7 @@ argument. These attributes are exposed:
   * `instance.D_app["preview"]` and `instance.D_app["poster"]`. These are optional.
 * `instance.has_preview` - `True` if there is a preview element, `False` otherwise.
 * `instance.has_poster` - `True` if there is a poster element, `False` otherwise.
+* `instance.has_box_cover` - `True` if there is a box cover element, `False` otherwise.
 * `instance.is_update` - `True` if the AMS data for the package indicates that the
  `Version_Major` is something other than `1`, `False` otherwise.
 * `instance.is_delete` - `True` if the AMS data for the package has
@@ -196,10 +194,9 @@ The `VodPackage` class exposes these methods:
  attributes (if applicable) for each of the asset elements: `Content_FileSize`,
  `Content_CheckSum`, `Run_Time`, `Display_Run_Time`, `Codec`, `Audio_Type`,
  `Resolution`, `Frame Rate`, and `Bit_Rate`.
-* `VodPackage.remove_preview()` - deletes the preview element from the asset
- package, if there is one to delete.
-* `VodPackage.remove_poster()` - deletes the poster element from the asset
- package, if there is one to delete.
+* `VodPackage.remove_preview()` - deletes the preview element from the asset package, if there is one to delete.
+* `VodPackage.remove_poster()` - deletes the poster element from the asset package, if there is one to delete.
+* `VodPackage.remove_box_cover()` - deletes the box cover element from the asset package, if there is one to delete.
 * `VodPackage.make_update()` - increments all the `Version_Major` values and
  marks the package as a metadata update. Content tags will not be written when
  using `instance.write_xml()`. See the note above about the assumptions the
