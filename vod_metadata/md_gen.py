@@ -27,7 +27,7 @@ def generate_metadata(file_path, vod_config):
     vod_package.xml_path = os.path.join(os.getcwd(), outfile_path)
 
     # File-specific values: looks for a preview of the same type as the movie,
-    # and a poster with a suitable extension.
+    # and a poster / box cover with a suitable extension.
     movie_name, movie_ext = os.path.splitext(file_path)
     vod_package.D_content["movie"] = file_path
 
@@ -50,6 +50,18 @@ def generate_metadata(file_path, vod_config):
     else:
         has_poster = False
         vod_package.remove_poster()
+
+    has_box_cover = True
+    for box_cover_path in (
+        '{}_box_cover{}'.format(movie_name, '.bmp'),
+        '{}_box_cover{}'.format(movie_name, '.jpg'),
+    ):
+        if os.path.exists(box_cover_path):
+            vod_package.D_content["box cover"] = box_cover_path
+            break
+    else:
+        has_box_cover = False
+        vod_package.remove_box_cover()
 
     vod_package.check_files()
 
@@ -169,5 +181,27 @@ def generate_metadata(file_path, vod_config):
             "Asset_Class": "poster"
         }
         vod_package.D_app["poster"]["Type"] = "poster"
+
+    if has_box_cover:
+        box_cover_asset_name = "{} {} (box cover)".format(short_name, suffix)
+        box_cover_description = "{} {} (box cover asset)".format(
+            short_name, suffix
+        )
+        box_cover_asset_id = "{}B{}{}".format(
+            vod_config.prefix, asset_id, suffix
+        )
+        vod_package.D_ams["box cover"] = {
+            "Provider":  vod_config.provider,
+            "Product": vod_config.product,
+            "Asset_Name": box_cover_asset_name,
+            "Version_Major": '1',
+            "Version_Minor": '0',
+            "Description": box_cover_description,
+            "Creation_Date": creation_date,
+            "Provider_ID": vod_config.provider_id,
+            "Asset_ID": box_cover_asset_id,
+            "Asset_Class": "box cover"
+        }
+        vod_package.D_app["box cover"]["Type"] = "box cover"
 
     return vod_package
