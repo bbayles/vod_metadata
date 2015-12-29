@@ -111,5 +111,24 @@
       </Metadata>
       <Content Value="%poster_file_name%"/>
     </Asset>
+    <Asset>
+      <Metadata>
+        <AMS Provider="%box_cover_provider%"
+             Product="%box_cover_product%"
+             Asset_Name="%box_cover_asset_name%"
+             Version_Major="%box_cover_version_major%"
+             Version_Minor="%box_cover_version_minor%"
+             Description="%box_cover_description%"
+             Creation_Date="%box_cover_creation_date%"
+             Provider_ID="%box_cover_provider_id%"
+             Asset_ID="%box_cover_asset_id%"
+             Asset_Class="box cover"/>
+        <App_Data App="MOD" Name="Type" Value="poster"/>
+        <App_Data App="MOD" Name="Image_Aspect_Ratio" Value="%box_cover_image_aspect_ratio%"/>
+        <App_Data App="MOD" Name="Content_FileSize" Value="%box_cover_content_file_size%"/>
+        <App_Data App="MOD" Name="Content_CheckSum" Value="%box_cover_content_checksum%"/>
+      </Metadata>
+      <Content Value="%box_cover_file_name%"/>
+    </Asset>
   </Asset>
 </ADI>
