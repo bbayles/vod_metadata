@@ -172,7 +172,7 @@ argument. These attributes are exposed:
  data, these sub-dictionaries are included:
   * `instance.D_app["package"]`, `instance.D_app["title"]`, and
  `instance.D_app["movie"]`. These are required.
-  * `instance.D_app["preview"]` and `instance.D_app["poster"]`. These are optional.
+  * `instance.D_app["preview"]`, `instance.D_app["poster"]`, `instance.D_app["box cover"]`. These are optional.
 * `instance.has_preview` - `True` if there is a preview element, `False` otherwise.
 * `instance.has_poster` - `True` if there is a poster element, `False` otherwise.
 * `instance.has_box_cover` - `True` if there is a box cover element, `False` otherwise.
