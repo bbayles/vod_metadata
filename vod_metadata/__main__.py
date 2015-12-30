@@ -8,7 +8,7 @@ from io import open
 from os import chdir, getcwd, listdir
 from os.path import abspath, splitext
 
-from vod_metadata import config_path, default_template_path
+from vod_metadata import default_config_path, default_template_path
 from vod_metadata.config_read import parse_config
 from vod_metadata.md_gen import generate_metadata
 
@@ -24,11 +24,15 @@ parser.add_argument(
 parser.add_argument(
     '--template-path', help='Specify the path to the metadata template'
 )
+parser.add_argument(
+    '--config-path', help='Specify the path to the configuration file'
+)
 args = parser.parse_args()
 
 if __name__ == "__main__":
     # Retrieve the user's configuration, overriding with command line arguments
-    vod_config = parse_config(config_path)
+    config_path = args.config_path or default_config_path
+    vod_config = parse_config(abspath(config_path))
 
     if args.mediainfo_path is not None:
         vod_config = vod_config._replace(mediainfo_path=args.mediainfo_path)

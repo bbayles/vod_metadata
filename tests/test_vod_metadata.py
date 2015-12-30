@@ -12,7 +12,11 @@ except ImportError:
     from mock import MagicMock, patch
 import os.path
 
-from vod_metadata import config_path, default_template_path, find_data_file
+from vod_metadata import (
+    default_config_path,
+    default_template_path,
+    find_data_file,
+)
 from vod_metadata.config_read import ConfigurationError, parse_config
 from vod_metadata.md5_calc import md5_checksum
 from vod_metadata.md_gen import generate_metadata
@@ -33,7 +37,7 @@ from vod_metadata.xml_helper import etree, tobytes
 )
 class ConfigReadTests(unittest.TestCase):
     def setUp(self):
-        with open(find_data_file(config_path), mode='r') as infile:
+        with open(find_data_file(default_config_path), mode='r') as infile:
             self.config_lines = [line.strip() for line in infile if line]
 
     def _modify_key(self, key, value):
@@ -218,7 +222,7 @@ class MdGenTests(unittest.TestCase):
         self.temp_dir = mkdtemp()
         mock_random.randint.return_value = 1020
         mock_datetime.today.return_value = datetime(1999, 9, 9, 1, 2)
-        vod_config = parse_config(find_data_file(config_path))
+        vod_config = parse_config(find_data_file(default_config_path))
         self.vod_config = vod_config._replace(ecn_2009=True)
         self.vod_package = generate_metadata(reference_mp4, self.vod_config)
         self.ams_expected = {

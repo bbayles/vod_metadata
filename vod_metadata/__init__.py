@@ -4,7 +4,7 @@
 
 from vod_metadata.utils import find_data_file
 
-config_path = find_data_file("vod_config.ini")
+default_config_path = find_data_file("vod_config.ini")
 default_template_path = find_data_file("metadata_template.xml")
 
 # Expose the main VodPackage class
