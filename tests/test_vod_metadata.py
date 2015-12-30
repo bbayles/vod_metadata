@@ -283,7 +283,9 @@ class MdGenTests(unittest.TestCase):
             "Licensing_Window_Start": "1999-09-09",
             "Licensing_Window_End": "2002-06-04",
             "Preview_Period": "300",
-            "Provider_QA_Contact": "N/A"
+            "Provider_QA_Contact": "N/A",
+            "Run_Time": "00:00:07",
+            "Display_Run_Time": "00:00",
         }
         self.assertEqual(actual, expected)
 
