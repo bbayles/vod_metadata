@@ -7,6 +7,32 @@ from vod_metadata.vodpackage import VodPackage
 
 __all__ = ["generate_metadata"]
 
+IMAGE_EXTENSIONS = [".bmp", ".jpg"]
+
+
+def _check_for_ae(ae_type, movie_name, extensions):
+    ae_safe = ae_type.replace(' ', '_')
+    ae_paths = ['{}_{}{}'.format(movie_name, ae_safe, x) for x in extensions]
+    for ae_path in ae_paths:
+        if os.path.exists(ae_path):
+            return ae_path
+
+    return None
+
+
+def _set_ae(vod_package, movie_name, ae_type, extensions):
+    ae_safe = ae_type.replace(' ', '_')
+    has_ae = getattr(vod_package, 'has_{}'.format(ae_safe))
+    ae_path = _check_for_ae(ae_type, movie_name, extensions)
+    if has_ae:
+        if ae_path is None:
+            getattr(vod_package, 'remove_{}'.format(ae_safe))()
+            has_ae = False
+        else:
+            vod_package.D_content[ae_type] = ae_path
+
+    return has_ae
+
 
 def generate_metadata(
     file_path, vod_config, template_path=default_template_path
@@ -33,37 +59,11 @@ def generate_metadata(
     movie_name, movie_ext = os.path.splitext(file_path)
     vod_package.D_content["movie"] = file_path
 
-    has_preview = True
-    preview_path = '{}_preview{}'.format(movie_name, movie_ext)
-    if not os.path.exists(preview_path):
-        has_preview = False
-        vod_package.remove_preview()
-    else:
-        vod_package.D_content["preview"] = preview_path
-
-    has_poster = True
-    for poster_path in (
-        '{}_poster{}'.format(movie_name, '.bmp'),
-        '{}_poster{}'.format(movie_name, '.jpg'),
-    ):
-        if os.path.exists(poster_path):
-            vod_package.D_content["poster"] = poster_path
-            break
-    else:
-        has_poster = False
-        vod_package.remove_poster()
-
-    has_box_cover = True
-    for box_cover_path in (
-        '{}_box_cover{}'.format(movie_name, '.bmp'),
-        '{}_box_cover{}'.format(movie_name, '.jpg'),
-    ):
-        if os.path.exists(box_cover_path):
-            vod_package.D_content["box cover"] = box_cover_path
-            break
-    else:
-        has_box_cover = False
-        vod_package.remove_box_cover()
+    has_preview = _set_ae(vod_package, movie_name, "preview", [movie_ext])
+    has_poster = _set_ae(vod_package, movie_name, "poster", IMAGE_EXTENSIONS)
+    has_box_cover = _set_ae(
+        vod_package, movie_name, "box cover", IMAGE_EXTENSIONS
+    )
 
     vod_package.check_files()
 
