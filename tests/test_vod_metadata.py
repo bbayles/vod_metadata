@@ -2,6 +2,9 @@ from copy import deepcopy
 from configparser import ConfigParser
 from datetime import datetime
 from io import BytesIO, open
+from os.path import join
+from shutil import rmtree
+from tempfile import mkdtemp
 import unittest
 try:
     from unittest.mock import MagicMock, patch
@@ -9,7 +12,7 @@ except ImportError:
     from mock import MagicMock, patch
 import os.path
 
-from vod_metadata import config_path, find_data_file
+from vod_metadata import config_path, default_template_path, find_data_file
 from vod_metadata.config_read import ConfigurationError, parse_config
 from vod_metadata.md5_calc import md5_checksum
 from vod_metadata.md_gen import generate_metadata
@@ -212,6 +215,7 @@ class MdGenTests(unittest.TestCase):
     @patch('vod_metadata.md_gen.random', autospec=True)
     @patch('vod_metadata.md_gen.datetime.datetime', autospec=True)
     def setUp(self, mock_datetime, mock_random):
+        self.temp_dir = mkdtemp()
         mock_random.randint.return_value = 1020
         mock_datetime.today.return_value = datetime(1999, 9, 9, 1, 2)
         vod_config = parse_config(find_data_file(config_path))
@@ -225,6 +229,9 @@ class MdGenTests(unittest.TestCase):
             "Creation_Date": "1999-09-09",
             "Provider_ID": "example.com",
         }
+
+    def tearDown(self):
+        rmtree(self.temp_dir, ignore_errors=True)
 
     def test_package(self):
         # XML path
@@ -422,6 +429,30 @@ class MdGenTests(unittest.TestCase):
         self.assertFalse(vod_package.has_preview)
         self.assertFalse(vod_package.has_poster)
         self.assertFalse(vod_package.has_box_cover)
+
+    def test_custom_template(self):
+        # Make a custom template file
+        tree = etree.parse(default_template_path)
+        doctype = b'<!DOCTYPE ADI SYSTEM "ADI.DTD">'
+        ADI = tree.getroot()
+        title_metadata = ADI.find('Asset').find('Metadata')
+        for value in ('Scary', 'Warning'):
+            App_Data = etree.SubElement(title_metadata, "App_Data")
+            App_Data.set("App", "MOD")
+            App_Data.set("Name", "Advisories")
+            App_Data.set("Value", value)
+
+        template_path = join(self.temp_dir, 'mytemplate.xml')
+        with open(template_path, 'wb') as outfile:
+            outfile.write(tobytes(doctype, ADI))
+
+        # Ensure that the templates values are used
+        vod_package = generate_metadata(
+            reference_mp4, self.vod_config, template_path
+        )
+        self.assertEqual(
+            vod_package.D_app['title']['Advisories'], ['Scary', 'Warning']
+        )
 
 
 class MediaInfoTests(unittest.TestCase):
