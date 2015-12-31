@@ -2,13 +2,41 @@ import datetime
 import os
 import random
 
-from vod_metadata import template_path
+from vod_metadata import default_template_path
 from vod_metadata.vodpackage import VodPackage
 
 __all__ = ["generate_metadata"]
 
+IMAGE_EXTENSIONS = [".bmp", ".jpg"]
 
-def generate_metadata(file_path, vod_config):
+
+def _check_for_ae(ae_type, movie_name, extensions):
+    ae_safe = ae_type.replace(' ', '_')
+    ae_paths = ['{}_{}{}'.format(movie_name, ae_safe, x) for x in extensions]
+    for ae_path in ae_paths:
+        if os.path.exists(ae_path):
+            return ae_path
+
+    return None
+
+
+def _set_ae(vod_package, movie_name, ae_type, extensions):
+    ae_safe = ae_type.replace(' ', '_')
+    has_ae = getattr(vod_package, 'has_{}'.format(ae_safe))
+    ae_path = _check_for_ae(ae_type, movie_name, extensions)
+    if has_ae:
+        if ae_path is None:
+            getattr(vod_package, 'remove_{}'.format(ae_safe))()
+            has_ae = False
+        else:
+            vod_package.D_content[ae_type] = ae_path
+
+    return has_ae
+
+
+def generate_metadata(
+    file_path, vod_config, template_path=default_template_path
+):
     # Time-sensitive values
     timestamp = datetime.datetime.today()
     creation_date = timestamp.strftime("%Y-%m-%d")
@@ -31,37 +59,11 @@ def generate_metadata(file_path, vod_config):
     movie_name, movie_ext = os.path.splitext(file_path)
     vod_package.D_content["movie"] = file_path
 
-    has_preview = True
-    preview_path = '{}_preview{}'.format(movie_name, movie_ext)
-    if not os.path.exists(preview_path):
-        has_preview = False
-        vod_package.remove_preview()
-    else:
-        vod_package.D_content["preview"] = preview_path
-
-    has_poster = True
-    for poster_path in (
-        '{}_poster{}'.format(movie_name, '.bmp'),
-        '{}_poster{}'.format(movie_name, '.jpg'),
-    ):
-        if os.path.exists(poster_path):
-            vod_package.D_content["poster"] = poster_path
-            break
-    else:
-        has_poster = False
-        vod_package.remove_poster()
-
-    has_box_cover = True
-    for box_cover_path in (
-        '{}_box_cover{}'.format(movie_name, '.bmp'),
-        '{}_box_cover{}'.format(movie_name, '.jpg'),
-    ):
-        if os.path.exists(box_cover_path):
-            vod_package.D_content["box cover"] = box_cover_path
-            break
-    else:
-        has_box_cover = False
-        vod_package.remove_box_cover()
+    has_preview = _set_ae(vod_package, movie_name, "preview", [movie_ext])
+    has_poster = _set_ae(vod_package, movie_name, "poster", IMAGE_EXTENSIONS)
+    has_box_cover = _set_ae(
+        vod_package, movie_name, "box cover", IMAGE_EXTENSIONS
+    )
 
     vod_package.check_files()
 
@@ -70,19 +72,23 @@ def generate_metadata(file_path, vod_config):
     package_description = "{} {} (package asset)".format(short_name, suffix)
     package_asset_id = "{}P{}{}".format(vod_config.prefix, asset_id, suffix)
 
-    vod_package.D_ams["package"] = {
-        "Provider":  vod_config.provider,
-        "Product": vod_config.product,
-        "Asset_Name": package_asset_name,
-        "Version_Major": '1',
-        "Version_Minor": '0',
-        "Description": package_description,
-        "Creation_Date": creation_date,
-        "Provider_ID": vod_config.provider_id,
-        "Asset_ID": package_asset_id,
-        "Asset_Class": "package"
-    }
-    vod_package.D_app["package"] = {"Metadata_Spec_Version": "CableLabsVOD1.1"}
+    vod_package.D_ams["package"].update(
+        {
+            "Provider":  vod_config.provider,
+            "Product": vod_config.product,
+            "Asset_Name": package_asset_name,
+            "Version_Major": '1',
+            "Version_Minor": '0',
+            "Description": package_description,
+            "Creation_Date": creation_date,
+            "Provider_ID": vod_config.provider_id,
+            "Asset_ID": package_asset_id,
+            "Asset_Class": "package"
+        }
+    )
+    vod_package.D_app["package"].update(
+        {"Metadata_Spec_Version": "CableLabsVOD1.1"}
+    )
 
     # Title section
     title_asset_name = "{} {} (title)".format(short_name, suffix)
@@ -91,54 +97,60 @@ def generate_metadata(file_path, vod_config):
     title_title_brief = "{} {}".format(file_name[:14], suffix)
     title_title = "{} {}".format(file_name[:124], suffix)
 
-    vod_package.D_ams["title"] = {
-        "Provider":  vod_config.provider,
-        "Product": vod_config.product,
-        "Asset_Name": title_asset_name,
-        "Version_Major": '1',
-        "Version_Minor": '0',
-        "Description": title_description,
-        "Creation_Date": creation_date,
-        "Provider_ID": vod_config.provider_id,
-        "Asset_ID": title_asset_id,
-        "Asset_Class": "title"
-    }
-    vod_package.D_app["title"] = {
-        "Type": "title",
-        "Title_Brief": title_title_brief,
-        "Title": title_title,
-        "Summary_Short": title_title,
-        "Rating": ["NR"],
-        "Closed_Captioning": 'N',
-        "Year": timestamp.strftime("%Y"),
-        "Category": [vod_config.title_category],
-        "Genre": ["Other"],
-        "Show_Type": "Other",
-        "Billing_ID": title_billing_id,
-        "Licensing_Window_Start": creation_date,
-        "Licensing_Window_End": end_date,
-        "Preview_Period": "300",
-        "Provider_QA_Contact": "N/A"
-    }
+    vod_package.D_ams["title"].update(
+        {
+            "Provider":  vod_config.provider,
+            "Product": vod_config.product,
+            "Asset_Name": title_asset_name,
+            "Version_Major": '1',
+            "Version_Minor": '0',
+            "Description": title_description,
+            "Creation_Date": creation_date,
+            "Provider_ID": vod_config.provider_id,
+            "Asset_ID": title_asset_id,
+            "Asset_Class": "title"
+        }
+    )
+    vod_package.D_app["title"].update(
+        {
+            "Type": "title",
+            "Title_Brief": title_title_brief,
+            "Title": title_title,
+            "Summary_Short": title_title,
+            "Rating": ["NR"],
+            "Closed_Captioning": 'N',
+            "Year": timestamp.strftime("%Y"),
+            "Category": [vod_config.title_category],
+            "Genre": ["Other"],
+            "Show_Type": "Other",
+            "Billing_ID": title_billing_id,
+            "Licensing_Window_Start": creation_date,
+            "Licensing_Window_End": end_date,
+            "Preview_Period": "300",
+            "Provider_QA_Contact": "N/A"
+        }
+    )
 
     # Movie section
     movie_asset_name = "{} {} (movie)".format(short_name, suffix)
     movie_description = "{} {} (movie asset)".format(short_name, suffix)
     movie_asset_id = "{}M{}{}".format(vod_config.prefix, asset_id, suffix)
 
-    vod_package.D_ams["movie"] = {
-        "Provider":  vod_config.provider,
-        "Product": vod_config.product,
-        "Asset_Name": movie_asset_name,
-        "Version_Major": '1',
-        "Version_Minor": '0',
-        "Description": movie_description,
-        "Creation_Date": creation_date,
-        "Provider_ID": vod_config.provider_id,
-        "Asset_ID": movie_asset_id,
-        "Asset_Class": "movie"
-    }
-    vod_package.D_app["movie"]["Type"] = "movie"
+    vod_package.D_ams["movie"].update(
+        {
+            "Provider":  vod_config.provider,
+            "Product": vod_config.product,
+            "Asset_Name": movie_asset_name,
+            "Version_Major": '1',
+            "Version_Minor": '0',
+            "Description": movie_description,
+            "Creation_Date": creation_date,
+            "Provider_ID": vod_config.provider_id,
+            "Asset_ID": movie_asset_id,
+            "Asset_Class": "movie"
+        }
+    )
+    vod_package.D_app["movie"].update({"Type": "movie"})
 
     # Preview section
     if has_preview:
@@ -149,38 +161,43 @@ def generate_metadata(file_path, vod_config):
         preview_asset_id = "{}R{}{}".format(
             vod_config.prefix, asset_id, suffix
         )
-        vod_package.D_ams["preview"] = {
-            "Provider":  vod_config.provider,
-            "Product": vod_config.product,
-            "Asset_Name": preview_asset_name,
-            "Version_Major": '1',
-            "Version_Minor": '0',
-            "Description": preview_description,
-            "Creation_Date": creation_date,
-            "Provider_ID": vod_config.provider_id,
-            "Asset_ID": preview_asset_id,
-            "Asset_Class": "preview"
-        }
-        vod_package.D_app["preview"]["Type"] = "preview"
-        vod_package.D_app["preview"]["Rating"] = ["NR"]
+        vod_package.D_ams["preview"].update(
+            {
+                "Provider":  vod_config.provider,
+                "Product": vod_config.product,
+                "Asset_Name": preview_asset_name,
+                "Version_Major": '1',
+                "Version_Minor": '0',
+                "Description": preview_description,
+                "Creation_Date": creation_date,
+                "Provider_ID": vod_config.provider_id,
+                "Asset_ID": preview_asset_id,
+                "Asset_Class": "preview"
+            }
+        )
+        vod_package.D_app["preview"].update(
+            {"Type": "preview", "Rating": ["NR"]}
+        )
 
     if has_poster:
         poster_asset_name = "{} {} (poster)".format(short_name, suffix)
         poster_description = "{} {} (poster asset)".format(short_name, suffix)
         poster_asset_id = "{}I{}{}".format(vod_config.prefix, asset_id, suffix)
-        vod_package.D_ams["poster"] = {
-            "Provider":  vod_config.provider,
-            "Product": vod_config.product,
-            "Asset_Name": poster_asset_name,
-            "Version_Major": '1',
-            "Version_Minor": '0',
-            "Description": poster_description,
-            "Creation_Date": creation_date,
-            "Provider_ID": vod_config.provider_id,
-            "Asset_ID": poster_asset_id,
-            "Asset_Class": "poster"
-        }
-        vod_package.D_app["poster"]["Type"] = "poster"
+        vod_package.D_ams["poster"].update(
+            {
+                "Provider":  vod_config.provider,
+                "Product": vod_config.product,
+                "Asset_Name": poster_asset_name,
+                "Version_Major": '1',
+                "Version_Minor": '0',
+                "Description": poster_description,
+                "Creation_Date": creation_date,
+                "Provider_ID": vod_config.provider_id,
+                "Asset_ID": poster_asset_id,
+                "Asset_Class": "poster"
+            }
+        )
+        vod_package.D_app["poster"].update({"Type": "poster"})
 
     if has_box_cover:
         box_cover_asset_name = "{} {} (box cover)".format(short_name, suffix)
@@ -190,18 +207,20 @@ def generate_metadata(file_path, vod_config):
         box_cover_asset_id = "{}B{}{}".format(
             vod_config.prefix, asset_id, suffix
         )
-        vod_package.D_ams["box cover"] = {
-            "Provider":  vod_config.provider,
-            "Product": vod_config.product,
-            "Asset_Name": box_cover_asset_name,
-            "Version_Major": '1',
-            "Version_Minor": '0',
-            "Description": box_cover_description,
-            "Creation_Date": creation_date,
-            "Provider_ID": vod_config.provider_id,
-            "Asset_ID": box_cover_asset_id,
-            "Asset_Class": "box cover"
-        }
-        vod_package.D_app["box cover"]["Type"] = "box cover"
+        vod_package.D_ams["box cover"].update(
+            {
+                "Provider":  vod_config.provider,
+                "Product": vod_config.product,
+                "Asset_Name": box_cover_asset_name,
+                "Version_Major": '1',
+                "Version_Minor": '0',
+                "Description": box_cover_description,
+                "Creation_Date": creation_date,
+                "Provider_ID": vod_config.provider_id,
+                "Asset_ID": box_cover_asset_id,
+                "Asset_Class": "box cover"
+            }
+        )
+        vod_package.D_app["box cover"].update({"Type": "box cover"})
 
     return vod_package

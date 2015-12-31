@@ -2,7 +2,7 @@ from __future__ import division
 from io import open
 import os.path
 
-from vod_metadata import config_path
+from vod_metadata import default_config_path
 from vod_metadata.config_read import parse_config
 from vod_metadata.md5_calc import md5_checksum
 from vod_metadata.media_info import check_video, check_picture
@@ -34,7 +34,7 @@ class VodPackage(object):
     def __init__(self, xml_path, vod_config=None):
         # Retrieve configuration if it's not set already
         if vod_config is None:
-            self.vod_config = parse_config(config_path)
+            self.vod_config = parse_config(default_config_path)
         else:
             self.vod_config = vod_config
 

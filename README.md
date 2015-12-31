@@ -8,21 +8,23 @@ is described in these two documents:
 * [Content Specification](http://cablelabs.com/specification/cablelabs-video-on-demand-content-specification-version-1-1/)
 * [Asset Distribution Interface Specification](http://www.cablelabs.com/specification/cablelabs-asset-distribution-interface-specification-version-1-1-2/)
 
-If you're looking at this project you probably have some familiarity with that
-specification. The goal of this project is to prevent its users from having to
-be _too_ familiar with its endearing quirks. 
+## Installation
 
-### Quick start (for beginners and Windows users)
-This project contains a script that will generate valid VOD metadata for all the
-video files in a directory.
+You will need:
+* Python (preferably version 2.7 or 3.4+):
+  * Windows users: Download and install Python from [python.org](http://python.org)
+* MediaInfo (preferably version 0.7.52+)
+  * Windows users: Download the [MediaInfo](http://mediaarea.net/en/MediaInfo) __CLI__ package and extract it somewhere (e.g. to `C:\Program Files\MediaInfo`)
+* The `vod_metadata` module from [PyPI](https://pypi.python.org/pypi/vod_metadata)
+  * Windows users: Open a command prompt. Then run this command: `C:\Python34\python.exe -m pip install vod_metadata`
 
-* Download and install [Python](http://python.or). Get version 3.4 or later.
-* Download the [MediaInfo](http://mediaarea.net/en/MediaInfo) CLI archive and
- extract it somewhere (e.g. to `C:\Program Files\MediaInfo`)
-* Open a command prompt. Then run this command: `C:\Python34\python.exe -m pip install vod_metadata`
+## Using the metadata generator
 
+You can use the metadata generator to create XML metadata for video files.
 
-Once you're set up, switch to a directory with some video files (e.g. `cd C:\videos`):
+### Quick start
+
+Start by switching to a directory with some video files (e.g. `cd C:\videos`):
 ```
 C:\Videos>dir /b
 11 Pink.mpg
@@ -49,11 +51,6 @@ C:\Videos>dir /b
 13 Game_5056.xml
 ```
 
-You may process videos in some other directory with the `--video-dir` argument.
-```
-C:\Videos>C:\Python34\python.exe -m vod_metadata  --video-dir "C:\Somewhere\Videos"
-```
-
 To incorporate a preview and/or poster element for the file `something.mpg`:
 * Put a `something_preview.mpg` file in the same directory
 * Put a `something_poster.bmp` file in the same directory.
@@ -61,6 +58,24 @@ To incorporate a preview and/or poster element for the file `something.mpg`:
 
 The preview file must have the same extension as the movie file,
 and the poster / box cover can have either a .bmp or .jpg extension.
+
+### Command line options
+
+Process videos in a particular directory with the `--video-dir` argument.
+```
+C:\Videos>C:\Python34\python.exe -m vod_metadata  --video-dir "C:\Somewhere\Videos"
+```
+
+Specify a different metadata template (useful for adding custom values) with the `--template-path` argument.
+```
+C:\Videos>C:\Python34\python.exe -m vod_metadata  --template-path "C:\Somewhere\template.xml"
+```
+
+Change what values are used when generating metadata files by specifying the path to a config file ([example](https://github.com/bbayles/vod_metadata/blob/master/vod_metadata/vod_config.ini)):
+```
+C:\Videos>C:\Python34\python.exe -m vod_metadata  --config-path "C:\Somewhere\config.ini"
+```
+
 
 ## Troubleshooting
 If you find that you get a `RuntimeError: MediaInfo not found.` error message, you can specify the path to MediaInfo on the command line:
