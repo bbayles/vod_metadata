@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE ADI SYSTEM "ADI.DTD">
+<ADI>
+  <Metadata>
+    <AMS Provider="%package_provider%"
+         Product="%package_product%"
+         Asset_Name="%package_asset_name%"
+         Version_Major="%package_version_major%"
+         Version_Minor="%package_version_minor%"
+         Description="%package_description%"
+         Creation_Date="%package_creation_date%"
+         Provider_ID="%package_provider_id%"
+         Asset_ID="%package_asset_id%"
+         Asset_Class="package"/>
+    <App_Data App="MOD" Name="Metadata_Spec_Version" Value="CableLabsVOD1.1"/>
+  </Metadata>
+  <Asset>
+    <Metadata>
+      <AMS Provider="%title_provider%"
+           Product="%title_product%"
+           Asset_Name="%title_asset_name%"
+           Version_Major="%title_version_major%"
+           Version_Minor="%title_version_minor%"
+           Description="%title_description%"
+           Creation_Date="%title_creation_date%"
+           Provider_ID="%title_provider_id%"
+           Asset_ID="%title_asset_id%"
+           Asset_Class="title"/>
+      <App_Data App="MOD" Name="Type" Value="title"/>
+      <App_Data App="MOD" Name="Title_Brief" Value="%title_title_brief%"/>
+      <App_Data App="MOD" Name="Title" Value="%title_title%"/>
+      <App_Data App="MOD" Name="Summary_Short" Value="%title_summary_short%"/>
+      <App_Data App="MOD" Name="Rating" Value="%title_rating%"/>
+      <App_Data App="MOD" Name="Closed_Captioning" Value="%title_closed_captioning%"/>
+      <App_Data App="MOD" Name="Run_Time" Value="%title_run_time%"/>
+      <App_Data App="MOD" Name="Display_Run_Time" Value="%title_display_run_time%"/>
+      <App_Data App="MOD" Name="Year" Value="%title_year%"/>
+      <App_Data App="MOD" Name="Category" Value="%title_category%"/>
+      <App_Data App="MOD" Name="Genre" Value="%title_genre%"/>
+      <App_Data App="MOD" Name="Show_Type" Value="%title_show_type%"/>
+      <App_Data App="MOD" Name="Billing_ID" Value="%title_billing_id%"/>
+      <App_Data App="MOD" Name="Licensing_Window_Start" Value="%title_licensing_window_start%"/>
+      <App_Data App="MOD" Name="Licensing_Window_End" Value="%title_licensing_window_end%"/>
+      <App_Data App="MOD" Name="Preview_Period" Value="%title_preview_period%"/>
+      <App_Data App="MOD" Name="Provider_QA_Contact" Value="%title_provider_qa_contact%"/> 
+    </Metadata>
+    <Asset>
+      <Metadata>
+        <AMS Provider="%movie_provider%"
+             Product="%movie_product%"
+             Asset_Name="%movie_asset_name%"
+             Version_Major="%movie_version_major%"
+             Version_Minor="%movie_version_minor%"
+             Description="%movie_description%"
+             Creation_Date="%movie_creation_date%"
+             Provider_ID="%movie_provider_id%"
+             Asset_ID="%movie_asset_id%"
+             Asset_Class="movie"/>
+        <App_Data App="MOD" Name="Type" Value="movie"/>
+        <App_Data App="MOD" Name="Audio_Type" Value="%movie_audio_type%"/>
+        <App_Data App="MOD" Name="Resolution" Value="%movie_resolution%"/>
+        <App_Data App="MOD" Name="Frame_Rate" Value="%movie_frame_rate%"/>
+        <App_Data App="MOD" Name="Codec" Value="%movie_codec%"/>
+        <App_Data App="MOD" Name="Bit_Rate" Value="%movie_bit_rate%"/>
+        <App_Data App="MOD" Name="Content_FileSize" Value="%movie_content_filesize%"/>
+        <App_Data App="MOD" Name="Content_CheckSum" Value="%movie_content_checksum%"/>
+      </Metadata>
+      <Content Value="%movie_file_name%"/>
+    </Asset>
+    <Asset>
+      <Metadata>
+        <AMS Provider="%preview_provider%"
+             Product="%preview_product%"
+             Asset_Name="%preview_asset_name%"
+             Version_Major="%preview_version_major%"
+             Version_Minor="%preview_version_minor%"
+             Description="%preview_description%"
+             Creation_Date="%preview_creation_date%"
+             Provider_ID="%preview_provider_id%"
+             Asset_ID="%preview_asset_id%"
+             Asset_Class="preview"/>
+        <App_Data App="MOD" Name="Type" Value="preview"/>
+        <App_Data App="MOD" Name="Audio_Type" Value="%preview_%"/>
+        <App_Data App="MOD" Name="Resolution" Value="%preview_resolution%"/>
+        <App_Data App="MOD" Name="Frame_Rate" Value="%preview_frame_rate%"/>
+        <App_Data App="MOD" Name="Codec" Value="%preview_codec%"/>
+        <App_Data App="MOD" Name="Bit_Rate" Value="%preview_bit_rate%"/>
+        <App_Data App="MOD" Name="Rating" Value="%preview_rating%"/>
+        <App_Data App="MOD" Name="Run_Time" Value="%preview_run_time%"/>
+        <App_Data App="MOD" Name="Content_FileSize" Value="%preview_content_filesize%"/>
+        <App_Data App="MOD" Name="Content_CheckSum" Value="%preview_content_checksum%"/>
+      </Metadata>
+      <Content Value="%preview_file_name%"/>
+    </Asset>
+    <Asset>
+      <Metadata>
+        <AMS Provider="%poster_provider%"
+             Product="%poster_product%"
+             Asset_Name="%poster_asset_name%"
+             Version_Major="%poster_version_major%"
+             Version_Minor="%poster_version_minor%"
+             Description="%poster_description%"
+             Creation_Date="%poster_creation_date%"
+             Provider_ID="%poster_provider_id%"
+             Asset_ID="%poster_asset_id%"
+             Asset_Class="poster"/>
+        <App_Data App="MOD" Name="Type" Value="poster"/>
+        <App_Data App="MOD" Name="Image_Aspect_Ratio" Value="%poster_image_aspect_ratio%"/>
+        <App_Data App="MOD" Name="Content_FileSize" Value="%poster_content_file_size%"/>
+        <App_Data App="MOD" Name="Content_CheckSum" Value="%poster_content_checksum%"/>
+      </Metadata>
+      <Content Value="%poster_file_name%"/>
+    </Asset>
+    <Asset>
+      <Metadata>
+        <AMS Provider="%box_cover_provider%"
+             Product="%box_cover_product%"
+             Asset_Name="%box_cover_asset_name%"
+             Version_Major="%box_cover_version_major%"
+             Version_Minor="%box_cover_version_minor%"
+             Description="%box_cover_description%"
+             Creation_Date="%box_cover_creation_date%"
+             Provider_ID="%box_cover_provider_id%"
+             Asset_ID="%box_cover_asset_id%"
+             Asset_Class="box cover"/>
+        <App_Data App="MOD" Name="Type" Value="poster"/>
+        <App_Data App="MOD" Name="Image_Aspect_Ratio" Value="%box_cover_image_aspect_ratio%"/>
+        <App_Data App="MOD" Name="Content_FileSize" Value="%box_cover_content_file_size%"/>
+        <App_Data App="MOD" Name="Content_CheckSum" Value="%box_cover_content_checksum%"/>
+      </Metadata>
+      <Content Value="%box_cover_file_name%"/>
+    </Asset>
+  </Asset>
+</ADI>
