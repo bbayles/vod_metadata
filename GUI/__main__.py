@@ -12,11 +12,12 @@ from vod_metadata import default_config_path, default_template_path
 
 from tkinter import *
 from tkinter.filedialog import askdirectory 
+from tkinter.filedialog import askopenfilename
 from tkinter.messagebox import showerror
 from tkinter import ttk
 
 fname = ''
-
+xmlName = ''
 
 def generateMetadata():
     config_path = default_config_path
@@ -51,16 +52,22 @@ class MyFrame(Frame):
         Frame.__init__(self)
         
         self.txtVideoPath = StringVar()
+        self.txtXMLTemplate = StringVar()
         
         self.master.title("CableLabs VOD Metada 1.1 Generator")
         self.master.rowconfigure(5, weight=1)
         self.master.columnconfigure(5, weight=1)
         self.grid(sticky=W+E+N+S)
         
-        Label(self, text="Seleccione Carpeta con archivos").grid(row=0, column=0, sticky=W)
-        self.button = Button(self, text="Browse", command=self.load_file, width=10)
-        self.button.grid(row=0, column=1, sticky=E)
+        Label(self, text="Select File Folder").grid(row=0, column=0, sticky=W)
+        self.buttonPath = Button(self, text="Browse", command=self.load_file, width=10).grid(row=0, column=1, sticky=E)
         self.labelFolder = Label(self, textvariable=self.txtVideoPath).grid(row=1, column=0, columnspan=2, sticky=(W, N))
+        
+        
+        Label(self, text="Select XML Template").grid(row=2, column=0, sticky=W)
+        self.buttonPath = Button(self, text="Browse", command=self.load_XML, width=10).grid(row=2, column=1, sticky=E)
+        self.labelXmlTemplate = Label(self, textvariable=self.txtXMLTemplate).grid(row=3, column=0, columnspan=2, sticky=(W, N))
+        
         
         self.buttonGenerateMetadata = Button(self, text="Generate Metadata", command=self.GenerateMetadata, width=20)
         self.buttonGenerateMetadata.grid(row=10, column=1, sticky=E)
@@ -78,7 +85,18 @@ class MyFrame(Frame):
             except: # <- naked except is a bad idea
                 showerror("Open Source File", "Failed to read file\n'%s'" % fname)
             return
-
+        
+    def load_XML(self):    
+        global xmlName
+        xmlName = askopenfilename(filetypes=[('XML Template', '.xml')])
+        if xmlName:
+            try:
+                print("Selected Xml File: ", xmlName)
+                self.txtXMLTemplate.set(xmlName)
+            except: # <- naked except is a bad idea
+                showerror("Open Source File", "Failed to read file\n'%s'" % fname)
+            return
+        
     def GenerateMetadata(self):
         global fname
         if fname:
