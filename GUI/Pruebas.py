@@ -1,5 +1,5 @@
 from tkinter import *
-from tkinter.filedialog import askopenfilename
+from tkinter.filedialog import askdirectory 
 from tkinter.messagebox import showerror
 
 class MyFrame(Frame):
@@ -9,14 +9,11 @@ class MyFrame(Frame):
         self.master.rowconfigure(5, weight=1)
         self.master.columnconfigure(5, weight=1)
         self.grid(sticky=W+E+N+S)
-
         self.button = Button(self, text="Browse", command=self.load_file, width=10)
         self.button.grid(row=1, column=0, sticky=W)
 
     def load_file(self):
-        fname = askopenfilename(filetypes=(("Template files", "*.tplate"),
-                                           ("HTML files", "*.html;*.htm"),
-                                           ("All files", "*.*") ))
+        fname = askdirectory()
         if fname:
             try:
                 print("""here it comes: {}""", fname)

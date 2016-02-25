@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE ADI SYSTEM "ADI.DTD">
+<ADI>
+  <Metadata>
+    <AMS Asset_Class="package" Asset_ID="MSOP2016022412289487" Asset_Name="reference_preview 9487 (package)" Creation_Date="2016-02-24" Description="reference_preview 9487 (package asset)" Product="MOD" Provider="001" Provider_ID="example.com" Version_Major="1" Version_Minor="0" />
+    <App_Data App="MOD" Name="Metadata_Spec_Version" Value="CableLabsVOD1.1" />
+  </Metadata>
+  <Asset>
+    <Metadata>
+      <AMS Asset_Class="title" Asset_ID="MSOT2016022412289487" Asset_Name="reference_preview 9487 (title)" Creation_Date="2016-02-24" Description="reference_preview 9487 (title asset)" Product="MOD" Provider="001" Provider_ID="example.com" Version_Major="1" Version_Minor="0" />
+      <App_Data App="MOD" Name="Billing_ID" Value="9487B" />
+      <App_Data App="MOD" Name="Category" Value="MSO Lab" />
+      <App_Data App="MOD" Name="Closed_Captioning" Value="N" />
+      <App_Data App="MOD" Name="Display_Run_Time" Value="00:00" />
+      <App_Data App="MOD" Name="Genre" Value="Other" />
+      <App_Data App="MOD" Name="Licensing_Window_End" Value="2018-11-19" />
+      <App_Data App="MOD" Name="Licensing_Window_Start" Value="2016-02-24" />
+      <App_Data App="MOD" Name="Preview_Period" Value="300" />
+      <App_Data App="MOD" Name="Provider_QA_Contact" Value="N/A" />
+      <App_Data App="MOD" Name="Rating" Value="NR" />
+      <App_Data App="MOD" Name="Run_Time" Value="00:00:02" />
+      <App_Data App="MOD" Name="Show_Type" Value="Other" />
+      <App_Data App="MOD" Name="Summary_Short" Value="reference_preview 9487" />
+      <App_Data App="MOD" Name="Title" Value="reference_preview 9487" />
+      <App_Data App="MOD" Name="Title_Brief" Value="reference_prev 9487" />
+      <App_Data App="MOD" Name="Type" Value="title" />
+      <App_Data App="MOD" Name="Year" Value="2016" />
+    </Metadata>
+    <Asset>
+      <Metadata>
+        <AMS Asset_Class="movie" Asset_ID="MSOM2016022412289487" Asset_Name="reference_preview 9487 (movie)" Creation_Date="2016-02-24" Description="reference_preview 9487 (movie asset)" Product="MOD" Provider="001" Provider_ID="example.com" Version_Major="1" Version_Minor="0" />
+        <App_Data App="MOD" Name="Audio_Type" Value="Stereo" />
+        <App_Data App="MOD" Name="Bit_Rate" Value="771" />
+        <App_Data App="MOD" Name="Content_CheckSum" Value="c3707c2c5c42847da0bfc06bcc33e251" />
+        <App_Data App="MOD" Name="Content_FileSize" Value="165487" />
+        <App_Data App="MOD" Name="Type" Value="movie" />
+      </Metadata>
+      <Content Value="reference_preview.mp4" />
+    </Asset>
+  </Asset>
+</ADI>
