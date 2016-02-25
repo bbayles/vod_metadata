@@ -20,12 +20,19 @@ fname = ''
 xmlName = ''
 
 def generateMetadata():
+    
+    global xmlName
+    
     config_path = default_config_path
     vod_config = parse_config(abspath(config_path))
     
-    template_path = default_template_path
-    template_path = abspath(template_path)
-    
+    if xmlName != '':
+        template_path = xmlName
+        template_path = abspath(template_path)
+    else:
+        template_path = default_template_path
+        template_path = abspath(template_path)
+        
     for file_path in listdir(getcwd()):
         
         file_name, file_ext = splitext(file_path)
@@ -104,8 +111,8 @@ class MyFrame(Frame):
                 print("A generar metadata!", fname)
                 chdir(fname)
                 generateMetadata()
-            except: # <- maybe we can show some more specific error.
-                showerror("Error during Metadata Generation")
+            except ValueError: # <- maybe we can show some more specific error.
+                showerror("Error during Metadata Generation", ValueError)
             return
         else:
             showerror("Error :(", "An error occurred, verify that all fields are completed") 

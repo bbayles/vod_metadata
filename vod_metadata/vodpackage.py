@@ -326,3 +326,6 @@ class VodPackage(object):
         self.D_app[ae_type]["Image_Aspect_Ratio"] = "{}x{}".format(
             img_width, img_height
         )
+        self.D_app[ae_type]["Custom_Image_Aspect_Ratio"] = "{}x{}".format(
+            63, 43
+        )
