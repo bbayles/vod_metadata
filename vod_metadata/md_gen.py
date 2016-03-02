@@ -4,6 +4,7 @@ import random
 
 from vod_metadata import default_template_path
 from vod_metadata.vodpackage import VodPackage
+from _overlapped import NULL
 
 __all__ = ["generate_metadata"]
 
@@ -150,7 +151,12 @@ def generate_metadata(
             "Asset_Class": "movie"
         }
     )
-    vod_package.D_app["movie"].update({"Type": "movie"})
+    vod_package.D_app["movie"].update(
+                                      {
+                                       "Type": "movie",
+                                       "Languages": "enES, enEN, enMX"
+                                       }
+                                      )
 
     # Preview section
     if has_preview:

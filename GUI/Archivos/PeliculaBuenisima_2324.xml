@@ -1,0 +1,94 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE ADI SYSTEM "ADI.DTD">
+<ADI>
+  <Metadata>
+    <AMS Asset_Class="package" Asset_ID="MSOP2016030117462324" Asset_Name="PeliculaBuenisima 2324 (package)" Creation_Date="2016-03-01" Description="PeliculaBuenisima 2324 (package asset)" Product="MOD" Provider="001" Provider_ID="example.com" Verb="" Version_Major="1" Version_Minor="0" />
+    <App_Data App="MOD" Name="Metadata_Spec_Version" Value="CableLabsVOD1.1" />
+  </Metadata>
+  <Asset>
+    <Metadata>
+      <AMS Asset_Class="title" Asset_ID="MSOT2016030117462324" Asset_Name="PeliculaBuenisima 2324 (title)" Creation_Date="2016-03-01" Description="PeliculaBuenisima 2324 (title asset)" Product="MOD" Provider="001" Provider_ID="example.com" Verb="" Version_Major="1" Version_Minor="0" />
+      <App_Data App="MOD" Name="Actors" Value="%title_actors%" />
+      <App_Data App="MOD" Name="Actors_Display" Value="%title_actors_display%" />
+      <App_Data App="MOD" Name="Billing_ID" Value="2324B" />
+      <App_Data App="MOD" Name="Category" Value="MSO Lab" />
+      <App_Data App="MOD" Name="Country_of_Origin" Value="%title_country_of_origin%" />
+      <App_Data App="MOD" Name="Director" Value="%title_director%" />
+      <App_Data App="MOD" Name="Display_Run_Time" Value="00:00" />
+      <App_Data App="MOD" Name="Episode_Name" Value="%title_episode_name%" />
+      <App_Data App="MOD" Name="Genre" Value="Other" />
+      <App_Data App="MOD" Name="Licensing_Window_End" Value="2018-11-25" />
+      <App_Data App="MOD" Name="Licensing_Window_Start" Value="2016-03-01" />
+      <App_Data App="MOD" Name="Preview_Period" Value="300" />
+      <App_Data App="MOD" Name="Provider_QA_Contact" Value="N/A" />
+      <App_Data App="MOD" Name="Rating" Value="NR" />
+      <App_Data App="MOD" Name="Run_Time" Value="00:00:07" />
+      <App_Data App="MOD" Name="Show_Type" Value="Other" />
+      <App_Data App="MOD" Name="Studio" Value="%title_studio%" />
+      <App_Data App="MOD" Name="Summary_Long" Value="%title_summary_long%" />
+      <App_Data App="MOD" Name="Summary_Medium" Value="%title_summary_medium%" />
+      <App_Data App="MOD" Name="Summary_Short" Value="PeliculaBuenisima 2324" />
+      <App_Data App="MOD" Name="Title" Value="PeliculaBuenisima 2324" />
+      <App_Data App="MOD" Name="Title_Brief" Value="PeliculaBuenis 2324" />
+      <App_Data App="MOD" Name="Title_Sort_Name" Value="%title_title_sort_name%" />
+      <App_Data App="MOD" Name="Type" Value="title" />
+      <App_Data App="MOD" Name="Year" Value="2016" />
+    </Metadata>
+    <Asset>
+      <Metadata>
+        <AMS Asset_Class="movie" Asset_ID="MSOM2016030117462324" Asset_Name="PeliculaBuenisima 2324 (movie)" Creation_Date="2016-03-01" Description="PeliculaBuenisima 2324 (movie asset)" Product="MOD" Provider="001" Provider_ID="example.com" Verb="" Version_Major="1" Version_Minor="0" />
+        <App_Data App="MOD" Name="Audio_Type" Value="Stereo" />
+        <App_Data App="MOD" Name="Conax_Product_ID" Value="%movie_conax_product_id%" />
+        <App_Data App="MOD" Name="Content_CheckSum" Value="f5f66bd6e6b2ed02153d6fa94787626c" />
+        <App_Data App="MOD" Name="Content_FileSize" Value="251404" />
+        <App_Data App="MOD" Name="Content_Format" Value="%movie_content_format%" />
+        <App_Data App="MOD" Name="Copy_Protection" Value="%movie_copy_protection%" />
+        <App_Data App="MOD" Name="Encryption" Value="%movie_encryption%" />
+        <App_Data App="MOD" Name="Languages" Value="%movie_languages%" />
+        <App_Data App="MOD" Name="Screen_Format" Value="%movie_screen_format%" />
+        <App_Data App="MOD" Name="Subtitle_Languages" Value="%movie_subtitle_languages%" />
+        <App_Data App="MOD" Name="Type" Value="movie" />
+      </Metadata>
+      <Content Value="PeliculaBuenisima.mp4" />
+    </Asset>
+    <Asset>
+      <Metadata>
+        <AMS Asset_Class="preview" Asset_ID="MSOR2016030117462324" Asset_Name="PeliculaBuenisima 2324 (preview)" Creation_Date="2016-03-01" Description="PeliculaBuenisima 2324 (preview asset)" Product="MOD" Provider="001" Provider_ID="example.com" Verb="" Version_Major="1" Version_Minor="0" />
+        <App_Data App="MOD" Name="Audio_Type" Value="Stereo" />
+        <App_Data App="MOD" Name="Conax_Product_ID" Value="%preview_conax_product_id%" />
+        <App_Data App="MOD" Name="Content_CheckSum" Value="c3707c2c5c42847da0bfc06bcc33e251" />
+        <App_Data App="MOD" Name="Content_FileSize" Value="165487" />
+        <App_Data App="MOD" Name="Content_Format" Value="%preview_content_format%" />
+        <App_Data App="MOD" Name="Copy_Protection" Value="%preview_copy_protection%" />
+        <App_Data App="MOD" Name="Encryption" Value="%preview_encryption%" />
+        <App_Data App="MOD" Name="Languages" Value="%preview_languages%" />
+        <App_Data App="MOD" Name="Rating" Value="NR" />
+        <App_Data App="MOD" Name="Run_Time" Value="00:00:02" />
+        <App_Data App="MOD" Name="Screen_Format" Value="%preview_screen_format%" />
+        <App_Data App="MOD" Name="Subtitle_Languages" Value="%preview_subtitle_languages%" />
+        <App_Data App="MOD" Name="Type" Value="preview" />
+      </Metadata>
+      <Content Value="PeliculaBuenisima_preview.mp4" />
+    </Asset>
+    <Asset>
+      <Metadata>
+        <AMS Asset_Class="poster" Asset_ID="MSOI2016030117462324" Asset_Name="PeliculaBuenisima 2324 (poster)" Creation_Date="2016-03-01" Description="PeliculaBuenisima 2324 (poster asset)" Product="MOD" Provider="001" Provider_ID="example.com" Verb="" Version_Major="1" Version_Minor="0" />
+        <App_Data App="MOD" Name="Content_CheckSum" Value="3ac9e2860d2e78c2a571f2ffc90b9e0c" />
+        <App_Data App="MOD" Name="Content_FileSize" Value="70" />
+        <App_Data App="MOD" Name="Image_Aspect_Ratio" Value="2x2" />
+        <App_Data App="MOD" Name="Type" Value="poster" />
+      </Metadata>
+      <Content Value="PeliculaBuenisima_poster.bmp" />
+    </Asset>
+    <Asset>
+      <Metadata>
+        <AMS Asset_Class="box cover" Asset_ID="MSOB2016030117462324" Asset_Name="PeliculaBuenisima 2324 (box cover)" Creation_Date="2016-03-01" Description="PeliculaBuenisima 2324 (box cover asset)" Product="MOD" Provider="001" Provider_ID="example.com" Verb="" Version_Major="1" Version_Minor="0" />
+        <App_Data App="MOD" Name="Content_CheckSum" Value="8798e5e9ce9f811700ada4e1a4bef6f1" />
+        <App_Data App="MOD" Name="Content_FileSize" Value="70" />
+        <App_Data App="MOD" Name="Image_Aspect_Ratio" Value="2x2" />
+        <App_Data App="MOD" Name="Type" Value="box cover" />
+      </Metadata>
+      <Content Value="PeliculaBuenisima_box_cover.bmp" />
+    </Asset>
+  </Asset>
+</ADI>
