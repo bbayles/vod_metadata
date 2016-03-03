@@ -106,12 +106,7 @@ You can now read and edit the metadata through Python dictionaries
  Maybe you need to know the `Provider_ID` and `Asset_ID` for the title
  asset?
 
-```python
->>> vod_package.D_ams["title"]["Provider_ID"]
-'example.com'
->>> vod_package.D_ams["title"]["Asset_ID"]
-'MSOT2014020814473655'
-```
+
 
 Do you need to determine whether the asset package contains a poster? Or do you 
 need to remove it?
@@ -122,23 +117,6 @@ True
 >>> vod_package.remove_poster()
 >>> vod_package.has_poster
 False
-```
-
-Maybe you suspect that your metadata is describing the wrong file? You can update it to describe the correct one:
-
-```python
->>> vod_package.D_app["preview"]["Content_CheckSum"]
-'05b441362eccbde82a98fabcafe071c1',
->>> vod_package.check_files()
->>> vod_package.D_app["preview"]["Content_CheckSum"]
-'2680090e51970e67b412af35201b9053'
-```
-
-Have an XML file for an asset you need to delete?
-```python
->>> vod_package.make_delete()
->>> vod_package.D_ams["package"]["Verb"]
-'DELETE'
 ```
 
 Save your edited file like so:

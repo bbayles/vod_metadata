@@ -154,7 +154,7 @@ def generate_metadata(
     vod_package.D_app["movie"].update(
                                       {
                                        "Type": "movie",
-                                       "Languages": "enES, enEN, enMX"
+                                       "Languages": "enES|enEN|enMX"
                                        }
                                       )
 

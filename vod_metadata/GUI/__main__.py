@@ -4,12 +4,13 @@ from argparse import ArgumentParser
 from io import open
 from os import chdir, getcwd, listdir
 from os.path import abspath, splitext
+import sys
 
-# from vod_metadata import VodPackage
-# from vod_metadata.md_gen import generate_metadata
-# from vod_metadata.config_read import parse_config
-# from vod_metadata import default_config_path, default_template_path
-import VOD_METADATA_GUI.vid_metadata.md_gen
+from vod_metadata import VodPackage
+from vod_metadata.md_gen import generate_metadata
+from vod_metadata.config_read import parse_config
+from vod_metadata import default_config_path, default_template_path
+
 
 from tkinter import *
 from tkinter.filedialog import askdirectory 
