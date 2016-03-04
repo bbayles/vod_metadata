@@ -10,6 +10,7 @@ from vod_metadata import VodPackage
 from vod_metadata.md_gen import generate_metadata
 from vod_metadata.config_read import parse_config
 from vod_metadata import default_config_path, default_template_path
+from vod_metadata.ReadXML import MyXML
 
 
 from tkinter import *
@@ -18,11 +19,13 @@ from tkinter.filedialog import askopenfilename
 from tkinter.messagebox import showerror
 from tkinter import ttk
 
+from functools import partial
+
 fname = ''
 xmlName = ''
 vodConfigName = ''
 
-def generateMetadata():
+def  generateMetadata():
     
     global xmlName
     global vodConfigName
@@ -63,9 +66,11 @@ def generateMetadata():
 
 
 class MyFrame(Frame):
-    def __init__(self):
+    counter = 0
+    def __init__(self, *args, **kwargs):
         global fname
         Frame.__init__(self)
+        
         
         self.txtVideoPath = StringVar()
         self.txtXMLTemplate = StringVar()
@@ -94,8 +99,51 @@ class MyFrame(Frame):
         self.buttonGenerateMetadata = Button(self, text="Generate Metadata", command=self.GenerateMetadata, width=20)
         self.buttonGenerateMetadata.grid(row=10, column=1, sticky=E)
         
+        self.button = Button(self, text="Create new window", command=self.create_window).grid(row=15, column=1, sticky=E)
         for child in self.winfo_children(): child.grid_configure(padx=5, pady=5)
         
+        
+    def create_window(self):
+        
+        elpath = "C:\\Users\\nmastromarino\\Proyectos Codigo\\VOD_METADATA_GUI\\TestMastrom\\metadata_template.xml"
+        elpathD = "C:\\Users\\nmastromarino\\Proyectos Codigo\\VOD_METADATA_GUI\\TestMastrom\\ArchivoFinal.xml"
+        ElPathEjemplo = "C:\\Users\\nmastromarino\\Proyectos Codigo\\VOD_METADATA_GUI\\TestMastrom\\Modelo1.xml"
+        myXmlInstancia1 = MyXML(elpath)
+        myXmlejemplo = MyXML(ElPathEjemplo)
+        
+        
+        myXmlInstancia1.D_ams["package"].update(
+            {
+                "Provider":  myXmlejemplo.D_ams["package"]["Provider"]
+            }
+        )
+        
+        myXmlInstancia1.D_app["title"]["Actors"] = myXmlejemplo.D_app["title"]["Actors"]
+    
+        self.counter += 1
+        t = Toplevel(self)
+        t.wm_title("Window #%s" % self.counter)
+        l = Label(t, text="This is window #%s" % self.counter)
+        l.pack(side="top", fill="both", expand=True, padx=100, pady=5)
+        l2 = Label(t, text="Actores...")
+        l2.config(text=myXmlInstancia1.D_app["title"]["Actors"])
+        l2.pack(side="top", fill="both", expand=True, padx=100, pady=5)
+        
+        Actors = Entry(t, text=myXmlInstancia1.D_app["title"]["Actors"])
+        Actors.pack(side="top", fill="both", expand=True, padx=100, pady=5)
+        
+            
+        b2 = Button(t, text='Save', command= lambda: SaveXml())
+        b2.pack(side="top", fill="both", expand=True, padx=100, pady=5)
+    
+        def SaveXml():
+            
+            myXmlInstancia1.D_app["title"]["Actors"] = [Actors.get()]
+            elpathD = "C:\\Users\\nmastromarino\\Proyectos Codigo\\VOD_METADATA_GUI\\TestMastrom\\ArchivoFinal.xml"
+            s = myXmlInstancia1.write_xml(rewrite=True)
+            with open(elpathD, "wb") as outfile:
+                _ = outfile.write(s) 
+               
         
     def load_file(self):    
         global fname
@@ -142,7 +190,14 @@ class MyFrame(Frame):
             return
         else:
             showerror("Error :(", "An error occurred, verify that all fields are completed") 
-            
+    
+    
+        
 if __name__ == "__main__":
     #generateMetadata()
-    MyFrame().mainloop()
+    root = Tk()
+    main = MyFrame(root)
+    main.pack(side="top", fill="both", expand=True)
+    root.mainloop()
+    
+    # MyFrame().mainloop()

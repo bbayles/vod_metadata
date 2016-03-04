@@ -62,9 +62,7 @@ def generate_metadata(
 
     has_preview = _set_ae(vod_package, movie_name, "preview", [movie_ext])
     has_poster = _set_ae(vod_package, movie_name, "poster", IMAGE_EXTENSIONS)
-    has_box_cover = _set_ae(
-        vod_package, movie_name, "box cover", IMAGE_EXTENSIONS
-    )
+    has_box_cover = _set_ae(vod_package, movie_name, "box cover", IMAGE_EXTENSIONS)
 
     vod_package.check_files()
 

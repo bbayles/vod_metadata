@@ -1,16 +1,17 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE ADI SYSTEM "ADI.DTD">
 <ADI>
   <Metadata>
-    <AMS Asset_Class="package" Asset_ID="MSOP2016030218142183" Asset_Name="PeliculaBuenisima 2183 (package)" Creation_Date="2016-03-02" Description="PeliculaBuenisima 2183 (package asset)" Product="MOD" Provider="001" Provider_ID="example.com" Verb="" Version_Major="1" Version_Minor="0" />
+    <AMS Asset_Class="package" Asset_ID="MSOP2016030318022000" Asset_Name="PeliculaBuenisima 2000 (package)" Creation_Date="2016-03-03" Description="PeliculaBuenisima 2000 (package asset)" Product="MOD" Provider="001" Provider_ID="example.com" Verb="" Version_Major="1" Version_Minor="0" />
     <App_Data App="MOD" Name="Metadata_Spec_Version" Value="CableLabsVOD1.1" />
   </Metadata>
   <Asset>
     <Metadata>
-      <AMS Asset_Class="title" Asset_ID="MSOT2016030218142183" Asset_Name="PeliculaBuenisima 2183 (title)" Creation_Date="2016-03-02" Description="PeliculaBuenisima 2183 (title asset)" Product="MOD" Provider="001" Provider_ID="example.com" Verb="" Version_Major="1" Version_Minor="0" />
+      <AMS Asset_Class="title" Asset_ID="MSOT2016030318022000" Asset_Name="PeliculaBuenisima 2000 (title)" Creation_Date="2016-03-03" Description="PeliculaBuenisima 2000 (title asset)" Product="MOD" Provider="001" Provider_ID="example.com" Verb="" Version_Major="1" Version_Minor="0" />
       <App_Data App="MOD" Name="Actors" Value="%title_actors%" />
+      <App_Data App="MOD" Name="Actors" Value="%title_actors2%" />
       <App_Data App="MOD" Name="Actors_Display" Value="%title_actors_display%" />
-      <App_Data App="MOD" Name="Billing_ID" Value="2183B" />
+      <App_Data App="MOD" Name="Billing_ID" Value="2000B" />
       <App_Data App="MOD" Name="Category" Value="MSO Lab" />
       <App_Data App="MOD" Name="Closed_Captioning" Value="N" />
       <App_Data App="MOD" Name="Country_of_Origin" Value="%title_country_of_origin%" />
@@ -18,8 +19,8 @@
       <App_Data App="MOD" Name="Display_Run_Time" Value="00:00" />
       <App_Data App="MOD" Name="Episode_Name" Value="%title_episode_name%" />
       <App_Data App="MOD" Name="Genre" Value="Other" />
-      <App_Data App="MOD" Name="Licensing_Window_End" Value="2018-11-26" />
-      <App_Data App="MOD" Name="Licensing_Window_Start" Value="2016-03-02" />
+      <App_Data App="MOD" Name="Licensing_Window_End" Value="2018-11-27" />
+      <App_Data App="MOD" Name="Licensing_Window_Start" Value="2016-03-03" />
       <App_Data App="MOD" Name="Preview_Period" Value="300" />
       <App_Data App="MOD" Name="Provider_QA_Contact" Value="N/A" />
       <App_Data App="MOD" Name="Rating" Value="NR" />
@@ -28,16 +29,16 @@
       <App_Data App="MOD" Name="Studio" Value="%title_studio%" />
       <App_Data App="MOD" Name="Summary_Long" Value="%title_summary_long%" />
       <App_Data App="MOD" Name="Summary_Medium" Value="%title_summary_medium%" />
-      <App_Data App="MOD" Name="Summary_Short" Value="PeliculaBuenisima 2183" />
-      <App_Data App="MOD" Name="Title" Value="PeliculaBuenisima 2183" />
-      <App_Data App="MOD" Name="Title_Brief" Value="PeliculaBuenis 2183" />
+      <App_Data App="MOD" Name="Summary_Short" Value="PeliculaBuenisima 2000" />
+      <App_Data App="MOD" Name="Title" Value="PeliculaBuenisima 2000" />
+      <App_Data App="MOD" Name="Title_Brief" Value="PeliculaBuenis 2000" />
       <App_Data App="MOD" Name="Title_Sort_Name" Value="%title_title_sort_name%" />
       <App_Data App="MOD" Name="Type" Value="title" />
       <App_Data App="MOD" Name="Year" Value="2016" />
     </Metadata>
     <Asset>
       <Metadata>
-        <AMS Asset_Class="movie" Asset_ID="MSOM2016030218142183" Asset_Name="PeliculaBuenisima 2183 (movie)" Creation_Date="2016-03-02" Description="PeliculaBuenisima 2183 (movie asset)" Product="MOD" Provider="001" Provider_ID="example.com" Verb="" Version_Major="1" Version_Minor="0" />
+        <AMS Asset_Class="movie" Asset_ID="MSOM2016030318022000" Asset_Name="PeliculaBuenisima 2000 (movie)" Creation_Date="2016-03-03" Description="PeliculaBuenisima 2000 (movie asset)" Product="MOD" Provider="001" Provider_ID="example.com" Verb="" Version_Major="1" Version_Minor="0" />
         <App_Data App="MOD" Name="Audio_Type" Value="Stereo" />
         <App_Data App="MOD" Name="Bit_Rate" Value="275" />
         <App_Data App="MOD" Name="Conax_Product_ID" Value="%movie_conax_product_id%" />
@@ -68,7 +69,7 @@
     </Asset>
     <Asset>
       <Metadata>
-        <AMS Asset_Class="preview" Asset_ID="MSOR2016030218142183" Asset_Name="PeliculaBuenisima 2183 (preview)" Creation_Date="2016-03-02" Description="PeliculaBuenisima 2183 (preview asset)" Product="MOD" Provider="001" Provider_ID="example.com" Verb="" Version_Major="1" Version_Minor="0" />
+        <AMS Asset_Class="preview" Asset_ID="MSOR2016030318022000" Asset_Name="PeliculaBuenisima 2000 (preview)" Creation_Date="2016-03-03" Description="PeliculaBuenisima 2000 (preview asset)" Product="MOD" Provider="001" Provider_ID="example.com" Verb="" Version_Major="1" Version_Minor="0" />
         <App_Data App="MOD" Name="Audio_Type" Value="Stereo" />
         <App_Data App="MOD" Name="Bit_Rate" Value="771" />
         <App_Data App="MOD" Name="Conax_Product_ID" Value="%preview_conax_product_id%" />
@@ -88,7 +89,7 @@
     </Asset>
     <Asset>
       <Metadata>
-        <AMS Asset_Class="poster" Asset_ID="MSOI2016030218142183" Asset_Name="PeliculaBuenisima 2183 (poster)" Creation_Date="2016-03-02" Description="PeliculaBuenisima 2183 (poster asset)" Product="MOD" Provider="001" Provider_ID="example.com" Verb="" Version_Major="1" Version_Minor="0" />
+        <AMS Asset_Class="poster" Asset_ID="MSOI2016030318022000" Asset_Name="PeliculaBuenisima 2000 (poster)" Creation_Date="2016-03-03" Description="PeliculaBuenisima 2000 (poster asset)" Product="MOD" Provider="001" Provider_ID="example.com" Verb="" Version_Major="1" Version_Minor="0" />
         <App_Data App="MOD" Name="Content_CheckSum" Value="3ac9e2860d2e78c2a571f2ffc90b9e0c" />
         <App_Data App="MOD" Name="Content_FileSize" Value="70" />
         <App_Data App="MOD" Name="Custom_Image_Aspect_Ratio" Value="63x43" />
@@ -99,7 +100,7 @@
     </Asset>
     <Asset>
       <Metadata>
-        <AMS Asset_Class="box cover" Asset_ID="MSOB2016030218142183" Asset_Name="PeliculaBuenisima 2183 (box cover)" Creation_Date="2016-03-02" Description="PeliculaBuenisima 2183 (box cover asset)" Product="MOD" Provider="001" Provider_ID="example.com" Verb="" Version_Major="1" Version_Minor="0" />
+        <AMS Asset_Class="box cover" Asset_ID="MSOB2016030318022000" Asset_Name="PeliculaBuenisima 2000 (box cover)" Creation_Date="2016-03-03" Description="PeliculaBuenisima 2000 (box cover asset)" Product="MOD" Provider="001" Provider_ID="example.com" Verb="" Version_Major="1" Version_Minor="0" />
         <App_Data App="MOD" Name="Content_CheckSum" Value="8798e5e9ce9f811700ada4e1a4bef6f1" />
         <App_Data App="MOD" Name="Content_FileSize" Value="70" />
         <App_Data App="MOD" Name="Custom_Image_Aspect_Ratio" Value="63x43" />

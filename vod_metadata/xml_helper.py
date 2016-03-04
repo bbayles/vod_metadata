@@ -20,8 +20,8 @@ def indent(elem, level=0):
 
 
 def tobytes(doctype, root_elem):
-    declaration = b"<?xml version='1.0' encoding='utf-8'?>"
+    declaration = b"<?xml version='1.0' encoding='UTF-8'?>"
     indent(root_elem)
-    elements = etree.tostring(root_elem, encoding="utf-8")
+    elements = etree.tostring(root_elem, encoding="UTF-8")
 
     return b'\n'.join((declaration, doctype, elements))

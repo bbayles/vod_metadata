@@ -179,8 +179,8 @@ class VodPackage(object):
             # Content element, if it is present
             if ae_type in self.D_content:
                 ae_Content = etree.SubElement(ae_Asset, "Content")
-                ae_Content.set("Value", self.D_content[ae_type])
-
+                ae_Content.set("Value", self.D_content[ae_type])   
+                     
         return tobytes(doctype, ADI)
 
     def overwrite_xml(self, rewrite=False):

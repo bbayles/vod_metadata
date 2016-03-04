@@ -52,6 +52,7 @@
 	  <!-- AGREGADOS --> <App_Data App="MOD" Name="Studio" Value="%title_studio%"/>
 	  <!-- AGREGADOS --> <App_Data App="MOD" Name="Director" Value="%title_director%"/>
 	  <!-- AGREGADOS --> <App_Data App="MOD" Name="Actors" Value="%title_actors%"/>
+	  <!-- AGREGADOS --> <App_Data App="MOD" Name="Actors" Value="%title_actors2%"/>
 	  <!-- AGREGADOS --> <App_Data App="MOD" Name="Actors_Display" Value="%title_actors_display%"/>
 	  <!-- AGREGADOS --> <App_Data App="MOD" Name="Title_Sort_Name" Value="%title_title_sort_name%"/>
 	  <!-- AGREGADOS --> <App_Data App="MOD" Name="Episode_Name" Value="%title_episode_name%"/>
@@ -72,7 +73,7 @@
 				Asset_Class="movie"
 				Verb=""/>
         <App_Data App="MOD" Name="Type" Value="movie"/>
-        <App_Data App="MOD" Name="Audio_Type" Value="%movie_audio_type%"/>
+        <App_Data App="MOD" Name="Audio_Type" Value="%movie_audio_type%"/> 
         <App_Data App="MOD" Name="Content_FileSize" Value="%movie_content_filesize%"/>
         <App_Data App="MOD" Name="Content_CheckSum" Value="%movie_content_checksum%"/>
 		
