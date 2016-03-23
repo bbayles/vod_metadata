@@ -21,6 +21,7 @@ You will need:
 
 ## Using the metadata generator
 
+
 You can use the metadata generator to create XML metadata for video files.
 The metadata generator can be used through the graphical interface or the command line.
 
