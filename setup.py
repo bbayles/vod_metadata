@@ -17,16 +17,16 @@ else:
 
 setup(
     name='vod_metadata',
-    version='2016.1.6',
+    version='2016.3.23',
     license='MIT',
     url='https://github.com/bbayles/vod_metadata',
 
     description='CableLabs VOD Metadata 1.1 library and tools',
     long_description="Library and tools for CableLabs VOD Metadata 1.1",
 
-    author='Bo Bayles',
-    author_email='bbayles@gmail.com',
-
+    author='Bo Bayles - Nicolas Mastromarino',
+    author_email='bbayles@gmail.com; nicolasmastrom@gmail.com',
+	
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Telecommunications Industry',
