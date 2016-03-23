@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/bbayles/vod_metadata.svg?branch=master)](https://travis-ci.org/bbayles/vod_metadata)
+[![Coverage Status](https://coveralls.io/repos/bbayles/vod_metadata/badge.svg?branch=master&service=github)](https://coveralls.io/github/bbayles/vod_metadata?branch=master)
+
 ## Introduction
 This project contains a library and tools for manipulating and generating
 metadata files that conform to the CableLabs VOD Metada 1.1 specification, which
@@ -5,21 +8,23 @@ is described in these two documents:
 * [Content Specification](http://cablelabs.com/specification/cablelabs-video-on-demand-content-specification-version-1-1/)
 * [Asset Distribution Interface Specification](http://www.cablelabs.com/specification/cablelabs-asset-distribution-interface-specification-version-1-1-2/)
 
-If you're looking at this project you probably have some familiarity with that
-specification. The goal of this project is to prevent its users from having to
-be _too_ familiar with its endearing quirks. 
+## Installation
 
-### Quick start (for beginners and Windows users)
-This project contains a script that will generate valid VOD metadata for all the
-video files in a directory.
+You will need:
+* Python (preferably version 2.7 or 3.4+):
+  * Windows users: Download and install Python from [python.org](http://python.org)
+* MediaInfo (preferably version 0.7.52+)
+  * Windows users: Download the [MediaInfo](http://mediaarea.net/en/MediaInfo) __CLI__ package and extract it somewhere (e.g. to `C:\Program Files\MediaInfo`)
+* The `vod_metadata` module from [PyPI](https://pypi.python.org/pypi/vod_metadata)
+  * Windows users: Open a command prompt. Then run this command: `C:\Python34\python.exe -m pip install vod_metadata`
 
-* Download and install [Python](http://python.or). Get version 3.4 or later.
-* Download the [MediaInfo](http://mediaarea.net/en/MediaInfo) CLI archive and
- extract it somewhere (e.g. to `C:\Program Files\MediaInfo`)
-* Open a command prompt. Then run this command: `C:\Python34\python.exe -m pip install vod_metadata`
+## Using the metadata generator
 
+You can use the metadata generator to create XML metadata for video files.
 
-Once you're set up, switch to a directory with some video files (e.g. `cd C:\videos`):
+### Quick start
+
+Start by switching to a directory with some video files (e.g. `cd C:\videos`):
 ```
 C:\Videos>dir /b
 11 Pink.mpg
@@ -46,10 +51,31 @@ C:\Videos>dir /b
 13 Game_5056.xml
 ```
 
-You may process videos in some other directory with the `--video-dir` argument.
+To incorporate a preview and/or poster element for the file `something.mpg`:
+* Put a `something_preview.mpg` file in the same directory
+* Put a `something_poster.bmp` file in the same directory.
+* Put a `something_box_cover.bmp` file in the same directory.
+
+The preview file must have the same extension as the movie file,
+and the poster / box cover can have either a .bmp or .jpg extension.
+
+### Command line options
+
+Process videos in a particular directory with the `--video-dir` argument.
 ```
 C:\Videos>C:\Python34\python.exe -m vod_metadata  --video-dir "C:\Somewhere\Videos"
 ```
+
+Specify a different metadata template (useful for adding custom values) with the `--template-path` argument.
+```
+C:\Videos>C:\Python34\python.exe -m vod_metadata  --template-path "C:\Somewhere\template.xml"
+```
+
+Change what values are used when generating metadata files by specifying the path to a config file ([example](https://github.com/bbayles/vod_metadata/blob/master/vod_metadata/vod_config.ini)):
+```
+C:\Videos>C:\Python34\python.exe -m vod_metadata  --config-path "C:\Somewhere\config.ini"
+```
+
 
 ## Troubleshooting
 If you find that you get a `RuntimeError: MediaInfo not found.` error message, you can specify the path to MediaInfo on the command line:
@@ -130,14 +156,11 @@ Save your edited file like so:
 
 __Note__: This library makes some assumptions about VOD metadata that you might
 need to keep in mind:
-* This library assumes that asset packages always have one `movie` asset element,
-zero or more `preview` asset elements, and zero or more `poster` asset elements.
-No other types of asset element are supported (even though the spec allows for
-others). I may add support for other types in the future.
-* This library assumes that if you're generating metadata updates to previously-
-delivered packages that you don't want to change the structure of the package.
-That is, you don't want to add or remove an asset element (like a `preview` or
-`poster`).
+* Asset packages must have one `movie` asset element.
+* Asset packages _may_ have zero or one `preview`, `poster`, or `box cover` asset elements.
+* Asset packages may not have any other types of asset element (even though the spec allows for custom ones).
+* Metadata updates may not alter the asset elements in the package
+ (i.e. the `preview`, `poster`, or `box cover` asset elements cannot be removed).
 
 The `VodPackage` class is defined in the `vod_metadata.VodPackage` sub-module.
  Import it with:
@@ -164,9 +187,10 @@ argument. These attributes are exposed:
  data, these sub-dictionaries are included:
   * `instance.D_app["package"]`, `instance.D_app["title"]`, and
  `instance.D_app["movie"]`. These are required.
-  * `instance.D_app["preview"]` and `instance.D_app["poster"]`. These are optional.
+  * `instance.D_app["preview"]`, `instance.D_app["poster"]`, `instance.D_app["box cover"]`. These are optional.
 * `instance.has_preview` - `True` if there is a preview element, `False` otherwise.
 * `instance.has_poster` - `True` if there is a poster element, `False` otherwise.
+* `instance.has_box_cover` - `True` if there is a box cover element, `False` otherwise.
 * `instance.is_update` - `True` if the AMS data for the package indicates that the
  `Version_Major` is something other than `1`, `False` otherwise.
 * `instance.is_delete` - `True` if the AMS data for the package has
@@ -186,10 +210,9 @@ The `VodPackage` class exposes these methods:
  attributes (if applicable) for each of the asset elements: `Content_FileSize`,
  `Content_CheckSum`, `Run_Time`, `Display_Run_Time`, `Codec`, `Audio_Type`,
  `Resolution`, `Frame Rate`, and `Bit_Rate`.
-* `VodPackage.remove_preview()` - deletes the preview element from the asset
- package, if there is one to delete.
-* `VodPackage.remove_poster()` - deletes the poster element from the asset
- package, if there is one to delete.
+* `VodPackage.remove_preview()` - deletes the preview element from the asset package, if there is one to delete.
+* `VodPackage.remove_poster()` - deletes the poster element from the asset package, if there is one to delete.
+* `VodPackage.remove_box_cover()` - deletes the box cover element from the asset package, if there is one to delete.
 * `VodPackage.make_update()` - increments all the `Version_Major` values and
  marks the package as a metadata update. Content tags will not be written when
  using `instance.write_xml()`. See the note above about the assumptions the

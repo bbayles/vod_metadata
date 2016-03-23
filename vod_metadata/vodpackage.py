@@ -2,7 +2,7 @@ from __future__ import division
 from io import open
 import os.path
 
-from vod_metadata import config_path
+from vod_metadata import default_config_path
 from vod_metadata.config_read import parse_config
 from vod_metadata.md5_calc import md5_checksum
 from vod_metadata.media_info import check_video, check_picture
@@ -34,7 +34,7 @@ class VodPackage(object):
     def __init__(self, xml_path, vod_config=None):
         # Retrieve configuration if it's not set already
         if vod_config is None:
-            self.vod_config = parse_config(config_path)
+            self.vod_config = parse_config(default_config_path)
         else:
             self.vod_config = vod_config
 
@@ -62,6 +62,7 @@ class VodPackage(object):
 
         self.has_preview = "preview" in self.D_ams
         self.has_poster = "poster" in self.D_ams
+        self.has_box_cover = "box cover" in self.D_ams
         self.is_delete = self.D_ams.get("Verb", '') == "DELETE"
         self.is_update = self.D_ams["package"]["Version_Major"] != "1"
 
@@ -76,7 +77,8 @@ class VodPackage(object):
         self.D_app["title"] = self._parse_App_Data(title_Metadata)
 
     def _read_elements(self, ADI):
-        # Asset elements section: "movie", "poster", and "preview" are allowed.
+        # Asset elements section: "movie", "preview", "poster", and
+        # "box cover" are allowed.
         for ae_Asset in ADI.find("Asset").findall("Asset"):
             ae_Metadata = ae_Asset.find("Metadata")
             ae_AMS = ae_Metadata.find("AMS")
@@ -161,7 +163,7 @@ class VodPackage(object):
         self._write_App_Data("title", title_Metadata)
 
         # Asset elements
-        for ae_type in ("movie", "preview", "poster"):
+        for ae_type in ("movie", "preview", "poster", "box cover"):
             if ae_type not in self.D_ams:
                 continue
             ae_Asset = etree.SubElement(title_Asset, "Asset")
@@ -212,8 +214,8 @@ class VodPackage(object):
             self.D_app[ae_type]["Content_CheckSum"] = md5_checksum(ae_path)
             # Use MediaInfo to determine the correct information about the
             # content files
-            if ae_type == "poster":
-                self._scan_image(ae_path)
+            if (ae_type == "poster") or (ae_type == "box cover"):
+                self._scan_image(ae_type, ae_path)
             else:
                 self._scan_video(ae_type, ae_path)
 
@@ -233,6 +235,10 @@ class VodPackage(object):
     def remove_poster(self):
         self._remove_ae("poster")
         self.has_poster = False
+
+    def remove_box_cover(self):
+        self._remove_ae("box cover")
+        self.has_box_cover = False
 
     def make_update(self):
         for ae_type in self.D_ams:
@@ -254,7 +260,7 @@ class VodPackage(object):
         mpeg_info = check_video(ae_path, self.vod_config.mediainfo_path)
 
         # Calculate the run time of the video
-        duration_s = round(float(mpeg_info["General"]["Duration"]) / 1000)
+        duration_s = int(round(float(mpeg_info["General"]["Duration"]) / 1000))
         duration_h, duration_s = divmod(duration_s, 3600)
         duration_m, duration_s = divmod(duration_s, 60)
         duration_h = format(duration_h, "02")
@@ -289,12 +295,10 @@ class VodPackage(object):
                 self.D_app[ae_type]["Codec"] = "MPEG2"
             elif commercial_name == "AVC":
                 avc_profile = format_profile[0]
-                avc_level = format_profile[format_profile.find("@"):].replace(
-                    ".", ""
-                )
-                self.D_app[ae_type]["Codec"] = "AVC {}P{}".format(
-                    avc_profile, avc_level
-                )
+                avc_level = format_profile.split('@')[1][1:]
+                avc_level = format(float(avc_level), '0.1f').replace('.', '')
+                codec = "AVC {}P@L{}".format(avc_profile, avc_level)
+                self.D_app[ae_type]["Codec"] = codec
             else:
                 raise InvalidMpeg("Could not determine codec for {}".format(
                     self.D_content[ae_type])
@@ -315,10 +319,10 @@ class VodPackage(object):
         bit_rate = float(mpeg_info["General"]["Overall bit rate"]) / 1000
         self.D_app[ae_type]["Bit_Rate"] = format(bit_rate, '.0f')
 
-    def _scan_image(self, ae_path):
+    def _scan_image(self, ae_type, ae_path):
         img_info = check_picture(ae_path, self.vod_config.mediainfo_path)
         img_width = img_info["Image"]["Width"]
         img_height = img_info["Image"]["Height"]
-        self.D_app["poster"]["Image_Aspect_Ratio"] = "{}x{}".format(
+        self.D_app[ae_type]["Image_Aspect_Ratio"] = "{}x{}".format(
             img_width, img_height
         )

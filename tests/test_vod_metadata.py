@@ -2,6 +2,9 @@ from copy import deepcopy
 from configparser import ConfigParser
 from datetime import datetime
 from io import BytesIO, open
+from os.path import join
+from shutil import rmtree
+from tempfile import mkdtemp
 import unittest
 try:
     from unittest.mock import MagicMock, patch
@@ -9,7 +12,11 @@ except ImportError:
     from mock import MagicMock, patch
 import os.path
 
-from vod_metadata import config_path, find_data_file
+from vod_metadata import (
+    default_config_path,
+    default_template_path,
+    find_data_file,
+)
 from vod_metadata.config_read import ConfigurationError, parse_config
 from vod_metadata.md5_calc import md5_checksum
 from vod_metadata.md_gen import generate_metadata
@@ -30,7 +37,7 @@ from vod_metadata.xml_helper import etree, tobytes
 )
 class ConfigReadTests(unittest.TestCase):
     def setUp(self):
-        with open(find_data_file(config_path), mode='r') as infile:
+        with open(find_data_file(default_config_path), mode='r') as infile:
             self.config_lines = [line.strip() for line in infile if line]
 
     def _modify_key(self, key, value):
@@ -212,11 +219,12 @@ class MdGenTests(unittest.TestCase):
     @patch('vod_metadata.md_gen.random', autospec=True)
     @patch('vod_metadata.md_gen.datetime.datetime', autospec=True)
     def setUp(self, mock_datetime, mock_random):
+        self.temp_dir = mkdtemp()
         mock_random.randint.return_value = 1020
         mock_datetime.today.return_value = datetime(1999, 9, 9, 1, 2)
-        vod_config = parse_config(find_data_file(config_path))
-        vod_config = vod_config._replace(ecn_2009=True)
-        self.vod_package = generate_metadata(reference_mp4, vod_config)
+        vod_config = parse_config(find_data_file(default_config_path))
+        self.vod_config = vod_config._replace(ecn_2009=True)
+        self.vod_package = generate_metadata(reference_mp4, self.vod_config)
         self.ams_expected = {
             "Provider":  "001",
             "Product": "MOD",
@@ -225,6 +233,9 @@ class MdGenTests(unittest.TestCase):
             "Creation_Date": "1999-09-09",
             "Provider_ID": "example.com",
         }
+
+    def tearDown(self):
+        rmtree(self.temp_dir, ignore_errors=True)
 
     def test_package(self):
         # XML path
@@ -248,6 +259,10 @@ class MdGenTests(unittest.TestCase):
         actual = self.vod_package.D_app["package"]
         expected = {"Metadata_Spec_Version": "CableLabsVOD1.1"}
         self.assertEqual(actual, expected)
+
+        self.assertTrue(self.vod_package.has_preview)
+        self.assertTrue(self.vod_package.has_poster)
+        self.assertTrue(self.vod_package.has_box_cover)
 
     def test_title(self):
         # Title AMS values
@@ -279,7 +294,9 @@ class MdGenTests(unittest.TestCase):
             "Licensing_Window_Start": "1999-09-09",
             "Licensing_Window_End": "2002-06-04",
             "Preview_Period": "300",
-            "Provider_QA_Contact": "N/A"
+            "Provider_QA_Contact": "N/A",
+            "Run_Time": "00:00:07",
+            "Display_Run_Time": "00:00",
         }
         self.assertEqual(actual, expected)
 
@@ -315,6 +332,132 @@ class MdGenTests(unittest.TestCase):
         expected = reference_mp4
         self.assertEqual(actual, expected)
 
+    def test_preview(self):
+        # Preview AMS values
+        actual = self.vod_package.D_ams["preview"]
+        expected = self.ams_expected.copy()
+        preview_expected = {
+            "Asset_Name": "reference 1020 (preview)",
+            "Description": "reference 1020 (preview asset)",
+            "Asset_Class": "preview",
+            "Asset_ID": "MSOR1999090901021020",
+        }
+        expected.update(preview_expected)
+        self.assertEqual(actual, expected)
+
+        # Preview APP values
+        actual = self.vod_package.D_app["preview"]
+        expected = {
+            'Audio_Type': 'Stereo',
+            'Bit_Rate': '771',
+            'Codec': 'AVC HP@L30',
+            'Content_CheckSum': 'c3707c2c5c42847da0bfc06bcc33e251',
+            'Content_FileSize': '165487',
+            'Frame_Rate': '26',
+            'Rating': ['NR'],
+            'Type': 'preview',
+            'Resolution': '480p',
+            'Run_Time': '00:00:02',
+        }
+        self.assertEqual(actual, expected)
+
+        # Preview Content values
+        actual = self.vod_package.D_content["preview"]
+        expected = reference_preview
+        self.assertEqual(actual, expected)
+
+    def test_poster(self):
+        # Poster AMS values
+        actual = self.vod_package.D_ams["poster"]
+        expected = self.ams_expected.copy()
+        poster_expected = {
+            "Asset_Name": "reference 1020 (poster)",
+            "Description": "reference 1020 (poster asset)",
+            "Asset_Class": "poster",
+            "Asset_ID": "MSOI1999090901021020",
+        }
+        expected.update(poster_expected)
+        self.assertEqual(actual, expected)
+
+        # Poster APP values
+        actual = self.vod_package.D_app["poster"]
+        expected = {
+            'Content_FileSize': '70',
+            'Content_CheckSum': '3ac9e2860d2e78c2a571f2ffc90b9e0c',
+            'Image_Aspect_Ratio': '2x2',
+            'Type': 'poster',
+        }
+        self.assertEqual(actual, expected)
+
+        # Poster Content values
+        actual = self.vod_package.D_content["poster"]
+        expected = reference_poster
+        self.assertEqual(actual, expected)
+
+    def test_box_cover(self):
+        # Poster AMS values
+        actual = self.vod_package.D_ams["box cover"]
+        expected = self.ams_expected.copy()
+        box_cover_expected = {
+            "Asset_Name": "reference 1020 (box cover)",
+            "Description": "reference 1020 (box cover asset)",
+            "Asset_Class": "box cover",
+            "Asset_ID": "MSOB1999090901021020",
+        }
+        expected.update(box_cover_expected)
+        self.assertEqual(actual, expected)
+
+        # Box cover APP values
+        actual = self.vod_package.D_app["box cover"]
+        expected = {
+            'Content_FileSize': '70',
+            'Content_CheckSum': '8798e5e9ce9f811700ada4e1a4bef6f1',
+            'Image_Aspect_Ratio': '2x2',
+            'Type': 'box cover',
+        }
+        self.assertEqual(actual, expected)
+
+        # Box cover Content values
+        actual = self.vod_package.D_content["box cover"]
+        expected = reference_box_cover
+        self.assertEqual(actual, expected)
+
+    def test_metadata(self):
+        # Make sure there are no missing attributes
+        xml_output = self.vod_package.write_xml()
+        self.assertNotIn('%', xml_output.decode('utf-8'))
+
+    @patch('vod_metadata.md_gen.os.path.exists', lambda x: False)
+    def test_movie_only(self):
+        vod_package = generate_metadata(reference_mp4, self.vod_config)
+        self.assertFalse(vod_package.has_preview)
+        self.assertFalse(vod_package.has_poster)
+        self.assertFalse(vod_package.has_box_cover)
+
+    def test_custom_template(self):
+        # Make a custom template file
+        tree = etree.parse(default_template_path)
+        doctype = b'<!DOCTYPE ADI SYSTEM "ADI.DTD">'
+        ADI = tree.getroot()
+        title_metadata = ADI.find('Asset').find('Metadata')
+        for value in ('Scary', 'Warning'):
+            App_Data = etree.SubElement(title_metadata, "App_Data")
+            App_Data.set("App", "MOD")
+            App_Data.set("Name", "Advisories")
+            App_Data.set("Value", value)
+
+        template_path = join(self.temp_dir, 'mytemplate.xml')
+        with open(template_path, 'wb') as outfile:
+            outfile.write(tobytes(doctype, ADI))
+
+        # Ensure that the templates values are used
+        vod_package = generate_metadata(
+            reference_mp4, self.vod_config, template_path
+        )
+        self.assertEqual(
+            vod_package.D_app['title']['Advisories'], ['Scary', 'Warning']
+        )
+
 
 class MediaInfoTests(unittest.TestCase):
     def setUp(self):
@@ -348,7 +491,12 @@ class MediaInfoTests(unittest.TestCase):
         for section in self.D_reference.keys():
             for key, expected in self.D_reference[section].items():
                 actual = D[section][key]
-                self.assertEqual(actual, expected)
+                # Different MediaInfo versions give different strings for
+                # Format profile
+                if key == "Format profile":
+                    self.assertTrue(expected.startswith(actual))
+                else:
+                    self.assertEqual(actual, expected)
 
     @patch('vod_metadata.media_info.call_MediaInfo', autospec=True)
     def test_check_video(self, mock_call_MediaInfo):
@@ -456,12 +604,48 @@ class VodMetadataTests(unittest.TestCase):
         vod_package.overwrite_xml()
         file_handle.write.assert_called_once_with(vod_package.write_xml())
 
+    def test_files_present(self):
+        vod_package = VodPackage(reference_xml)
+        self.assertFalse(vod_package.files_present())
+        vod_package.remove_poster()
+        vod_package.remove_preview()
+        vod_package.D_content["movie"] = reference_mp4
+        self.assertTrue(vod_package.files_present())
+
+    def test_failed_remove(self):
+        vod_package = VodPackage(reference_xml)
+
+        vod_package.remove_preview()
+        with self.assertRaises(MissingElement):
+            vod_package.remove_preview()
+
+        vod_package.remove_poster()
+        with self.assertRaises(MissingElement):
+            vod_package.remove_poster()
+
+    def test_make_update(self):
+        vod_package = VodPackage(reference_xml)
+        vod_package.make_update()
+        for ae_type in vod_package.D_ams:
+            self.assertEqual(vod_package.D_ams[ae_type]["Version_Major"], '2')
+        self.assertTrue(vod_package.is_update)
+
+    def test_make_delete(self):
+        vod_package = VodPackage(reference_xml)
+        vod_package.make_delete()
+        for ae_type in vod_package.D_ams:
+            self.assertEqual(vod_package.D_ams[ae_type]["Verb"], "DELETE")
+        self.assertTrue(vod_package.is_delete)
+
 
 # Reference values
 script_path = os.path.abspath(__file__)
 script_dir = os.path.split(script_path)[0]
 reference_xml = os.path.join(script_dir, "reference.xml")
 reference_mp4 = os.path.join(script_dir, "reference.mp4")
+reference_preview = os.path.join(script_dir, "reference_preview.mp4")
+reference_poster = os.path.join(script_dir, "reference_poster.bmp")
+reference_box_cover = os.path.join(script_dir, "reference_box_cover.bmp")
 
 ams_package = {
     'Asset_Class': 'package',
