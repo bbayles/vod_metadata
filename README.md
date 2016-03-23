@@ -12,7 +12,8 @@ is described in these two documents:
 
 You will need:
 * Python (preferably version 2.7 or 3.4+):
-  * Windows users: Download and install Python from [python.org](http://python.org)
+  * Windows users: Download and install Python from [python.org](http://python.org).
+  * The GUI only works in 3.4+
 * MediaInfo (preferably version 0.7.52+)
   * Windows users: Download the [MediaInfo](http://mediaarea.net/en/MediaInfo) __CLI__ package and extract it somewhere (e.g. to `C:\Program Files\MediaInfo`)
 * The `vod_metadata` module from [PyPI](https://pypi.python.org/pypi/vod_metadata)
@@ -21,8 +22,20 @@ You will need:
 ## Using the metadata generator
 
 You can use the metadata generator to create XML metadata for video files.
+The metadata generator can be used through the graphical interface or the command line.
+
 
 ### Quick start
+
+#### Using the GUI:
+
+To open the graphical interface, and execute the following command, using the `-g` switch:
+
+```
+C:\Python35\python.exe vod_metadata -g
+```
+
+#### Using the Python interpreter command line:
 
 Start by switching to a directory with some video files (e.g. `cd C:\videos`):
 ```

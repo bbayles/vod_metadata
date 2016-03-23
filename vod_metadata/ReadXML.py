@@ -6,6 +6,8 @@ Created on 3 de mar. de 2016
 from __future__ import division
 from io import open
 from vod_metadata.xml_helper import etree,tobytes
+import ast
+import re
 
 class MissingElement(Exception):
     pass    
@@ -20,7 +22,7 @@ class MyXML(object):
         }
     
     
-    def __init__(self, xml_path, vod_config=None):
+    def __init__(self, xml_path=None, vod_config=None, NewValuesArray={}):
         
         
         self.xml_path = xml_path
@@ -29,6 +31,9 @@ class MyXML(object):
         self.D_ams = {}
         self.D_app = {}
         self.D_content = {}    
+        
+        if len(NewValuesArray) > 0:
+            self.NewValuesArray = NewValuesArray;
         
         ADI = self.tree.getroot()
         self._read_package(ADI)
@@ -47,12 +52,15 @@ class MyXML(object):
             value = App_Data.attrib["Value"]
             # Some App_Data fields can occur more than once and are treated as
             # a list
-            if key in self._multiples:
-                if key in D:
-                    D[key].append(value)
+            if value != '':
+                if key in self._multiples:
+                    if key in D:
+                        D[key].append(value)
+                    else:
+                        D[key] = [value]
+                # Others can only occur once and are treated as plain values
                 else:
-                    D[key] = [value]
-            # Others can only occur once and are treated as plain values
+                    D[key] = value
             else:
                 D[key] = value
         return D   
@@ -150,32 +158,94 @@ class MyXML(object):
                      
         return tobytes(doctype, ADI)                          
 
+    def FormatXML(self, aTemplate):  
+        for Each_ams in list(self.D_ams):
+            if not (Each_ams in list(aTemplate.D_ams)):
+                del self.D_ams[Each_ams]
+                break
+            
+            for values_each_AMS in list(self.D_ams[Each_ams]):
+                if not (values_each_AMS in list(aTemplate.D_ams[Each_ams])):
+                    del self.D_ams[Each_ams][values_each_AMS]
+                
+        for Each_Template_ams in list(aTemplate.D_ams):
+            if not (Each_Template_ams in list(self.D_ams)):
+                self.D_ams[Each_Template_ams] = aTemplate.D_ams[Each_Template_ams]
+                
+            for values_Each_Template_ams in list(aTemplate.D_ams[Each_Template_ams]):
+                if not (values_Each_Template_ams in list(self.D_ams[Each_Template_ams])):
+                    self.D_ams[Each_Template_ams][values_Each_Template_ams] = aTemplate.D_ams[Each_Template_ams][values_Each_Template_ams]
+       
+        for Each_ams in list(self.D_app):
+            if not (Each_ams in list(aTemplate.D_app)):
+                del self.D_app[Each_ams]
+                break
+            
+            for values_each_AMS in list(self.D_app[Each_ams]):
+                if not (values_each_AMS in list(aTemplate.D_app[Each_ams])):
+                    del self.D_app[Each_ams][values_each_AMS]   
+                
+        for Each_Template_ams in list(aTemplate.D_app):
+            if not (Each_Template_ams in list(self.D_app)):
+                self.D_app[Each_Template_ams] = aTemplate.D_app[Each_Template_ams]
+                
+            for values_Each_Template_ams in list(aTemplate.D_app[Each_Template_ams]):
+                if not (values_Each_Template_ams in list(self.D_app[Each_Template_ams])):
+                    self.D_app[Each_Template_ams][values_Each_Template_ams] = aTemplate.D_app[Each_Template_ams][values_Each_Template_ams]
+         
+        for Each_ams in list(self.D_content):
+            if not (Each_ams in list(aTemplate.D_content)):
+                del self.D_content[Each_ams]
+              
+                
+        for Each_Template_ams in list(aTemplate.D_content):
+            if not (Each_Template_ams in list(self.D_content)):
+                self.D_content[Each_Template_ams] = aTemplate.D_content[Each_Template_ams]
+                
+        print("DOC GUARDADO: ", "Doc Guardado")
+    
+    def UpdateXml(self, NuevosValores):
 
+        for eachType in NuevosValores["D_ams"]:
+            if self.D_ams.get(eachType):
+                for fields in NuevosValores["D_ams"][eachType]:
+                    if NuevosValores["D_ams"][eachType][fields] != '' or len(NuevosValores["D_ams"][eachType][fields]) > 0:
+                        if fields in self._multiples:
+                            self.D_ams[eachType][fields].clear()
+                            allfields = re.split(r"(.+)", NuevosValores["D_ams"][eachType][fields])
+                            for eachfield in allfields:
+                                self.D_ams[eachType][fields].append(eachfield) 
+                                   
+                        else:
+                            self.D_ams[eachType][fields] = NuevosValores["D_ams"][eachType][fields]
+                    
+        for eachType in NuevosValores["D_app"]:
+            if self.D_app.get(eachType):
+                for fields in NuevosValores["D_app"][eachType]:
+                    if NuevosValores["D_app"][eachType][fields] != '' or len(NuevosValores["D_app"][eachType][fields]) > 0:
+                        if fields in self._multiples:
+                            try:
+                                self.D_app[eachType][fields].clear()
+                            except KeyError:
+                                print("KeyError: ", "self.D_app[" + eachType + "][" +fields + "] no existe")
+                                pass
+                            allfields = re.findall(r"(.+)", NuevosValores["D_app"][eachType][fields])
+                            for eachfield in allfields:
+                                self.D_app[eachType][fields].append(eachfield)
+                                
+                        else:
+                            self.D_app[eachType][fields] = NuevosValores["D_app"][eachType][fields]                            
+
+        for eachType in NuevosValores["D_content"]:
+            if self.D_content.get(eachType) and NuevosValores["D_content"][eachType] != '':
+                self.D_content[eachType] = NuevosValores["D_content"][eachType]
+
+
+        return 1
                             
 if __name__ == "__main__":
-    elpath = "C:\\Users\\nmastromarino\\Proyectos Codigo\\VOD_METADATA_GUI\\TestMastrom\\metadata_template.xml"
-    elpathD = "C:\\Users\\nmastromarino\\Proyectos Codigo\\VOD_METADATA_GUI\\TestMastrom\\ArchivoFinal.xml"
-    ElPathEjemplo = "C:\\Users\\nmastromarino\\Proyectos Codigo\\VOD_METADATA_GUI\\TestMastrom\\Modelo1.xml"
-    myXmlInstancia1 = MyXML(elpath)
-    myXmlejemplo = MyXML(ElPathEjemplo)
     
-    
-    myXmlInstancia1.D_ams["package"].update(
-        {
-            "Provider":  myXmlejemplo.D_ams["package"]["Provider"]
-        }
-    )
-    
-    myXmlInstancia1.D_app["title"]["Actors"] = myXmlejemplo.D_app["title"]["Actors"]
-    
-    
-    
-    s = myXmlInstancia1.write_xml(rewrite=True)
-    with open(elpathD, "wb") as outfile:
-        _ = outfile.write(s)
-            
-            
-    print("RESPOSE: ", myXmlInstancia1)
+    print("Wrong Module: ", "Sorry, you initialize from the wrong module")
     
     
     

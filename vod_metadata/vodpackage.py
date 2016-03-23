@@ -1,6 +1,7 @@
 from __future__ import division
 from io import open
 import os.path
+import re
 
 from vod_metadata import default_config_path
 from vod_metadata.config_read import parse_config
@@ -207,6 +208,7 @@ class VodPackage(object):
             ae_path = os.path.join(ae_dir, ae_name)
             if not os.path.isfile(ae_path):
                 msg = "Package's {} element is missing - {}"
+                continue
                 raise MissingElement(msg.format(ae_type, ae_path))
             # Set the file size and checksum values
             self.D_app[ae_type]["Content_FileSize"] = str(
@@ -330,3 +332,90 @@ class VodPackage(object):
         self.D_app[ae_type]["Custom_Image_Aspect_Ratio"] = "{}x{}".format(
             63, 43
         )
+
+
+
+
+
+    def FormatXML(self, aTemplate):  
+        for Each_ams in list(self.D_ams):
+            if not (Each_ams in list(aTemplate.D_ams)):
+                del self.D_ams[Each_ams]
+                break
+            
+            for values_each_AMS in list(self.D_ams[Each_ams]):
+                if not (values_each_AMS in list(aTemplate.D_ams[Each_ams])):
+                    del self.D_ams[Each_ams][values_each_AMS]
+                
+        for Each_Template_ams in list(aTemplate.D_ams):
+            if not (Each_Template_ams in list(self.D_ams)):
+                self.D_ams[Each_Template_ams] = aTemplate.D_ams[Each_Template_ams]
+                
+            for values_Each_Template_ams in list(aTemplate.D_ams[Each_Template_ams]):
+                if not (values_Each_Template_ams in list(self.D_ams[Each_Template_ams])):
+                    self.D_ams[Each_Template_ams][values_Each_Template_ams] = aTemplate.D_ams[Each_Template_ams][values_Each_Template_ams]
+       
+        for Each_ams in list(self.D_app):
+            if not (Each_ams in list(aTemplate.D_app)):
+                del self.D_app[Each_ams]
+                break
+            
+            for values_each_AMS in list(self.D_app[Each_ams]):
+                if not (values_each_AMS in list(aTemplate.D_app[Each_ams])):
+                    del self.D_app[Each_ams][values_each_AMS]   
+                
+        for Each_Template_ams in list(aTemplate.D_app):
+            if not (Each_Template_ams in list(self.D_app)):
+                self.D_app[Each_Template_ams] = aTemplate.D_app[Each_Template_ams]
+                
+            for values_Each_Template_ams in list(aTemplate.D_app[Each_Template_ams]):
+                if not (values_Each_Template_ams in list(self.D_app[Each_Template_ams])):
+                    self.D_app[Each_Template_ams][values_Each_Template_ams] = aTemplate.D_app[Each_Template_ams][values_Each_Template_ams]
+         
+        for Each_ams in list(self.D_content):
+            if not (Each_ams in list(aTemplate.D_content)):
+                del self.D_content[Each_ams]
+              
+                
+        for Each_Template_ams in list(aTemplate.D_content):
+            if not (Each_Template_ams in list(self.D_content)):
+                self.D_content[Each_Template_ams] = aTemplate.D_content[Each_Template_ams]
+                
+        print("DOC GUARDADO: ", "Doc Guardado")
+    
+    def UpdateXml(self, NuevosValores):
+
+        for eachType in NuevosValores["D_ams"]:
+            if self.D_ams.get(eachType):
+                for fields in NuevosValores["D_ams"][eachType]:
+                    if NuevosValores["D_ams"][eachType][fields] != '' or len(NuevosValores["D_ams"][eachType][fields]) > 0:
+                        if fields in self._multiples:
+                            self.D_ams[eachType][fields].clear()
+                            allfields = re.split(r"(.+)", NuevosValores["D_ams"][eachType][fields])
+                            for eachfield in allfields:
+                                self.D_ams[eachType][fields].append(eachfield) 
+                                   
+                        else:
+                            self.D_ams[eachType][fields] = NuevosValores["D_ams"][eachType][fields]
+                    
+        for eachType in NuevosValores["D_app"]:
+            if self.D_app.get(eachType):
+                for fields in NuevosValores["D_app"][eachType]:
+                    if NuevosValores["D_app"][eachType][fields] != '' or len(NuevosValores["D_app"][eachType][fields]) > 0:
+                        if fields in self._multiples:
+                            self.D_app[eachType][fields].clear()
+                            allfields = re.findall(r"(.+)", NuevosValores["D_app"][eachType][fields])
+                            for eachfield in allfields:
+                                self.D_app[eachType][fields].append(eachfield)
+                                
+                        else:
+                            self.D_app[eachType][fields] = NuevosValores["D_app"][eachType][fields]                            
+
+        for eachType in NuevosValores["D_content"]:
+            if self.D_content.get(eachType) and NuevosValores["D_content"][eachType] != '':
+                self.D_content[eachType] = NuevosValores["D_content"][eachType]
+
+
+        return 1
+    
+    
