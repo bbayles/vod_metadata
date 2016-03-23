@@ -5,7 +5,7 @@ import random
 from vod_metadata import default_template_path
 from vod_metadata.vodpackage import VodPackage
 
-__all__ = ["generate_metadata"]
+__all__ = [""]
 
 IMAGE_EXTENSIONS = [".bmp", ".jpg"]
 
@@ -35,7 +35,7 @@ def _set_ae(vod_package, movie_name, ae_type, extensions):
 
 
 def generate_metadata(
-    file_path, vod_config, template_path=default_template_path
+    file_path, vod_config, template_path=default_template_path, suffix=0
 ):
     # Time-sensitive values
     timestamp = datetime.datetime.today()
@@ -44,7 +44,8 @@ def generate_metadata(
     asset_id = timestamp.strftime("%Y%m%d%H%M")
 
     # Randomly-generated values
-    suffix = format(random.randint(0, 9999), "04")
+    if suffix == 0:
+        suffix = format(random.randint(0, 9999), "04")
     title_billing_id = "{}B".format(suffix)
 
     # Start with a minimal metadata template
@@ -61,9 +62,7 @@ def generate_metadata(
 
     has_preview = _set_ae(vod_package, movie_name, "preview", [movie_ext])
     has_poster = _set_ae(vod_package, movie_name, "poster", IMAGE_EXTENSIONS)
-    has_box_cover = _set_ae(
-        vod_package, movie_name, "box cover", IMAGE_EXTENSIONS
-    )
+    has_box_cover = _set_ae(vod_package, movie_name, "box cover", IMAGE_EXTENSIONS)
 
     vod_package.check_files()
 
