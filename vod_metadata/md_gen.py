@@ -4,7 +4,6 @@ import random
 
 from vod_metadata import default_template_path
 from vod_metadata.vodpackage import VodPackage
-from _overlapped import NULL
 
 __all__ = [""]
 
