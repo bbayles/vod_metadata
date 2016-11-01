@@ -35,10 +35,10 @@ def _set_ae(vod_package, movie_name, ae_type, extensions):
 
 
 def generate_metadata(
-    file_path, vod_config, template_path=default_template_path
+    file_path, vod_config, template_path=default_template_path, timestamp=None
 ):
     # Time-sensitive values
-    timestamp = datetime.datetime.today()
+    timestamp = datetime.datetime.today() if timestamp is None else timestamp
     creation_date = timestamp.strftime("%Y-%m-%d")
     end_date = (timestamp + datetime.timedelta(days=999)).strftime("%Y-%m-%d")
     asset_id = timestamp.strftime("%Y%m%d%H%M")

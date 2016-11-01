@@ -217,14 +217,15 @@ class Md5CalcTests(unittest.TestCase):
 
 class MdGenTests(unittest.TestCase):
     @patch('vod_metadata.md_gen.random', autospec=True)
-    @patch('vod_metadata.md_gen.datetime.datetime', autospec=True)
-    def setUp(self, mock_datetime, mock_random):
+    def setUp(self, mock_random):
         self.temp_dir = mkdtemp()
         mock_random.randint.return_value = 1020
-        mock_datetime.today.return_value = datetime(1999, 9, 9, 1, 2)
+        timestamp = datetime(1999, 9, 9, 1, 2)
         vod_config = parse_config(find_data_file(default_config_path))
         self.vod_config = vod_config._replace(ecn_2009=True)
-        self.vod_package = generate_metadata(reference_mp4, self.vod_config)
+        self.vod_package = generate_metadata(
+            reference_mp4, self.vod_config, timestamp=timestamp
+        )
         self.ams_expected = {
             "Provider":  "001",
             "Product": "MOD",
