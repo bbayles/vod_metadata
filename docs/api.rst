@@ -88,9 +88,9 @@ The ``VodPackage`` class exposes these methods:
 *   ``VodPackage.remove_poster()`` - deletes the poster element from the asset package, if there is one to delete.
 *   ``VodPackage.remove_box_cover()`` - deletes the box cover element from the asset package, if there is one to delete.
 *   ``VodPackage.make_update()`` - increments all the ``Version_Major`` values and
-     marks the package as a metadata update. Content tags will not be written when
-     using ``instance.write_xml()``. See the note above about the assumptions the
-     library makes about updates for previously-delivered packages!
+    marks the package as a metadata update. Content tags will not be written when
+    using ``instance.write_xml()``. See the note above about the assumptions the
+    library makes about updates for previously-delivered packages!
 *   ``VodPackage.make_delete()`` - sets the ``Verb`` value to ``DELETE`` amd marks
     the package as a metadata update.
 
