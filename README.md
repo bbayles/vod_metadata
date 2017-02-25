@@ -12,7 +12,7 @@ video files and a Python library for manipulating metadata files.
 
 ## Documentation
 
-For full documentation, see [htthttps://vod-metadata.readthedocs.io](https://vod-metadata.readthedocs.io).
+For full documentation, see [https://vod-metadata.readthedocs.io](https://vod-metadata.readthedocs.io).
 
 
 ## Licensing
