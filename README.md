@@ -19,4 +19,4 @@ For full documentation, see [htthttps://vod-metadata.readthedocs.io](https://vod
 
 `vod-metadata` is open source, and uses the MIT license.
 If you're interested in a commercial license for including it in closed source
-software, please [contact me](bbayles@gmail.com).
+software, please [contact me](mailto:bbayles@gmail.com).
