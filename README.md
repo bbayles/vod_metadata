@@ -6,7 +6,13 @@
 The `vod-metadata` project contains tools for working with CableLabs Video On
 Demand (VOD) Metadata files.
 
+
+Included is a command line utility that can automatically generate metadata for
+video files and a Python library for manipulating metadata files.
+
 ## Documentation
+
+For full documentation, see [htthttps://vod-metadata.readthedocs.io](https://vod-metadata.readthedocs.io).
 
 
 ## Licensing
@@ -14,10 +20,3 @@ Demand (VOD) Metadata files.
 `vod-metadata` is open source, and uses the MIT license.
 If you're interested in a commercial license for including it in closed source
 software, please [contact me](bbayles@gmail.com).
-
-## Contact the author
-I wrote this tool to save myself time hand-editing VOD metadata files.
-I've tested importing the generated metadata into SeaChange Axiom and Arris CMM
-back office systems.
-
-E-mail [Bo Bayles](bbayles+github@gmail.com) with questions and feature suggestions.
