@@ -1,13 +1,14 @@
 language: python
+dist: xenial
 
 python:
     - "2.7"
     - "3.4"
     - "3.5"
     - "3.6"
-    - "3.7-dev"
-    - "pypy"
-    - "pypy3"
+    - "3.7"
+    - "pypy2.7-5.10.0"
+    - "pypy3.5"
 
 before_install:
     - sudo apt-get update -qq
@@ -23,4 +24,4 @@ after_success:
     - coveralls
 
 notifications:
-    email: false
+    - email: false
