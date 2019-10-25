@@ -1,14 +1,13 @@
-language: python
 dist: xenial
 
 python:
     - "2.7"
-    - "3.4"
     - "3.5"
     - "3.6"
     - "3.7"
-    - "pypy2.7-5.10.0"
-    - "pypy3.5"
+    - "3.8"
+    - "pypy"
+    - "pypy3
 
 before_install:
     - sudo apt-get update -qq
