@@ -9,8 +9,8 @@ class MediaInfoError(Exception):
 
 def find_MediaInfo():
     typical_paths = [
-        "C:\Program Files\MediaInfo\MediaInfo.exe",
-        "C:\Program Files (x86)\MediaInfo\MediaInfo.exe",
+        r"C:\Program Files\MediaInfo\MediaInfo.exe",
+        r"C:\Program Files (x86)\MediaInfo\MediaInfo.exe",
         "/usr/bin/mediainfo",
     ]
     for mediainfo_path in typical_paths:

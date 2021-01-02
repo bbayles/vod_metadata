@@ -23,6 +23,7 @@ setup(
 
     description='CableLabs VOD Metadata 1.1 library and tools',
     long_description="Library and tools for CableLabs VOD Metadata 1.1",
+    long_description_content_type="text/x-rst",
 
     author='Bo Bayles',
     author_email='bbayles@gmail.com',
