@@ -1,5 +1,4 @@
-[![Build Status](https://travis-ci.org/bbayles/vod_metadata.svg?branch=master)](https://travis-ci.org/bbayles/vod_metadata)
-[![Coverage Status](https://coveralls.io/repos/bbayles/vod_metadata/badge.svg?branch=master&service=github)](https://coveralls.io/github/bbayles/vod_metadata?branch=master)
+[![Documentation](https://readthedocs.org/projects/vod-metadata/badge/?version=latest)](https://vod-metadata.readthedocs.io/en/latest/?badge=latest)
 
 ## vod-metadata
 
