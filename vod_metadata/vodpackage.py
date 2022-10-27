@@ -81,42 +81,42 @@ class VodPackage(object):
     def _get_namespaces(self):
         self.namespaces = dict([node for _, node in etree.iterparse(self.xml_path, events=['start-ns'])])
         if len(self.namespaces) == 1:
-			_adi_ns = [*self.namespaces][0]
-			etree.register_namespace("", self.namespaces[_adi_ns])
-		elif len(self.namespaces) > 1:
+            _adi_ns = [*self.namespaces][0]
+            etree.register_namespace("", self.namespaces[_adi_ns])
+        elif len(self.namespaces) > 1:
             warnings.warn(f'Warning: ADI incompatible, multiple namespaces: {self.namespaces}')
 
     @adi_compatibility
     def _read_package(self, ADI):
-        package_Metadata = ADI.find("Metadata")
-        self.D_ams["package"] = package_Metadata.find("AMS").attrib
+        package_Metadata = ADI.find("Metadata", self.namespaces)
+        self.D_ams["package"] = package_Metadata.find("AMS", self.namespaces).attrib
         self.D_app["package"] = self._parse_App_Data(package_Metadata)
 
     @adi_compatibility
     def _read_title(self, ADI):
-        title_Metadata = ADI.find("Asset").find("Metadata")
-        self.D_ams["title"] = title_Metadata.find("AMS").attrib
+        title_Metadata = ADI.find("Asset", self.namespaces).find("Metadata", self.namespaces)
+        self.D_ams["title"] = title_Metadata.find("AMS", self.namespaces).attrib
         self.D_app["title"] = self._parse_App_Data(title_Metadata)
 
     @adi_compatibility
     def _read_elements(self, ADI):
         # Asset elements section: "movie", "preview", "poster", and
         # "box cover" are allowed.
-        for ae_Asset in ADI.find("Asset").findall("Asset"):
-            ae_Metadata = ae_Asset.find("Metadata")
-            ae_AMS = ae_Metadata.find("AMS")
+        for ae_Asset in ADI.find("Asset", self.namespaces).findall("Asset", self.namespaces):
+            ae_Metadata = ae_Asset.find("Metadata", self.namespaces)
+            ae_AMS = ae_Metadata.find("AMS", self.namespaces)
             ae_type = ae_AMS.attrib["Asset_Class"]
             self.D_ams[ae_type] = ae_AMS.attrib
             self.D_app[ae_type] = self._parse_App_Data(ae_Metadata)
-            if ae_Asset.find("Content") is not None:
+            if ae_Asset.find("Content", self.namespaces) is not None:
                 self.D_content[ae_type] = (
-                    ae_Asset.find("Content").attrib["Value"]
+                    ae_Asset.find("Content", self.namespaces).attrib["Value"]
                 )
 
     @adi_compatibility
     def _parse_App_Data(self, ae_Metadata):
         D = {}
-        for App_Data in ae_Metadata.findall("App_Data"):
+        for App_Data in ae_Metadata.findall("App_Data", self.namespaces):
             key = App_Data.attrib["Name"]
             value = App_Data.attrib["Value"]
             # Some App_Data fields can occur more than once and are treated as
@@ -129,7 +129,6 @@ class VodPackage(object):
             # Others can only occur once and are treated as plain values
             else:
                 D[key] = value
-
         return D
 
     @adi_compatibility
@@ -277,7 +276,6 @@ class VodPackage(object):
         for ae_type in self.D_ams:
             new_version = int(self.D_ams[ae_type]["Version_Major"]) + 1
             self.D_ams[ae_type]["Version_Major"] = str(new_version)
-
         # The Content element shouldn't be present for updates, per section 8.1
         # of the ADI spec.
         self.D_content = {}
