@@ -8,6 +8,7 @@ from vod_metadata.config_read import parse_config
 from vod_metadata.md5_calc import md5_checksum
 from vod_metadata.media_info import check_video, check_picture
 from vod_metadata.xml_helper import etree, tobytes
+from vod_metadata.type_validation import validate_D_app, validate_D_ams
 
 __all__ = ["MissingElement", "InvalidMpeg", "VodPackage"]
 
@@ -32,7 +33,8 @@ class VodPackage(object):
         "Song_Title", "Languages", "Subtitle_Languages", "Dubbed_Languages"
     }
 
-    def __init__(self, xml_path, vod_config=None):
+    def __init__(self, xml_path, vod_config=None, validate_type=False):
+        self.validate_type = validate_type
         # Retrieve configuration if it's not set already
         if vod_config is None:
             self.vod_config = parse_config(default_config_path)
@@ -76,6 +78,12 @@ class VodPackage(object):
                 self.D_content['poster'] = self.D_content['image']
                 self.has_poster = True
                 self.remove_image()
+
+        if self.validate_type:
+            self.D_ams_orig = self.D_ams.copy()
+            self.D_app_orig = self.D_app.copy()
+            self.D_ams = validate_D_ams(self.D_ams)
+            self.D_app = validate_D_app(self.D_app)
 
     def adi_compatibility(func):
         def wrap(self, *args, **kwargs):
