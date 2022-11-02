@@ -7,7 +7,7 @@ from vod_metadata.vodpackage import VodPackage
 
 __all__ = ["generate_metadata"]
 
-IMAGE_EXTENSIONS = [".bmp", ".jpg"]
+IMAGE_EXTENSIONS = [".bmp", ".jpg", ".png"]
 
 
 def _check_for_ae(ae_type, movie_name, extensions):
