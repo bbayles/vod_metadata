@@ -70,14 +70,6 @@ class VodPackage(object):
             self.has_box_cover = "box cover" in self.D_ams
             self.is_delete = self.D_ams.get("Verb", '') == "DELETE"
             self.is_update = self.D_ams["package"]["Version_Major"] != "1"
-            # some providers calls poster asset as "image"
-            self.has_image = "image" in self.D_ams
-            if not self.has_poster and self.has_image:
-                self.D_ams["poster"] = self.D_ams["image"]
-                self.D_ams["poster"]["Asset_Class"] = "poster"
-                self.D_content['poster'] = self.D_content['image']
-                self.has_poster = True
-                self.remove_image()
 
         if self.validate_type:
             self.D_ams_orig = self.D_ams.copy()
@@ -285,11 +277,6 @@ class VodPackage(object):
     def remove_box_cover(self):
         self._remove_ae("box cover")
         self.has_box_cover = False
-
-    @adi_compatibility
-    def remove_image(self):
-        self._remove_ae("image")
-        self.has_image = False
 
     @adi_compatibility
     def make_update(self):
