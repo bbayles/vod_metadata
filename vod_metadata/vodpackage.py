@@ -67,6 +67,7 @@ class VodPackage(object):
         if self.D_ams:
             self.has_preview = "preview" in self.D_ams
             self.has_poster = "poster" in self.D_ams
+            self.has_image = "image" in self.D_ams
             self.has_box_cover = "box cover" in self.D_ams
             self.is_delete = self.D_ams.get("Verb", '') == "DELETE"
             self.is_update = self.D_ams["package"]["Version_Major"] != "1"
@@ -195,7 +196,7 @@ class VodPackage(object):
         self._write_App_Data("title", title_Metadata)
 
         # Asset elements
-        for ae_type in ("movie", "preview", "poster", "box cover"):
+        for ae_type in ("movie", "preview", "poster", "box cover", "image"):
             if ae_type not in self.D_ams:
                 continue
             ae_Asset = etree.SubElement(title_Asset, "Asset")
@@ -248,7 +249,7 @@ class VodPackage(object):
             self.D_app[ae_type]["Content_CheckSum"] = md5_checksum(ae_path)
             # Use MediaInfo to determine the correct information about the
             # content files
-            if (ae_type == "poster") or (ae_type == "box cover"):
+            if (ae_type == "poster") or (ae_type == "box cover") or (ae_type == "image"):
                 self._scan_image(ae_type, ae_path)
             else:
                 self._scan_video(ae_type, ae_path)
@@ -278,6 +279,11 @@ class VodPackage(object):
         self._remove_ae("box cover")
         self.has_box_cover = False
 
+    @adi_compatibility
+    def remove_image(self):
+        self._remove_ae("image")
+        self.has_image = False
+        
     @adi_compatibility
     def make_update(self):
         for ae_type in self.D_ams:
