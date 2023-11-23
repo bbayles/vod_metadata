@@ -29,23 +29,23 @@ jobs:
       run: |
         coverage report --show-missing --fail-under=99.0
     - name: Lint with flake8
-      if: "matrix.python-version == '3.6'"
+      if: "matrix.python-version == '3.8'"
       run: |
         pip install -U flake8
         flake8 .
     - name: Build docs with sphinx
-      if: "matrix.python-version == '3.6'"
+      if: "matrix.python-version == '3.8'"
       run: |
         pip install -U sphinx sphinx_rtd_theme
         sphinx-build -W -b html docs docs/_build/html
     - name: Build packages
-      if: "matrix.python-version == '3.6'"
+      if: "matrix.python-version == '3.8'"
       run: |
         pip install -U twine wheel
         python setup.py sdist bdist_wheel
         twine check dist/*
     - name: Upload packages
-      if: "matrix.python-version == '3.6'"
+      if: "matrix.python-version == '3.8'"
       uses: actions/upload-artifact@v2
       with:
         name: vod-metadata-packages
