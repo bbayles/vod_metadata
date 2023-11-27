@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ADI xmlns="http://www.eventis.nl/PRODIS/ADI">
+  <Metadata>
+    <AMS Asset_Class="package" Asset_ID="VODA0082935900308291" Asset_Name="We're Here - Temporada 01 - #01" Creation_Date="2022-09-27" Description="We're Here - Temporada 01 - #01" Product="FVOD;;;;;;;;" Provider="hbo-la" Provider_ID="hbo-la.tv" Verb="" Version_Major="1" Version_Minor="0" />
+    <App_Data App="MOD" Name="House ID" Value="TTL829359" />
+    <App_Data App="MOD" Name="Metadata_Spec_Version" Value="CableLabsVOD1.1" />
+    <App_Data App="MOD" Name="Cable Operator" Value="SVOD RTV Ch" />
+  </Metadata>
+  <Asset>
+    <Metadata>
+      <AMS Asset_Class="title" Asset_ID="VODB0082935900308292" Asset_Name="We're Here - Temporada 01 - #01_Title" Creation_Date="2022-09-27" Description="We're Here - Temporada 01 - #01_Title" Product="FVOD;;;;;;;;" Provider="hbo-la" Provider_ID="hbo-la.tv" Verb="" Version_Major="1" Version_Minor="0" />
+      <App_Data App="MOD" Name="Type" Value="title" />
+      <App_Data App="MOD" Name="Title" Value="We're Here T01 EP01 HD" />
+      <App_Data App="MOD" Name="Summary_Short" Value="Estreno de la serie. Bob the Drag Queen, Eureka O'Hara y Shangela Laquifa Wadley visitan Gettysburg para un espectáculo de drag único." />
+      <App_Data App="MOD" Name="Summary_Medium" Value="Subtitulada. Estreno de la serie. Bob the Drag Queen, Eureka O'Hara y Shangela Laquifa Wadley visitan Gettysburg para un espectáculo de drag único estelarizado por lugareños que necesitan un poco de apoyo y empoderamiento." />
+      <App_Data App="MOD" Name="Summary_Long" Value="Estreno de la serie. Bob the Drag Queen, Eureka O'Hara y Shangela Laquifa Wadley visitan Gettysburg para un espectáculo de drag único estelarizado por lugareños que necesitan un poco de apoyo y empoderamiento." />
+      <App_Data App="MOD" Name="Rating" Value="R" />
+      <App_Data App="MOD" Name="Display_Run_Time" Value="01:00" />
+      <App_Data App="MOD" Name="Run_Time" Value="01:00:58" />
+      <App_Data App="MOD" Name="Year" Value="2020" />
+      <App_Data App="MOD" Name="Actor" Value="Caldwell Tidicue" />
+      <App_Data App="MOD" Name="Actor" Value="D.j. 'shangela' Pier" />
+      <App_Data App="MOD" Name="Actor" Value="David Huggard" />
+      <App_Data App="MOD" Name="Director" Value="Peter Logreco" />
+      <App_Data App="MOD" Name="Actors_Display" Value="Caldwell Tidicue,D.j. 'shangela' Pier,David Huggard" />
+      <App_Data App="MOD" Name="Billing_ID" Value="12345" />
+      <App_Data App="MOD" Name="Licensing_Window_Start" Value="2022-10-01" />
+      <App_Data App="MOD" Name="Licensing_Window_End" Value="2023-04-13" />
+      <App_Data App="MOD" Name="Title_Sort_Name" Value="We're Here S01E01" />
+      <App_Data App="MOD" Name="Title_Brief" Value="EP 01" />
+      <App_Data App="MOD" Name="Preview_Period" Value="0" />
+      <App_Data App="MOD" Name="Episode_Name" Value="Gettysburg, Pennsylvana" />
+      <App_Data App="MOD" Name="Episode ID" Value="S01E01" />
+      <App_Data App="MOD" Name="Provider_QA_Contact" Value="NA" />
+      <App_Data App="MOD" Name="Cable Operator" Value="SVOD RTV Ch" />
+      <App_Data App="MOD" Name="Episode_Ordinal" Value="1" />
+      <App_Data App="MOD" Name="Show_ID" Value="WEREHERE" />
+      <App_Data App="MOD" Name="Country_of_Origin" Value="US" />
+      <App_Data App="MOD" Name="Gross_price" Value="0" />
+      <App_Data App="MOD" Name="Series_Name" Value="Season 1" />
+      <App_Data App="MOD" Name="Series_Ordinal" Value="1" />
+      <App_Data App="MOD" Name="Series_ID" Value="WEREHERE_T1" />
+      <App_Data App="MOD" Name="Category" Value="Canales/HBO/Series/We're Here" />
+      <App_Data App="MOD" Name="Category" Value="Series/We're Here" />
+      <App_Data App="MOD" Name="Show_Type" Value="Series" />
+      <App_Data App="MOD" Name="Available_in_localities" Value="llacl" />
+      <App_Data App="MOD" Name="Show_Name" Value="We're Here" />
+      <App_Data App="MOD" Name="Eds_Product_ID" Value="100233" />
+      <App_Data App="MOD" Name="Net_price" Value="0" />
+      <App_Data App="MOD" Name="Genre" Value="FICTION/DRAMA" />
+    </Metadata>
+    <Asset>
+      <Metadata>
+        <AMS Asset_Class="movie" Asset_ID="VODC0082935900308293" Asset_Name="We're Here - Temporada 01 - #01_movie" Creation_Date="2022-09-27" Description="We're Here - Temporada 01 - #01_movie" Product="FVOD;;;;;;;;" Provider="hbo-la" Provider_ID="hbo-la.tv" Verb="" Version_Major="1" Version_Minor="0" />
+        <App_Data App="MOD" Name="Type" Value="movie" />
+        <App_Data App="MOD" Name="Audio_Type" Value="Stereo" />
+        <App_Data App="MOD" Name="Languages" Value="en" />
+        <App_Data App="MOD" Name="Subtitle_Languages" Value="es" />
+        <App_Data App="MOD" Name="Screen_Format" Value="Widescreen" />
+        <App_Data App="MOD" Name="HDContent" Value="Y" />
+        <App_Data App="MOD" Name="Content_Format" Value="H264" />
+        <App_Data App="MOD" Name="Encoding_Type" Value="H264 HD" />
+        <App_Data App="MOD" Name="Content_FileSize" Value="3430799028" />
+      </Metadata>
+      <Content Value="B82935906HD0030829.ts" />
+    </Asset>
+    <Asset>
+      <Metadata>
+        <AMS Asset_Class="image" Asset_ID="VODE0082935900308295" Asset_Name="We're Here - Temporada 01 - #01_HDPoster" Creation_Date="2022-09-27" Description="We're Here - Temporada 01 - #01_HDPoster" Product="MOD" Provider="HBO" Provider_ID="hbo.net" Verb="" Version_Major="1" Version_Minor="0" />
+        <App_Data App="MOD" Name="Type" Value="image" />
+        <App_Data App="MOD" Name="Content_FileSize" Value="140869" />
+        <App_Data App="MOD" Name="Content_CheckSum" Value="263e07ba411f8b5d634de30e5e459d01" />
+        <App_Data App="MOD" Name="Image_Aspect_Ratio" Value="1920x1080" />
+        <App_Data App="MOD" Name="Image_Qualifier" Value="HighResLandscape" />
+      </Metadata>
+      <Content Value="TTL829359_CLN_1920x1080_HBO.jpg" />
+    </Asset>
+    <Asset>
+      <Metadata>
+        <AMS Asset_Class="box cover" Asset_ID="COVE0082935900308292" Asset_Name="We're Here - Temporada 01 - #01_Title" Creation_Date="2022-09-28" Description="" Product="" Provider="hbo-la" Provider_ID="hbo-la.tv" Verb="" Version_Major="1" Version_Minor="0" />
+        <App_Data App="MOD" Name="Type" Value="box cover" />
+        <App_Data App="MOD" Name="Content_FileSize" Value="69289" />
+      </Metadata>
+      <Content Value="ucJ7qgoRvyKCROas2Ax0XSqXSqu.jpg" />
+    </Asset>
+  </Asset>
+</ADI>

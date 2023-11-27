@@ -1,12 +1,14 @@
 from __future__ import division
 from io import open
 import os.path
+import warnings
 
 from vod_metadata import default_config_path
 from vod_metadata.config_read import parse_config
 from vod_metadata.md5_calc import md5_checksum
 from vod_metadata.media_info import check_video, check_picture
 from vod_metadata.xml_helper import etree, tobytes
+from vod_metadata.type_validation import validate_D_app, validate_D_ams
 
 __all__ = ["MissingElement", "InvalidMpeg", "VodPackage"]
 
@@ -31,7 +33,8 @@ class VodPackage(object):
         "Song_Title", "Languages", "Subtitle_Languages", "Dubbed_Languages"
     }
 
-    def __init__(self, xml_path, vod_config=None):
+    def __init__(self, xml_path, vod_config=None, validate_type=False):
+        self.validate_type = validate_type
         # Retrieve configuration if it's not set already
         if vod_config is None:
             self.vod_config = parse_config(default_config_path)
@@ -46,6 +49,7 @@ class VodPackage(object):
             self.param_skip = {"Resolution", "Frame_Rate", "Codec"}
 
         self.xml_path = xml_path
+        self._get_namespaces()
         self.tree = etree.parse(self.xml_path)
 
         # The CableLabs VOD Metadata 1.1 specification stores metadata in "AMS"
@@ -60,39 +64,67 @@ class VodPackage(object):
         self._read_title(ADI)
         self._read_elements(ADI)
 
-        self.has_preview = "preview" in self.D_ams
-        self.has_poster = "poster" in self.D_ams
-        self.has_box_cover = "box cover" in self.D_ams
-        self.is_delete = self.D_ams.get("Verb", '') == "DELETE"
-        self.is_update = self.D_ams["package"]["Version_Major"] != "1"
+        if self.D_ams:
+            self.has_preview = "preview" in self.D_ams
+            self.has_poster = "poster" in self.D_ams
+            self.has_image = "image" in self.D_ams
+            self.has_box_cover = "box cover" in self.D_ams
+            self.is_delete = self.D_ams.get("Verb", '') == "DELETE"
+            self.is_update = self.D_ams["package"]["Version_Major"] != "1"
 
+        if self.validate_type:
+            self.D_ams_orig = self.D_ams.copy()
+            self.D_app_orig = self.D_app.copy()
+            self.D_ams = validate_D_ams(self.D_ams)
+            self.D_app = validate_D_app(self.D_app)
+
+    def adi_compatibility(func):
+        def wrap(self, *args, **kwargs):
+            if len(self.namespaces) <= 1:
+                return func(self, *args, **kwargs)
+            else:
+                return None
+        return wrap
+
+    def _get_namespaces(self):
+        self.namespaces = dict([node for _, node in etree.iterparse(self.xml_path, events=['start-ns'])])
+        if len(self.namespaces) == 1:
+            _adi_ns = [*self.namespaces][0]
+            etree.register_namespace("", self.namespaces[_adi_ns])
+        elif len(self.namespaces) > 1:
+            warnings.warn(f'Warning: ADI incompatible, multiple namespaces: {self.namespaces}')
+
+    @adi_compatibility
     def _read_package(self, ADI):
-        package_Metadata = ADI.find("Metadata")
-        self.D_ams["package"] = package_Metadata.find("AMS").attrib
+        package_Metadata = ADI.find("Metadata", self.namespaces)
+        self.D_ams["package"] = package_Metadata.find("AMS", self.namespaces).attrib
         self.D_app["package"] = self._parse_App_Data(package_Metadata)
 
+    @adi_compatibility
     def _read_title(self, ADI):
-        title_Metadata = ADI.find("Asset").find("Metadata")
-        self.D_ams["title"] = title_Metadata.find("AMS").attrib
+        title_Metadata = ADI.find("Asset", self.namespaces).find("Metadata", self.namespaces)
+        self.D_ams["title"] = title_Metadata.find("AMS", self.namespaces).attrib
         self.D_app["title"] = self._parse_App_Data(title_Metadata)
 
+    @adi_compatibility
     def _read_elements(self, ADI):
         # Asset elements section: "movie", "preview", "poster", and
         # "box cover" are allowed.
-        for ae_Asset in ADI.find("Asset").findall("Asset"):
-            ae_Metadata = ae_Asset.find("Metadata")
-            ae_AMS = ae_Metadata.find("AMS")
+        for ae_Asset in ADI.find("Asset", self.namespaces).findall("Asset", self.namespaces):
+            ae_Metadata = ae_Asset.find("Metadata", self.namespaces)
+            ae_AMS = ae_Metadata.find("AMS", self.namespaces)
             ae_type = ae_AMS.attrib["Asset_Class"]
             self.D_ams[ae_type] = ae_AMS.attrib
             self.D_app[ae_type] = self._parse_App_Data(ae_Metadata)
-            if ae_Asset.find("Content") is not None:
+            if ae_Asset.find("Content", self.namespaces) is not None:
                 self.D_content[ae_type] = (
-                    ae_Asset.find("Content").attrib["Value"]
+                    ae_Asset.find("Content", self.namespaces).attrib["Value"]
                 )
 
+    @adi_compatibility
     def _parse_App_Data(self, ae_Metadata):
         D = {}
-        for App_Data in ae_Metadata.findall("App_Data"):
+        for App_Data in ae_Metadata.findall("App_Data", self.namespaces):
             key = App_Data.attrib["Name"]
             value = App_Data.attrib["Value"]
             # Some App_Data fields can occur more than once and are treated as
@@ -105,9 +137,9 @@ class VodPackage(object):
             # Others can only occur once and are treated as plain values
             else:
                 D[key] = value
-
         return D
 
+    @adi_compatibility
     def _write_App_Data(self, ae_type, parent_Metadata):
         for key, value in sorted(
             self.D_app[ae_type].items(), key=lambda x: x[0]
@@ -129,6 +161,7 @@ class VodPackage(object):
                 ae_App_Data.set("Name", key)
                 ae_App_Data.set("Value", value)
 
+    @adi_compatibility
     def write_xml(self, rewrite=False):
         # A movie element is required by this library
         if "movie" not in self.D_ams:
@@ -163,7 +196,7 @@ class VodPackage(object):
         self._write_App_Data("title", title_Metadata)
 
         # Asset elements
-        for ae_type in ("movie", "preview", "poster", "box cover"):
+        for ae_type in ("movie", "preview", "poster", "box cover", "image"):
             if ae_type not in self.D_ams:
                 continue
             ae_Asset = etree.SubElement(title_Asset, "Asset")
@@ -182,11 +215,13 @@ class VodPackage(object):
 
         return tobytes(doctype, ADI)
 
+    @adi_compatibility
     def overwrite_xml(self, rewrite=False):
         s = self.write_xml(rewrite)
         with open(self.xml_path, mode="wb") as outfile:
             outfile.write(s)
 
+    @adi_compatibility
     def files_present(self):
         # Check the referenced content files for existence. If they are all
         # present return True. Otherwise return False.
@@ -195,9 +230,9 @@ class VodPackage(object):
             ae_path = os.path.join(ae_dir, ae_name)
             if not os.path.isfile(ae_path):
                 return False
-
         return True
 
+    @adi_compatibility
     def check_files(self):
         for ae_type, ae_name in self.D_content.items():
             # Check to make sure the referenced files exist in the same
@@ -214,11 +249,12 @@ class VodPackage(object):
             self.D_app[ae_type]["Content_CheckSum"] = md5_checksum(ae_path)
             # Use MediaInfo to determine the correct information about the
             # content files
-            if (ae_type == "poster") or (ae_type == "box cover"):
+            if (ae_type == "poster") or (ae_type == "box cover") or (ae_type == "image"):
                 self._scan_image(ae_type, ae_path)
             else:
                 self._scan_video(ae_type, ae_path)
 
+    @adi_compatibility
     def _remove_ae(self, ae_type):
         try:
             del self.D_ams[ae_type]
@@ -228,34 +264,44 @@ class VodPackage(object):
             msg = "Package does not content a {} element"
             raise MissingElement(msg.format(ae_type))
 
+    @adi_compatibility
     def remove_preview(self):
         self._remove_ae("preview")
         self.has_preview = False
 
+    @adi_compatibility
     def remove_poster(self):
         self._remove_ae("poster")
         self.has_poster = False
 
+    @adi_compatibility
     def remove_box_cover(self):
         self._remove_ae("box cover")
         self.has_box_cover = False
 
+    @adi_compatibility
+    def remove_image(self):
+        self._remove_ae("image")
+        self.has_image = False
+        
+    @adi_compatibility
     def make_update(self):
         for ae_type in self.D_ams:
             new_version = int(self.D_ams[ae_type]["Version_Major"]) + 1
             self.D_ams[ae_type]["Version_Major"] = str(new_version)
-
         # The Content element shouldn't be present for updates, per section 8.1
         # of the ADI spec.
         self.D_content = {}
         self.is_update = True
 
+    @adi_compatibility
     def make_delete(self):
         for ae_type in self.D_ams:
             self.D_ams[ae_type]["Verb"] = "DELETE"
 
         self.is_delete = True
 
+    @adi_compatibility
     def _scan_video(self, ae_type, ae_path):
         mpeg_info = check_video(ae_path, self.vod_config.mediainfo_path)
 
@@ -319,6 +365,7 @@ class VodPackage(object):
         bit_rate = float(mpeg_info["General"]["Overall bit rate"]) / 1000
         self.D_app[ae_type]["Bit_Rate"] = format(bit_rate, '.0f')
 
+    @adi_compatibility
     def _scan_image(self, ae_type, ae_path):
         img_info = check_picture(ae_path, self.vod_config.mediainfo_path)
         img_width = img_info["Image"]["Width"]
